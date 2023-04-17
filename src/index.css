@@ -1,0 +1,92 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+
+@font-face {
+  font-family: Gilroy;
+  src: url('../public/fonts/Gilroy-Font/Gilroy-Medium.woff2');
+}
+
+@font-face {
+  font-family: GilroySemiBold;
+  src: url('../public/fonts/Gilroy-Font/Gilroy-Semibold.woff2');
+}
+
+@font-face {
+  font-family: GilroyBold;
+  src: url('../public/fonts/Gilroy-Font/Gilroy-Bold.woff2');
+}
+::-webkit-scrollbar {
+  width: 8px;
+}
+::-webkit-scrollbar-thumb {
+  background: #807373;
+  border-radius: 8px;
+}
+
+body {
+  margin: 0;
+  font-family: Gilroy, -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  background-color: #F5F6F7;
+}
+
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
+    monospace;
+}
+
+input {
+  background: transparent;
+}
+
+
+input:focus {
+  outline: none;
+}
+
+.dark-calendar div {
+  background-color: #242322 !important;
+}
+
+.dark-calendar div table tbody tr td:hover {
+  color: #242322 !important;
+}
+
+.dark-calendar div table tfoot tr td:hover {
+  color: #242322 !important;
+}
+
+.dark-calendar .rdtTime:hover {
+  color: white !important;
+}
+
+.dark-calendar .rdtTime table tbody tr td:hover {
+  color: white !important;
+}
+
+.dark-calendar .rdtBtn:hover {
+  color: #242322 !important;
+}
+
+.filled {
+  background: linear-gradient(270.01deg, #C89C34 8.72%, #FFBB1C 78.42%);
+}
+
+.transition-sidebar-close{
+  max-height: 0px;
+  transition: max-height 0.3s ease-in-out 0s;
+}
+
+
+.transition-sidebar-open{
+  max-height: 144px;
+  transition: max-height 0.3s ease-in-out 0s;
+}
+.logo-div{
+  margin-bottom: 20px;
+}
