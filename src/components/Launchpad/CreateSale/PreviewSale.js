@@ -2,10 +2,11 @@ import React from 'react'
 import PreviewHeader from '../../Common/PreviewHeader'
 import BackArrowSVG from '../../../svgs/back_arrow';
 import PreviewDetails from '../../Common/PreviewDetails';
+import { formatBigToNum } from '../../../utils/numberFormat'
 
 
 
-export default function PreviewSale({ token, setActive, saleObject, saleType }) {
+export default function PreviewSale({ token, setActive, saleObject, saleType, saleData }) {
 
   const handleSubmit = () => {
     
@@ -33,10 +34,13 @@ export default function PreviewSale({ token, setActive, saleObject, saleType }) 
 
       <PreviewHeader heading={"Token address Details"} />
 
-      <PreviewDetails name={"Name"} value={token.name} />
-      <PreviewDetails name={"Symbol"} value={token.symbol} />
-      <PreviewDetails name={"Decimals"} value={token.decimals} />
-      <PreviewDetails name={"Total Supply"} value={token.total_supply.toLocaleString() + " " + token.symbol} />
+      <PreviewDetails name="Name" value={saleData.tokenName} />
+      <PreviewDetails name="Symbol" value={saleData.tokenSymbol} />
+      <PreviewDetails name="Decimals" value={saleData.tokenDecimals} />
+      <PreviewDetails
+        name="Total Supply"
+        value={`${formatBigToNum(saleData.tokenSupply, saleData.tokenDecimals)} ${saleData.tokenSymbol}`}
+      />
 
       <PreviewHeader heading={"Presale Details"} />
 
@@ -48,12 +52,12 @@ export default function PreviewSale({ token, setActive, saleObject, saleType }) 
       {saleType === "standard" &&
         <PreviewDetails name={"Presale Rate"} value={saleObject.presalePrice + " " + token.symbol + " = 1 " + saleObject.currency.symbol} />
       }
-      <PreviewDetails name={"Soft Cap"} value={saleObject.softCap.toLocaleString()} />
+      <PreviewDetails name={"Soft Cap"} value={saleObject.softCap} />
       {saleType !== "fairlaunch" &&
         <div>
-          <PreviewDetails name={"Hard Cap"} value={saleObject.hardCap.toLocaleString()} />
-          <PreviewDetails name={"Minimum Allocation"} value={saleObject.minAllocation.toLocaleString() + " " + saleObject.currency.symbol} />
-          <PreviewDetails name={"Maximum Allocation"} value={saleObject.maxAllocation.toLocaleString() + " " + saleObject.currency.symbol} />
+          <PreviewDetails name={"Hard Cap"} value={saleObject.hardCap} />
+          <PreviewDetails name={"Minimum Allocation"} value={saleObject.minAllocation + " " + saleObject.currency.symbol} />
+          <PreviewDetails name={"Maximum Allocation"} value={saleObject.maxAllocation + " " + saleObject.currency.symbol} />
           <PreviewDetails name={"Amount to be sold"} value={"100,000,000 SXP"} />
         </div>
       }

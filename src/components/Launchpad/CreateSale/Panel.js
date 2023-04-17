@@ -43,7 +43,7 @@ const token = {
 }
 
 
-export default function Panel() {
+export default function Panel({saleData, setSaleData, initSaleState}) {
   const [active, setActive] = useState('Token Info');
   const [selectedSale, setSelectedSale] = useState('standard')
   const [saleType, setSaleType] = useState(null);
@@ -92,22 +92,22 @@ export default function Panel() {
             <div className="panel-content bg-white dark:bg-dark-1 rounded-r-[10px] pt-7 md:pt-9 px-4 md:p-9 md:w-2/3">
               {
                 active === 'Token Info' && (
-                  <TokenInfo setActive={setActive} saleType={saleType} setSaleType={setSaleType} />
+                  <TokenInfo setActive={setActive} saleType={saleType} setSaleType={setSaleType} saleData={saleData} setSaleData={setSaleData} initSaleState={initSaleState}/>
                 )
               }
               {
                 active === 'Presale' && (
-                  <Presale setActive={setActive} saleType={saleType} setSaleObject={setSaleObject} token={token} />
+                  <Presale setActive={setActive} saleType={saleType} setSaleObject={setSaleObject} token={token}/>
                 )
               }
               {
                 active === 'Project Details' && (
-                  <ProjectDetails setActive={setActive} />
+                  <ProjectDetails setActive={setActive} saleData={saleData} setSaleData={setSaleData} initSaleState={initSaleState}/>
                 )
               }
               {
                 active === 'Preview' && (
-                  <PreviewSale setActive={setActive} saleObject={saleObject} saleType={saleType} token={token} />
+                  <PreviewSale setActive={setActive} saleObject={saleObject} saleType={saleType} token={token} saleData={saleData} />
                 )
               }
             </div>

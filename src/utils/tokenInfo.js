@@ -6,7 +6,7 @@ import { Contract, Provider, setMulticallAddress } from 'ethers-multicall'
 const CHAIN_NUMBER = 56
 
 export const getTokenInfo = async (address) => {
-  setMulticallAddress(CHAIN_NUMBER, MULTICALL_ADDRESS[CHAIN_NUMBER])
+  setMulticallAddress(CHAIN_NUMBER, MULTICALL_ADDRESS[CHAIN_NUMBER])//sometimes need sunchronized data it guarantees data from same block and not multiple blocks prevents multiple seperate requests and does it in one
   const provider = new ethers.providers.JsonRpcProvider(RPC_ADDRESS[CHAIN_NUMBER])
   const ethcallProvider = new Provider(provider)
   await ethcallProvider.init()
@@ -16,7 +16,7 @@ export const getTokenInfo = async (address) => {
     calls.push(tokenContract.name())
     calls.push(tokenContract.symbol())
     calls.push(tokenContract.decimals())
-    calls.push(tokenContract.totalSupply())
+    calls.push(tokenContract.totalSupply())//how much supply available
 
     const [name, symbol, decimals, totalSupply] = await ethcallProvider.all(calls)
     return {
