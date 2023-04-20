@@ -45,34 +45,36 @@ const token = {
 
 export default function Panel({saleData, setSaleData, initSaleState}) {
   const [active, setActive] = useState('Token Info');
-  const [selectedSale, setSelectedSale] = useState('standard')
   const [saleType, setSaleType] = useState(null);
   const [saleObject, setSaleObject] = useState(null);
 
   return (
     <div className="w-full flex justify-center">
-      {!saleType &&
+      {saleData.showLanding ?(
 
         <div className="w-full md:w-[600px]">
           <div className="bg-white dark:bg-dark-1 flex flex-col rounded-[10px] p-9">
             <span className="font-semibold text-dark-text">Choose Presale Type</span>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-5 mt-6">
-              <LockOptions name={'Standard'} lock={selectedSale} setLock={setSelectedSale} selected={selectedSale === 'standard'} />
-              <LockOptions name={'Fairlaunch'} lock={selectedSale} setLock={setSelectedSale} selected={selectedSale === 'fairlaunch'} />
-              <LockOptions name={'Private'} lock={selectedSale} setLock={setSelectedSale} selected={selectedSale === 'private'} />
+              <LockOptions name={'Standard'}  selected={saleData.type==='standard'} airdropData={saleData} setAirdropData={setSaleData} initAirdropState={initSaleState} />
+              <LockOptions name={'Fairlaunch'}  selected={ saleData.type==='fairlaunch'} airdropData={saleData} setAirdropData={setSaleData} initAirdropState={initSaleState} />
+              <LockOptions name={'Private'}  selected={ saleData.type==='private'} airdropData={saleData} setAirdropData={setSaleData} initAirdropState={initSaleState} />
             </div>
 
             <div className="mt-10 flex justify-end">
               <button className="bg-primary-green hover:opacity-40 text-white rounded-md px-[42px] py-4 font-bold"
-                onClick={() => setSaleType(selectedSale)}>
+                onClick={() => 
+                  setSaleData((prevState) => ({
+                    ...prevState,
+                    showLanding: false,
+                  }))}>
                 Next
               </button>
             </div>
           </div>
         </div>
-      }
-      {saleType &&
+      ) : (
         <div className="w-full px-4 md:px-0 md:w-10/12">
           <div className="flex flex-col md:flex-row w-full">
             <div className="panel flex py-4 pl-5 gap-5 md:py-0 md:block md:pl-9 md:pr-[5%] rounded-l-[10px] bg-[#FAF8F5] dark:bg-dark-2">
@@ -113,7 +115,7 @@ export default function Panel({saleData, setSaleData, initSaleState}) {
             </div>
           </div>
         </div>
-      }
+      )}
     </div>
 
   )
