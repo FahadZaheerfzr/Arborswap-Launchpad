@@ -9,6 +9,16 @@ import DexOptions from './Subcomponents/DexOption';
 import Input from './Subcomponents/Input';
 import PresaleStandard from './Subcomponents/PresaleStandard';
 import PresalePrivate from './Subcomponents/PresalePrivate';
+import { tokenRate } from 'utils/helpers';
+
+import { ethers } from 'ethers';
+import { useEthers } from '@usedapp/core';
+import { Contract } from 'ethers';
+import { FairLaunch_FACTORYADRESS, Private_FACTORYADRESS, Public_FACTORYADRESS } from '../../../constants/Address';
+import ERCAbi from '../../../constants/abi/ERC20.json';
+import FairAbi from '../../../constants/abi/FairAbi.json';
+import PrivateAbi from '../../../constants/abi/PrivateAbi.json';
+import PublicAbi from '../../../constants/abi/PublicAbi.json';
 
 const currencies = [
     {
@@ -66,8 +76,9 @@ export default function Presale({ setActive, saleType, setSaleObject, token }) {
     const [vestingPeriod, setVestingPeriod] = useState();
     const [vestingRelease, setVestingRelease] = useState();
     const [unsoldToken, setUnsoldTokens] = useState("Burn");
+    const [requiredToken, setRequiredToken] = useState("0");
     const [lockup, setLockup] = useState();
-
+    const {account, library} = useEthers();
 
     const handleSubmit = () => {
         const presaleObject = {
@@ -89,10 +100,88 @@ export default function Presale({ setActive, saleType, setSaleObject, token }) {
             unsoldToken: unsoldToken,
             lockup: lockup,
         }
+        if (saleType === "standard") {
+            handleBeforeSubmitStandard(presaleObject)
+        }
+        else if (saleType === "fairlaunch") {
+            handleBeforeSubmitFair(presaleObject)
+        }
+        else if (saleType === "private") {
+            handleBeforeSubmitPrivate(presaleObject)
+        }
         setSaleObject(presaleObject)
         setActive("Project Details")
     }
 
+    const handleBeforeSubmitFair = async () => {
+        const contract = new Contract(FairLaunch_FACTORYADRESS, ERCAbi, library.getSigner(account));
+        const amount = ethers.constants.MaxUint256;
+
+        try {
+            const approval = await contract.approve(FairLaunch_FACTORYADRESS, amount);
+            await approval.wait();
+
+        } catch (error) {
+            console.log(error)
+            return false
+        }
+        return true
+    }
+    const handleBeforeSubmitPrivate = async () => {
+        const contract = new Contract(Private_FACTORYADRESS, ERCAbi, library.getSigner(account));
+        const amount = ethers.constants.MaxUint256;
+
+        try {
+            const approval = await contract.approve(Private_FACTORYADRESS, amount);
+            await approval.wait();
+        } catch (error) {
+            console.log(error)
+            return false
+        }
+        return true
+    }
+    const handleBeforeSubmitStandard = async () => {
+        const contract = new Contract(Public_FACTORYADRESS, ERCAbi, library.getSigner(account));
+        const amount = ethers.constants.MaxUint256;
+
+        try {
+            const approval = await contract.approve(Public_FACTORYADRESS, amount);
+            await approval.wait();
+        } catch (error) {
+            console.log(error)
+            return false
+        }
+        return true
+    }
+    const handleCheckBalance = async () => {
+        const contract = new Contract(token.address, ERCAbi, library.getSigner(account));
+        const amountRequired = ethers.utils.parseUnits(requiredToken, ethers.BigNumber.from(token.decimals));
+        try {
+            const balance = await contract.balanceOf(account);
+            if (balance.lt(amountRequired)) {
+                return false
+            }
+        } catch (error) {
+            console.log(error)
+            return false
+        }
+        return true
+    }
+
+    //use effect in which we will set required token if hardcap, softcap, listing price, amount liquidity, presale price changes
+    useEffect(() => {
+        if(hardCap>0 && softCap>0 && listing>0 && presalePrice>0){
+            const hardCapBNB = ethers.utils.parseUnits(hardCap.toString(), 18);
+            const presaleRateToken = ethers.BigNumber.from(presalePrice.toString())
+            const listingRateToken = ethers.BigNumber.from(listing)
+
+            const reqHard = hardCapBNB.mul(presaleRateToken).div(ethers.utils.parseUnits("1", token.decimals.toString()))
+            const reqLP = hardCapBNB.mul(listingRateToken).div(ethers.utils.parseUnits("1", token.decimals.toString()))
+            const presaleRateBNB = tokenRate(presaleRateToken,"18")
+
+            setRequiredToken(reqHard.add(reqLP).toString())
+        }
+    }, [hardCap, softCap, listing, presalePrice])
 
 
     const handleTempFixed = () => {
