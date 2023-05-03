@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import Presale from './Presale';
 import ProjectDetails from './ProjectDetails';
 import TokenInfo from './TokenInfo'
@@ -47,7 +47,12 @@ export default function Panel({saleData, setSaleData, initSaleState}) {
   const [active, setActive] = useState('Token Info');
   const [saleType, setSaleType] = useState(null);
   const [saleObject, setSaleObject] = useState(null);
-
+  //if saleData.type is not null, then we change the saleType to saleData.type
+  useEffect(() => {
+    if (saleData.type) {
+      setSaleType(saleData.type)
+    }
+  }, [saleData.type])
   return (
     <div className="w-full flex justify-center">
       {saleData.showLanding ?(
@@ -99,7 +104,7 @@ export default function Panel({saleData, setSaleData, initSaleState}) {
               }
               {
                 active === 'Presale' && (
-                  <Presale setActive={setActive} saleType={saleType} setSaleObject={setSaleObject} token={token}/>
+                  <Presale setActive={setActive} saleType={saleType} setSaleObject={setSaleObject} token={saleData}/>
                 )
               }
               {
@@ -109,7 +114,7 @@ export default function Panel({saleData, setSaleData, initSaleState}) {
               }
               {
                 active === 'Preview' && (
-                  <PreviewSale setActive={setActive} saleObject={saleObject} saleType={saleType} token={token} saleData={saleData} />
+                  <PreviewSale setActive={setActive} saleObject={saleObject} saleType={saleType} token={saleData} saleData={saleData} />
                 )
               }
             </div>

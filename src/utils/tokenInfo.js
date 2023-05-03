@@ -3,7 +3,7 @@ import ERC20Abi from '../config/abi/ERC20.json'
 import { ethers } from 'ethers'
 import { Contract, Provider, setMulticallAddress } from 'ethers-multicall'
 
-const CHAIN_NUMBER = 56
+const CHAIN_NUMBER = 97
 
 export const getTokenInfo = async (address) => {
   setMulticallAddress(CHAIN_NUMBER, MULTICALL_ADDRESS[CHAIN_NUMBER])//sometimes need sunchronized data it guarantees data from same block and not multiple blocks prevents multiple seperate requests and does it in one also reduces costs
@@ -37,7 +37,7 @@ export const getTokenInfo = async (address) => {
       },
     }
   } catch (error) {
-    
+    console.log(error)
     return {
       success: false,
       data: {},
