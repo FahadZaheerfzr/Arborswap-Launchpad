@@ -8,10 +8,10 @@ import useDeploymentFeeFair from 'hooks/useDeploymentFeeFair';
 import { BigNumber, ethers, utils } from "ethers"
 import { useEthers } from '@usedapp/core';
 import { useEffect } from 'react';
-import { Contract } from 'ethers-multicall';
 import { Public_FACTORYADRESS,ROUTER_ADDRESS,ADMIN_ADDRESS } from 'constants/Address';
 import PublicAbi from '../../../constants/abi/PublicAbi.json';
-
+import { Contract } from "@ethersproject/contracts"
+import { parseEther,  parseUnits} from 'ethers/lib/utils';
 
 
 export default function PreviewSale({ token, setActive, saleObject, saleType, saleData }) {
@@ -19,41 +19,45 @@ export default function PreviewSale({ token, setActive, saleObject, saleType, sa
   const {account, chainId, library} = useEthers()
   const deployFee = useDeploymentFeeFair()
 
+  console.log(saleObject)
 
   useEffect(() => {
     async function getFee() {
-      const fee = await deployFee
+      const fee = deployFee;
       setDeploymentFee(ethers.utils.formatEther(fee))
     }
     getFee()
   }, [deployFee])
 
   const handleDeploySale = async () => {
-    const signer = library.getSigner(account)
     const contract = new Contract(
       Public_FACTORYADRESS,
       PublicAbi,
-      signer
+      library.getSigner()
     )
     const routerAddress = ROUTER_ADDRESS
     const adminAddress = ADMIN_ADDRESS
     console.log(contract)
+    const startTime = Math.floor(new Date(saleObject.startDate).getTime() / 1000);
+    const endTime = Math.floor(new Date(saleObject.endDate).getTime() / 1000)
     // 2nd - with uints [minParticipation, maxParticipation, lp%, dex listing rate,lpLockPeriod, saleEnd, saleStart, hardCap(tokens), softCap(bnb)]
     try {
       const tx = await contract.deployNormalSale(
         [routerAddress, adminAddress, token.tokenAddress, account],
         [
-          saleObject.minAllocation,
-          saleObject.maxAllocation,
-          saleObject.amountLiquidity,
-          saleObject.listing,
-          saleObject.lockup,
-          saleObject.endDate,
-          saleObject.startDate,
-          saleObject.hardCap,
-          saleObject.softCap
-        ]
+          parseEther(Number(saleObject.minAllocation)).toString(),
+          parseEther(Number(saleObject.maxAllocation)).toString(),
+          parseEther(Number(saleObject.softCap)).toString(),
+          parseEther(Number(saleObject.hardCap)).toString(),
+          parseUnits(Number(saleObject.presalePrice), saleData.tokenDecimals).toString(),
+          parseUnits(Number(saleObject.listing), saleData.tokenDecimals).toString(),
 
+          (Number(saleObject.amountLiquidity)*100).toString(),
+          (Number(saleObject.lockup) * 86400).toString(),
+          endTime,
+          startTime,
+        ],
+        { value: utils.parseEther(deploymentFee) }
       )
       await tx.wait()
       console.log("Sale deployed")
@@ -72,7 +76,7 @@ export default function PreviewSale({ token, setActive, saleObject, saleType, sa
   return (
     <div className=''>
       <div className='flex items-center'>
-        <img src={token.icon} alt={token.name} className='w-[54px] h-[54px]' />
+        <img src={token.image} alt={token.name} className='w-[54px] h-[54px]' />
 
         <div className=' ml-4'>
           <div className='flex items-center'>
@@ -107,7 +111,7 @@ export default function PreviewSale({ token, setActive, saleObject, saleType, sa
       }
 
       {saleType === "standard" &&
-        <PreviewDetails name={"Presale Rate"} value={saleObject.presalePrice + " " + token.symbol + " = 1 " + saleObject.currency.symbol} />
+        <PreviewDetails name={"Presale Rate"} value={saleObject.presalePrice + " " + token.tokenSymbol + " = 1 " + saleObject.currency.symbol} />
       }
       <PreviewDetails name={"Soft Cap"} value={saleObject.softCap} />
       {saleType !== "fairlaunch" &&
@@ -137,7 +141,7 @@ export default function PreviewSale({ token, setActive, saleObject, saleType, sa
         </div>
       }
       {saleType === "standard" &&
-        <PreviewDetails name={"Listing rate"} value={saleObject.listing + " " + token.symbol + " = 1 " + saleObject.currency.symbol} />
+        <PreviewDetails name={"Listing rate"} value={saleObject.listing + " " + token.tokenSymbol + " = 1 " + saleObject.currency.symbol} />
       }
 
       <PreviewHeader heading={"Time Details"} />

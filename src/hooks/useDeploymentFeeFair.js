@@ -1,13 +1,13 @@
 import { Contract } from "ethers";
 import FairAbi from "../constants/abi/FairAbi.json";
-
+import PublicAbi from '../constants/abi/PublicAbi.json';
 import { useCall, useEthers } from "@usedapp/core";
-import { FairLaunch_FACTORYADRESS } from "constants/Address";
+import { FairLaunch_FACTORYADRESS, Public_FACTORYADRESS } from "constants/Address";
 
 function useDeploymentFeeFair() {
     const { value, error } =
         useCall({
-        contract: new Contract(FairLaunch_FACTORYADRESS, FairAbi),
+        contract: new Contract(Public_FACTORYADRESS, PublicAbi),
         method: "fee",
         args: [],
         }) ?? {};

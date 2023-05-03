@@ -1,3 +1,4 @@
+import LaunchpadSVG from 'svgs/Sidebar/launchpad'
 import AirplaneSVG from '../svgs/Sidebar/airplane'
 import DashboardSVG from '../svgs/Sidebar/dashboard'
 import MoreProductsSVG from '../svgs/Sidebar/more_products'
@@ -16,26 +17,26 @@ export const sitemap = [
     link: '/',
     sublinks: ['/'],
   },
-  // {
-  //   id: 2,
-  //   name: 'Launchpad',
-  //   extendable: true,
-  //   icon: <LaunchpadSVG className="fill-dim-text dark:fill-dim-text-dark" />,
-  //   activeIcon: <LaunchpadSVG className="fill-primary-green" />,
-  //   subitems: [
-  //     {
-  //       id: 1,
-  //       name: 'Pools',
-  //       link: '/launchpad/pools',
-  //     },
-  //     {
-  //       id: 2,
-  //       name: 'Create Sale',
-  //       link: '/launchpad/create-sale',
-  //     },
-  //   ],
-  //   sublinks: ['/launchpad/pools', '/launchpad/create-sale'],
-  // },
+  {
+    id: 2,
+    name: 'Launchpad',
+    extendable: true,
+    icon: <LaunchpadSVG className="fill-dim-text dark:fill-dim-text-dark" />,
+    activeIcon: <LaunchpadSVG className="fill-primary-green" />,
+    subitems: [
+      {
+        id: 1,
+        name: 'Pools',
+        link: '/launchpad/pools',
+      },
+      {
+        id: 2,
+        name: 'Create Sale',
+        link: '/launchpad/create-sale',
+      },
+    ],
+    sublinks: ['/launchpad/pools', '/launchpad/create-sale'],
+  },
   {
     id: 3,
     name: 'Locker',

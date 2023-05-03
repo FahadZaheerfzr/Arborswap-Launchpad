@@ -60,7 +60,7 @@ const dexes = [
 ]
 
 export default function Presale({ setActive, saleType, setSaleObject, token }) {
-    const [currencySelected, setCurrencySelected] = useState(2);
+    const [currencySelected, setCurrencySelected] = useState(1);
     const [tempfixed, setTempFixed] = useState(true)
     const [dex, setDex] = useState(1);
     const [presalePrice, setPresalePrice] = useState();
@@ -79,7 +79,7 @@ export default function Presale({ setActive, saleType, setSaleObject, token }) {
     const [unsoldToken, setUnsoldTokens] = useState("Burn");
     const [requiredToken, setRequiredToken] = useState("0");
     const [lockup, setLockup] = useState();
-    const {account, library} = useEthers();
+    const { account, library } = useEthers();
     const [enoughBalance, setEnoughBalance] = useState(false);
 
     const handleSubmit = () => {
@@ -102,7 +102,7 @@ export default function Presale({ setActive, saleType, setSaleObject, token }) {
             unsoldToken: unsoldToken,
             lockup: lockup,
         }
-        
+
         setSaleObject(presaleObject)
         setActive("Project Details")
     }
@@ -113,7 +113,7 @@ export default function Presale({ setActive, saleType, setSaleObject, token }) {
         const amountRequired = ethers.utils.parseUnits(requiredToken, ethers.BigNumber.from(token.tokenDecimals));
         try {
             const balance = await contract.balanceOf(account);
-            console.log("user",balance.toString())
+            console.log("user", balance.toString())
             if (balance.gt(amountRequired)) {
                 return true
             }
@@ -123,38 +123,46 @@ export default function Presale({ setActive, saleType, setSaleObject, token }) {
             return false
         }
     }
-   
+
     //use effect in which we will set required token if hardcap, softcap, listing price, amount liquidity, presale price changes
     useEffect(() => {
         console.log(token)
-        if(hardCap>0 && softCap>0 && listing>0 && presalePrice>0){
+        if (hardCap > 0 && softCap > 0 && listing > 0 && presalePrice > 0) {
             const hardCapBNB = ethers.utils.parseUnits(hardCap.toString(), 18);
             const presaleRateToken = ethers.BigNumber.from(presalePrice.toString())
             const listingRateToken = ethers.BigNumber.from(listing)
 
             const reqHard = hardCapBNB.mul(presaleRateToken).div(ethers.utils.parseUnits("1", token.tokenDecimals.toString()))
             const reqLP = hardCapBNB.mul(listingRateToken).div(ethers.utils.parseUnits("1", token.tokenDecimals.toString()))
-            const presaleRateBNB = tokenRate(presaleRateToken,"18")
+            const presaleRateBNB = tokenRate(presaleRateToken, "18")
 
             setRequiredToken(reqHard.add(reqLP).toString())
-            console.log(requiredToken)
+            console.log("requiredToken", requiredToken)
             //consolelog if user has enough balance
             //wait till return true from handleCheckBalance
             //if true then set required token
 
-            async function checkBalance() {
-                const check = await handleCheckBalance()
-                if (check){
-                    setEnoughBalance(true)
-                }
-                else{
-                    setEnoughBalance(false)
-                }
-            }
-            checkBalance()
+
         }
     }, [hardCap, softCap, listing, presalePrice])
 
+
+    useEffect(() => {
+        checkBalance()
+    }, [requiredToken])
+
+
+
+    async function checkBalance() {
+        const check = await handleCheckBalance()
+        console.log("check", check)
+        if (check) {
+            setEnoughBalance(true)
+        }
+        else {
+            setEnoughBalance(false)
+        }
+    }
 
     const handleTempFixed = () => {
         setWhiteisting(!whiteisting);
@@ -175,9 +183,9 @@ export default function Presale({ setActive, saleType, setSaleObject, token }) {
             <PreviewHeader heading={"Presale Details"} />
 
             {saleType === "standard" &&
-            <>
-                <Input heading={'Presale Price'} currencies={currencies} currencySelected={currencySelected} changeState={setPresalePrice} />
-            C\</>
+                <>
+                    <Input heading={'Presale Price'} currencies={currencies} currencySelected={currencySelected} changeState={setPresalePrice} />
+                </>
             }
             {
                 saleType === "fairlaunch" &&
@@ -290,11 +298,9 @@ export default function Presale({ setActive, saleType, setSaleObject, token }) {
             {saleType === "standard" &&
                 <div className="flex justify-center mt-7 bg-[#E56060] bg-opacity-[0.08] py-3 rounded-[10px]">
                     <img src="/images/create-sale/warning.svg" alt='warning' />
-                    {!enoughBalance&&
                     <span className='text-[#E56060] font-medium text-sm'>
                         To Create this Sale <span className='font-bold'>{requiredToken} {token.name}</span> is required.
                     </span>
-                    }
                 </div>
             }
 
