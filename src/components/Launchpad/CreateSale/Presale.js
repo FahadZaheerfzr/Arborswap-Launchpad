@@ -107,46 +107,7 @@ export default function Presale({ setActive, saleType, setSaleObject, token }) {
         setActive("Project Details")
     }
 
-    const handleBeforeSubmitFair = async () => {
-        const contract = new Contract(FairLaunch_FACTORYADRESS, ERCAbi, library.getSigner(account));
-        const amount = ethers.constants.MaxUint256;
 
-        try {
-            const approval = await contract.approve(FairLaunch_FACTORYADRESS, amount);
-            await approval.wait();
-
-        } catch (error) {
-            console.log(error)
-            return false
-        }
-        return true
-    }
-    const handleBeforeSubmitPrivate = async () => {
-        const contract = new Contract(Private_FACTORYADRESS, ERCAbi, library.getSigner(account));
-        const amount = ethers.constants.MaxUint256;
-
-        try {
-            const approval = await contract.approve(Private_FACTORYADRESS, amount);
-            await approval.wait();
-        } catch (error) {
-            console.log(error)
-            return false
-        }
-        return true
-    }
-    const handleBeforeSubmitStandard = async () => {
-        const contract = new Contract(Public_FACTORYADRESS, ERCAbi, library.getSigner(account));
-        const amount = ethers.constants.MaxUint256;
-
-        try {
-            const approval = await contract.approve(Public_FACTORYADRESS, amount);
-            await approval.wait();
-        } catch (error) {
-            console.log(error)
-            return false
-        }
-        return true
-    }
     const handleCheckBalance = async () => {
         const contract = new Contract(token.tokenAddress, ERCAbi, library.getSigner(account));
         const amountRequired = ethers.utils.parseUnits(requiredToken, ethers.BigNumber.from(token.tokenDecimals));

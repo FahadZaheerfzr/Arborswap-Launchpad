@@ -12,7 +12,7 @@ export default function PresaleStandard({setUnsoldTokens, setLockup}) {
                     <Input heading={'Liquidity Lockup (days)'} changeState={setLockup} nothing />
                 </div>
                 <div className='md:hidden'>
-                    <Input heading={'Lockup (days)'} nothing />
+                    <Input heading={'Lockup (days)'} changeState={setLockup} nothing />
                 </div>
             </div>
         </div>

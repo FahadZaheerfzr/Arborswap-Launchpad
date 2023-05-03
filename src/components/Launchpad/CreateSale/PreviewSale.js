@@ -3,13 +3,70 @@ import PreviewHeader from '../../Common/PreviewHeader'
 import BackArrowSVG from '../../../svgs/back_arrow';
 import PreviewDetails from '../../Common/PreviewDetails';
 import { formatBigToNum } from '../../../utils/numberFormat'
+import { useState } from 'react';
+import useDeploymentFeeFair from 'hooks/useDeploymentFeeFair';
+import { BigNumber, ethers, utils } from "ethers"
+import { useEthers } from '@usedapp/core';
+import { useEffect } from 'react';
+import { Contract } from 'ethers-multicall';
+import { Public_FACTORYADRESS,ROUTER_ADDRESS,ADMIN_ADDRESS } from 'constants/Address';
+import PublicAbi from '../../../constants/abi/PublicAbi.json';
 
 
 
 export default function PreviewSale({ token, setActive, saleObject, saleType, saleData }) {
+  const [deploymentFee, setDeploymentFee] = useState(0.0)
+  const {account, chainId, library} = useEthers()
+  const deployFee = useDeploymentFeeFair()
+
+
+  useEffect(() => {
+    async function getFee() {
+      const fee = await deployFee
+      setDeploymentFee(ethers.utils.formatEther(fee))
+    }
+    getFee()
+  }, [deployFee])
+
+  const handleDeploySale = async () => {
+    const signer = library.getSigner(account)
+    const contract = new Contract(
+      Public_FACTORYADRESS,
+      PublicAbi,
+      signer
+    )
+    const routerAddress = ROUTER_ADDRESS
+    const adminAddress = ADMIN_ADDRESS
+    console.log(contract)
+    // 2nd - with uints [minParticipation, maxParticipation, lp%, dex listing rate,lpLockPeriod, saleEnd, saleStart, hardCap(tokens), softCap(bnb)]
+    try {
+      const tx = await contract.deployNormalSale(
+        [routerAddress, adminAddress, token.tokenAddress, account],
+        [
+          saleObject.minAllocation,
+          saleObject.maxAllocation,
+          saleObject.amountLiquidity,
+          saleObject.listing,
+          saleObject.lockup,
+          saleObject.endDate,
+          saleObject.startDate,
+          saleObject.hardCap,
+          saleObject.softCap
+        ]
+
+      )
+      await tx.wait()
+      console.log("Sale deployed")
+    } catch (error) {
+      console.log(error)
+    }
+  }
 
   const handleSubmit = () => {
-    
+    if (saleType === 'standard') {
+      handleDeploySale()
+
+    }
   }
 
   return (
@@ -23,11 +80,11 @@ export default function PreviewSale({ token, setActive, saleObject, saleType, sa
           </div>
 
           <div className='flex items-center mt-2'>
-            {token.tags.map((tag) => (
+            {/* {token.tags?.map((tag) => (
               <div key={tag.id} className='bg-[#F5F1EB] dark:bg-dark-3 mr-[6px] py-[2px] px-[10px] rounded text-xs text-gray dark:text-gray-dark font-medium'>
                 {tag.name}
               </div>
-            ))}
+            ))} */}
           </div>
         </div>
       </div>
