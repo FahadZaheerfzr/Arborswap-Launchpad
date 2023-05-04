@@ -20,6 +20,7 @@ import ERCAbi from '../../../constants/abi/ERC20.json';
 import FairAbi from '../../../constants/abi/FairAbi.json';
 import PrivateAbi from '../../../constants/abi/PrivateAbi.json';
 import PublicAbi from '../../../constants/abi/PublicAbi.json';
+import { parseEther, parseUnits } from 'ethers/lib/utils';
 
 const currencies = [
     {
@@ -82,7 +83,35 @@ export default function Presale({ setActive, saleType, setSaleObject, token }) {
     const { account, library } = useEthers();
     const [enoughBalance, setEnoughBalance] = useState(false);
 
-    const handleSubmit = () => {
+    const handleBeforeSubmit = async () => {
+        const factoryContractAddress = Public_FACTORYADRESS
+        const contract = new Contract(
+          token.tokenAddress,
+          ERCAbi,
+          library.getSigner()
+        )
+    
+        const amount = ethers.constants.MaxUint256
+        console.log(`amount`, amount)
+    
+        try {
+          const approval = await contract.approve(factoryContractAddress, amount)
+    
+          await approval.wait()
+        } catch (error) {
+          console.log(error)
+          return false
+        }
+        return true
+      }
+
+    const handleSubmit = async () => {
+        const res = await handleBeforeSubmit();
+
+        if (!res) {
+            return
+        }
+
         const presaleObject = {
             currency: currencies[currencySelected - 1],
             dex: dexes[dex - 1],
@@ -102,7 +131,7 @@ export default function Presale({ setActive, saleType, setSaleObject, token }) {
             unsoldToken: unsoldToken,
             lockup: lockup,
         }
-
+        console.log(presaleObject)
         setSaleObject(presaleObject)
         setActive("Project Details")
     }
@@ -141,8 +170,6 @@ export default function Presale({ setActive, saleType, setSaleObject, token }) {
             //consolelog if user has enough balance
             //wait till return true from handleCheckBalance
             //if true then set required token
-
-
         }
     }, [hardCap, softCap, listing, presalePrice])
 

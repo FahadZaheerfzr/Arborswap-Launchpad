@@ -38,25 +38,23 @@ export default function PreviewSale({ token, setActive, saleObject, saleType, sa
     const routerAddress = ROUTER_ADDRESS
     const adminAddress = ADMIN_ADDRESS
     console.log(contract)
-    const startTime = Math.floor(new Date(saleObject.startDate).getTime() / 1000);
-    const endTime = Math.floor(new Date(saleObject.endDate).getTime() / 1000)
     // 2nd - with uints [minParticipation, maxParticipation, lp%, dex listing rate,lpLockPeriod, saleEnd, saleStart, hardCap(tokens), softCap(bnb)]
+    
     try {
       const tx = await contract.deployNormalSale(
-        [routerAddress, adminAddress, token.tokenAddress, account],
-        [
-          parseEther(Number(saleObject.minAllocation)).toString(),
-          parseEther(Number(saleObject.maxAllocation)).toString(),
-          parseEther(Number(saleObject.softCap)).toString(),
-          parseEther(Number(saleObject.hardCap)).toString(),
-          parseUnits(Number(saleObject.presalePrice), saleData.tokenDecimals).toString(),
-          parseUnits(Number(saleObject.listing), saleData.tokenDecimals).toString(),
-
-          (Number(saleObject.amountLiquidity)*100).toString(),
-          (Number(saleObject.lockup) * 86400).toString(),
-          endTime,
-          startTime,
-        ],
+          [routerAddress,adminAddress,token.tokenAddress,account],
+          [
+            parseEther(saleObject.minAllocation.toString()).toString(),
+            parseEther(saleObject.maxAllocation.toString()).toString(),
+            (saleObject.amountLiquidity * 100).toString(),
+            parseUnits(saleObject.listing.toString(),token.tokenDecimals).toString(),
+            (saleObject.lockup * 86400).toString(),
+            parseUnits(saleObject.presalePrice.toString(),token.tokenDecimals).toString(),
+            saleObject.endDate,
+            saleObject.startDate,
+            parseEther(saleObject.hardCap.toString()).toString(),
+            parseEther(saleObject.softCap.toString()).toString()
+          ],
         { value: utils.parseEther(deploymentFee) }
       )
       await tx.wait()
