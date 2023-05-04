@@ -4,7 +4,7 @@ import BackArrowSVG from '../../../svgs/back_arrow';
 import PreviewDetails from '../../Common/PreviewDetails';
 import { formatBigToNum } from '../../../utils/numberFormat'
 import { useState } from 'react';
-import useDeploymentFeeFair from 'hooks/useDeploymentFeeFair';
+import useDeploymentFeePublic from 'hooks/useDeploymentFeePublic';
 import { BigNumber, ethers, utils } from "ethers"
 import { useEthers } from '@usedapp/core';
 import { useEffect } from 'react';
@@ -17,7 +17,7 @@ import { parseEther,  parseUnits} from 'ethers/lib/utils';
 export default function PreviewSale({ token, setActive, saleObject, saleType, saleData }) {
   const [deploymentFee, setDeploymentFee] = useState(0.0)
   const {account, chainId, library} = useEthers()
-  const deployFee = useDeploymentFeeFair()
+  const deployFee = useDeploymentFeePublic()
 
   console.log(saleObject)
 
