@@ -70,7 +70,6 @@ export const deployPublicSale = async (token, saleObject, library, account, depl
         whiteisting: saleObject.whiteisting,
       }
 
-      console.log(finalSaleObject)
       return finalSaleObject
     } catch (error) {
       console.log(error)

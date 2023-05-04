@@ -9,6 +9,8 @@ import { ethers } from "ethers"
 import { useEthers } from '@usedapp/core';
 import { useEffect } from 'react';
 import { deployPublicSale } from 'utils/deploySale';
+import axios from 'axios';
+import {BACKEND_URL} from 'config/constants/LaunchpadAddress'
 
 
 export default function PreviewSale({ token, setActive, saleObject, saleType, saleData }) {
@@ -20,22 +22,36 @@ export default function PreviewSale({ token, setActive, saleObject, saleType, sa
 
 
   useEffect(() => {
+    console.log(startTime)
+  }, [startTime])
+
+
+  useEffect(() => {
     async function getFee() {
       const fee = deployFee;
       setDeploymentFee(ethers.utils.formatEther(fee))
     }
 
-    setStartTime(new Date(saleObject.startTime*1000))
-    setEndTime(new Date(saleObject.endTime*1000))
+    setStartTime(new Date(saleObject.startDate*1000))
+    setEndTime(new Date(saleObject.endDate*1000))
     getFee()
   }, [deployFee])
 
   
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     if (saleType === 'standard') {
-      const [finalSaleObject] = deployPublicSale(token, saleObject, library, account, deploymentFee, saleData);
+      const finalSaleObject = await deployPublicSale(token, saleObject, library, account, deploymentFee, saleData);
 
+      
+      console.log(finalSaleObject)
+
+      console.log("Calling API")
+      const res = await axios.post(`${BACKEND_URL}/api/sale`, {
+        sale: finalSaleObject,
+      })
+
+      console.log(res)
     }
   }
 
@@ -111,11 +127,11 @@ export default function PreviewSale({ token, setActive, saleObject, saleType, sa
 
       <PreviewHeader heading={"Time Details"} />
       {startTime &&
-      <PreviewDetails name={"Presale Start Date"} value={startTime} />
+      <PreviewDetails name={"Presale Start Date"} value={startTime.toUTCString()} />
       }
 
       {endTime &&
-      <PreviewDetails name={"Presale End Date"} value={endTime} />
+      <PreviewDetails name={"Presale End Date"} value={endTime.toUTCString()} />
       }
       {saleType !== "private" &&
       <div>
