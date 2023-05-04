@@ -35,9 +35,7 @@ export default function PreviewSale({ token, setActive, saleObject, saleType, sa
   const handleSubmit = () => {
     if (saleType === 'standard') {
       const [finalSaleObject] = deployPublicSale(token, saleObject, library, account, deploymentFee, saleData);
-      
 
-      
     }
   }
 

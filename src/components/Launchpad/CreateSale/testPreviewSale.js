@@ -16,11 +16,11 @@ import {
   ADMIN_ADDRESS,
   Private_FACTORYADRESS,
   FairLaunch_FACTORYADRESS,
-} from "constants/Address";
-import PublicAbi from "../../../constants/abi/PublicAbi.json";
+} from "config/constants/LaunchpadAddress";
+import PublicAbi from "../../../config/abi/PublicLaunchpadAbi.json";
 import PrivateAbi from "../../../constants/abi/PrivateAbi.json";
 import FairAbi from "../../../constants/abi/FairAbi.json";
-import ERCAbi from "../../../constants/abi/ERC20.json";
+import ERCAbi from "../../../config/abi/ERC20.json";
 import { Contract } from "@ethersproject/contracts";
 import { parseEther, parseUnits } from "ethers/lib/utils";
 

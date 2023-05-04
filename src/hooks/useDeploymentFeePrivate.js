@@ -1,7 +1,7 @@
 import { Contract } from "ethers";
 import PrivateAbi from "../constants/abi/PrivateAbi.json";
 import { useCall} from "@usedapp/core";
-import { Private_FACTORYADRESS} from "constants/Address";
+import { Private_FACTORYADRESS} from "config/constants/LaunchpadAddress";
 
 function useDeploymentFeePrivate() {
     const { value, error } =

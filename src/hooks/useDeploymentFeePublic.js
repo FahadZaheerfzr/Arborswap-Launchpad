@@ -1,7 +1,7 @@
 import { Contract } from "ethers";
-import PublicAbi from '../constants/abi/PublicAbi.json';
+import PublicAbi from '../config/abi/PublicLaunchpadAbi.json';
 import { useCall } from "@usedapp/core";
-import {Public_FACTORYADRESS } from "constants/Address";
+import {Public_FACTORYADRESS } from "config/constants/LaunchpadAddress";
 
 function useDeploymentFeePublic() {
     const { value, error } =

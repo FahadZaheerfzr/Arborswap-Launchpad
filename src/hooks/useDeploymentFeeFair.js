@@ -1,7 +1,7 @@
 import { Contract } from "ethers";
 import FairAbi from "../constants/abi/FairAbi.json";
 import { useCall} from "@usedapp/core";
-import { FairLaunch_FACTORYADRESS} from "constants/Address";
+import { FairLaunch_FACTORYADRESS} from "config/constants/LaunchpadAddress";
 
 function useDeploymentFeeFair() {
     const { value, error } =

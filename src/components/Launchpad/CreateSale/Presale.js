@@ -14,8 +14,8 @@ import PresalePrivate from './Subcomponents/PresalePrivate';
 import { ethers } from 'ethers';
 import { useEthers } from '@usedapp/core';
 import { Contract } from 'ethers';
-import ERCAbi from '../../../constants/abi/ERC20.json';
-import { Public_FACTORYADRESS } from 'constants/Address';
+import ERCAbi from '../../../config/abi/ERC20.json';
+import { Public_FACTORYADRESS } from 'config/constants/LaunchpadAddress';
 
 const currencies = [
     {
