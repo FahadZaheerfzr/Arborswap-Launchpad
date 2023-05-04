@@ -4,70 +4,40 @@ import BackArrowSVG from '../../../svgs/back_arrow';
 import PreviewDetails from '../../Common/PreviewDetails';
 import { formatBigToNum } from '../../../utils/numberFormat'
 import { useState } from 'react';
-import useDeploymentFeeFair from 'hooks/useDeploymentFeeFair';
-import { BigNumber, ethers, utils } from "ethers"
+import useDeploymentFeePublic from 'hooks/useDeploymentFeePublic';
+import { ethers } from "ethers"
 import { useEthers } from '@usedapp/core';
 import { useEffect } from 'react';
-import { Public_FACTORYADRESS,ROUTER_ADDRESS,ADMIN_ADDRESS } from 'constants/Address';
-import PublicAbi from '../../../constants/abi/PublicAbi.json';
-import { Contract } from "@ethersproject/contracts"
-import { parseEther,  parseUnits} from 'ethers/lib/utils';
+import { deployPublicSale } from 'utils/deploySale';
 
 
 export default function PreviewSale({ token, setActive, saleObject, saleType, saleData }) {
   const [deploymentFee, setDeploymentFee] = useState(0.0)
-  const {account, chainId, library} = useEthers()
-  const deployFee = useDeploymentFeeFair()
+  const {account, library} = useEthers()
+  const deployFee = useDeploymentFeePublic()
+  const [startTime, setStartTime] = useState(null)
+  const [endTime, setEndTime] = useState(null)
 
-  console.log(saleObject)
 
   useEffect(() => {
     async function getFee() {
       const fee = deployFee;
       setDeploymentFee(ethers.utils.formatEther(fee))
     }
+
+    setStartTime(new Date(saleObject.startTime*1000))
+    setEndTime(new Date(saleObject.endTime*1000))
     getFee()
   }, [deployFee])
 
-  const handleDeploySale = async () => {
-    const contract = new Contract(
-      Public_FACTORYADRESS,
-      PublicAbi,
-      library.getSigner()
-    )
-    const routerAddress = ROUTER_ADDRESS
-    const adminAddress = ADMIN_ADDRESS
-    console.log(contract)
-    // 2nd - with uints [minParticipation, maxParticipation, lp%, dex listing rate,lpLockPeriod, saleEnd, saleStart, hardCap(tokens), softCap(bnb)]
-    
-    try {
-      const tx = await contract.deployNormalSale(
-          [routerAddress,adminAddress,token.tokenAddress,account],
-          [
-            parseEther(saleObject.minAllocation.toString()).toString(),
-            parseEther(saleObject.maxAllocation.toString()).toString(),
-            (saleObject.amountLiquidity * 100).toString(),
-            parseUnits(saleObject.listing.toString(),token.tokenDecimals).toString(),
-            (saleObject.lockup * 86400).toString(),
-            parseUnits(saleObject.presalePrice.toString(),token.tokenDecimals).toString(),
-            saleObject.endDate,
-            saleObject.startDate,
-            parseEther(saleObject.hardCap.toString()).toString(),
-            parseEther(saleObject.softCap.toString()).toString()
-          ],
-        { value: utils.parseEther(deploymentFee) }
-      )
-      await tx.wait()
-      console.log("Sale deployed")
-    } catch (error) {
-      console.log(error)
-    }
-  }
+  
 
   const handleSubmit = () => {
     if (saleType === 'standard') {
-      handleDeploySale()
+      const [finalSaleObject] = deployPublicSale(token, saleObject, library, account, deploymentFee, saleData);
+      
 
+      
     }
   }
 
@@ -142,10 +112,13 @@ export default function PreviewSale({ token, setActive, saleObject, saleType, sa
       }
 
       <PreviewHeader heading={"Time Details"} />
+      {startTime &&
+      <PreviewDetails name={"Presale Start Date"} value={startTime} />
+      }
 
-      <PreviewDetails name={"Presale Start Date"} value={saleObject.startDate} />
-      <PreviewDetails name={"Presale End Date"} value={saleObject.endDate} />
-
+      {endTime &&
+      <PreviewDetails name={"Presale End Date"} value={endTime} />
+      }
       {saleType !== "private" &&
       <div>
       <PreviewHeader heading={"More Details"} />

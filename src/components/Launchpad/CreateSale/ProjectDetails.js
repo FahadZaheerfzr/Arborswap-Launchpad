@@ -2,7 +2,6 @@ import React, { useState, useContext } from "react";
 import TwitterSVG from "../../../svgs/Socials/twitter";
 import DribbleSVG from "../../../svgs/Socials/dribble";
 import HeadingTags from "../../TokenLocker/Subcomponents/HeadingTags";
-import UploadImageFlex from "../../Common/UploadImageFlex";
 import BackArrowSVG from "../../../svgs/back_arrow";
 import LinkedinSVG from "../../../svgs/Socials/linkedin";
 import { ThemeContext } from "../../../context/ThemeContext/ThemeProvider";
@@ -15,14 +14,7 @@ export default function ProjectDetails({
   setSaleData,
   saleData,
 }) {
-  const [profileImage, setProfileImage] = useState(null);
   const { theme } = useContext(ThemeContext);
-  const [description, setDescription] = useState("");
-  const [tags, setTags] = useState("");
-  const [twitter, setTwitter] = useState("");
-  const [website, setWebsite] = useState("");
-  const [linkedin, setLinkedin] = useState("");
-  const [github, setGithub] = useState("");
   const [validWebsite, setValidWebsite] = useState(true);
   const [validTwitter, setValidTwitter] = useState(true);
   const [validLinkedin, setValidLinkedin] = useState(true);
