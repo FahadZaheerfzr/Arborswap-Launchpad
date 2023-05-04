@@ -160,7 +160,7 @@ export default function PreviewSale({
     const endTime = Math.floor(new Date(saleObject.endDate).getTime() / 1000);
 
     try {
-      tx = await contract.deployNormalPrivateSale(
+      const tx = await contract.deployNormalPrivateSale(
         [adminAddress, account],
         [
           parseEther(Number(saleObject.minAllocation)).toString(),
