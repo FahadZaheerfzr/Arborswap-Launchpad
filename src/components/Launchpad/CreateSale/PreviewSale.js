@@ -105,7 +105,6 @@ export default function PreviewSale({ token, setActive, saleObject, saleType, sa
 
       {saleType === "fairlaunch" &&
         <PreviewDetails name={"Amount to be sold"} value={"100,000,000 SXP"} />
-
       }
 
       {saleType === "standard" &&
