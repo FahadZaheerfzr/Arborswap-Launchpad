@@ -15,7 +15,8 @@ import { ethers } from 'ethers';
 import { useEthers } from '@usedapp/core';
 import { Contract } from 'ethers';
 import ERCAbi from '../../../config/abi/ERC20.json';
-import { Public_FACTORYADRESS } from 'config/constants/LaunchpadAddress';
+import { approveTokens } from 'utils/deploySale';
+import { Public_FACTORYADRESS, Private_FACTORYADRESS } from 'config/constants/LaunchpadAddress';
 
 const currencies = [
     {
@@ -78,30 +79,17 @@ export default function Presale({ setActive, saleType, setSaleObject, token }) {
     const { account, library } = useEthers();
     const [enoughBalance, setEnoughBalance] = useState(false);
 
-    const handleBeforeSubmit = async () => {
-        const factoryContractAddress = Public_FACTORYADRESS
-        const contract = new Contract(
-          token.tokenAddress,
-          ERCAbi,
-          library.getSigner()
-        )
     
-        const amount = ethers.constants.MaxUint256
-        console.log(`amount`, amount)
-    
-        try {
-          const approval = await contract.approve(factoryContractAddress, amount)
-    
-          await approval.wait()
-        } catch (error) {
-          console.log(error)
-          return false
-        }
-        return true
-      }
 
     const handleSubmit = async () => {
-        const res = await handleBeforeSubmit();
+        let res = false;
+        if(saleType === "standard") {
+        res = await approveTokens(library, token, Public_FACTORYADRESS);
+        }
+        else if (saleType === "private") {
+        res = await approveTokens(library, token, Private_FACTORYADRESS);
+        }
+
 
         if (!res) {
             return

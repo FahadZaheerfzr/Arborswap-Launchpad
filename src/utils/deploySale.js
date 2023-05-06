@@ -1,8 +1,32 @@
 import { Contract } from "@ethersproject/contracts"
 import PublicAbi from '../config/abi/PublicLaunchpadAbi.json';
-import { Public_FACTORYADRESS,ROUTER_ADDRESS,ADMIN_ADDRESS } from 'config/constants/LaunchpadAddress';
+import PrivateAbi from '../config/abi/PrivateLaunchpadAbi.json';
+import { Public_FACTORYADRESS,ROUTER_ADDRESS,ADMIN_ADDRESS, Private_FACTORYADRESS } from 'config/constants/LaunchpadAddress';
 import { parseEther,  parseUnits} from 'ethers/lib/utils';
-import { utils } from "ethers"
+import { ethers, utils } from "ethers"
+import ERCAbi from '../config/abi/ERC20.json';
+
+export const approveTokens = async (library, token, factoryContractAddress) => {
+  const contract = new Contract(
+    token.tokenAddress,
+    ERCAbi,
+    library.getSigner()
+  )
+
+  const amount = ethers.constants.MaxUint256
+  console.log(`amount`, amount)
+
+  try {
+    console.log(`factoryContractAddress`, factoryContractAddress);
+    const approval = await contract.approve(factoryContractAddress, amount)
+
+    await approval.wait()
+  } catch (error) {
+    console.log(error)
+    return false
+  }
+  return true
+}
 
 
 export const deployPublicSale = async (token, saleObject, library, account, deploymentFee, saleData) => {
@@ -75,3 +99,64 @@ export const deployPublicSale = async (token, saleObject, library, account, depl
       console.log(error)
     }
   }
+
+
+export const deployPrivateSale = async (token, saleObject, library, account, deploymentFee, saleData) => {
+    const contract = new Contract(
+      Private_FACTORYADRESS,
+      PrivateAbi,
+      library.getSigner()
+    );
+    const adminAddress = ADMIN_ADDRESS;
+
+
+    const saleId = await contract.getNumberOfSalesDeployed()
+
+    try {
+      const tx = await contract.deployNormalPrivateSale(
+        [adminAddress, account],
+        [
+          parseEther(Number(saleObject.minAllocation).toString()).toString(),
+          parseEther(Number(saleObject.maxAllocation).toString()).toString(),
+          saleObject.endDate,
+          saleObject.startDate,
+          parseEther(Number(saleObject.hardCap).toString()).toString(),
+          parseEther(Number(saleObject.softCap).toString()).toString(),
+        ],
+        { value: utils.parseEther(deploymentFee) }
+      );
+      await tx.wait();
+      console.log("Sale deployed");
+
+      const deployedAddress = await contract.saleIdToAddress(saleId.toNumber())
+
+      const finalSaleObject ={
+        saleId: saleId.toNumber(),
+        saleAddress: deployedAddress,
+        saleType: saleData.type,
+        github: saleData.github,
+        website: saleData.website,
+        twitter: saleData.twitter,
+        linkedin: saleData.linkedin,
+        image: saleData.image,
+        name: saleData.name,
+        description: saleData.description,
+        tags: saleData.tags,
+        token: token,
+        firstRelease: saleObject.firstRelease,
+        minAllocation: parseEther(Number(saleObject.minAllocation).toString()).toString(),        
+        maxAllocation: parseEther(Number(saleObject.maxAllocation).toString()).toString(),       
+        endDate: saleObject.endDate,
+        startDate: saleObject.startDate,
+        hardCap: parseEther(Number(saleObject.hardCap).toString()).toString(),
+        softCap: parseEther(Number(saleObject.softCap).toString()).toString(),
+        currency: saleObject.currency,
+        dex: saleObject.dex,
+        whiteisting: saleObject.whiteisting,
+      }
+
+      return finalSaleObject
+    } catch (error) {
+      console.log(error);
+    }
+  };

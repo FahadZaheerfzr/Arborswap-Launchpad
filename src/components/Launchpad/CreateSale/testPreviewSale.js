@@ -146,38 +146,7 @@ export default function PreviewSale({
     }
   };
 
-  const handleDeployPrivateSale = async () => {
-    const contract = new Contract(
-      Private_FACTORYADRESS,
-      PrivateAbi,
-      library.getSigner()
-    );
-    const adminAddress = ADMIN_ADDRESS;
-
-    const startTime = Math.floor(
-      new Date(saleObject.startDate).getTime() / 1000
-    );
-    const endTime = Math.floor(new Date(saleObject.endDate).getTime() / 1000);
-
-    try {
-      const tx = await contract.deployNormalPrivateSale(
-        [adminAddress, account],
-        [
-          parseEther(Number(saleObject.minAllocation)).toString(),
-          parseEther(Number(saleObject.maxAllocation)).toString(),
-          startTime,
-          endTime,
-          parseEther(Number(saleObject.softCap)).toString(),
-          parseEther(Number(saleObject.hardCap)).toString(),
-        ],
-        { value: utils.parseEther(deploymentFee) }
-      );
-      await tx.wait();
-      console.log("Sale deployed");
-    } catch (error) {
-      console.log(error);
-    }
-  };
+  
 
   const handleSubmit = () => {
     handleBeforeSubmit();
@@ -188,7 +157,7 @@ export default function PreviewSale({
       handleDeployFairSale();
     }
     if (saleType === "private") {
-      handleDeployPrivateSale();
+//      handleDeployPrivateSale();
     }
   };
 

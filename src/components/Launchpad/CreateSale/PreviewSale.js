@@ -8,7 +8,7 @@ import useDeploymentFeePublic from 'hooks/useDeploymentFeePublic';
 import { ethers } from "ethers"
 import { useEthers } from '@usedapp/core';
 import { useEffect } from 'react';
-import { deployPublicSale } from 'utils/deploySale';
+import { deployPrivateSale, deployPublicSale } from 'utils/deploySale';
 import axios from 'axios';
 import {BACKEND_URL} from 'config/constants/LaunchpadAddress'
 
@@ -42,16 +42,15 @@ export default function PreviewSale({ token, setActive, saleObject, saleType, sa
   const handleSubmit = async () => {
     if (saleType === 'standard') {
       const finalSaleObject = await deployPublicSale(token, saleObject, library, account, deploymentFee, saleData);
-
-      
-      console.log(finalSaleObject)
-
-      console.log("Calling API")
-      const res = await axios.post(`${BACKEND_URL}/api/sale`, {
+      await axios.post(`${BACKEND_URL}/api/sale`, {
         sale: finalSaleObject,
       })
-
-      console.log(res)
+    }
+    else if (saleType === 'private'){
+      const finalSaleObject = await deployPrivateSale(token, saleObject, library, account, deploymentFee, saleData);
+      await axios.post(`${BACKEND_URL}/api/sale`, {
+        sale: finalSaleObject,
+      })
     }
   }
 
