@@ -8,7 +8,8 @@ import useDeploymentFeePublic from 'hooks/useDeploymentFeePublic';
 import { ethers } from "ethers"
 import { useEthers } from '@usedapp/core';
 import { useEffect } from 'react';
-import { deployPrivateSale, deployPublicSale } from 'utils/deploySale';
+import { useModal } from "react-simple-modal-provider";
+import { deployPrivateSale, deployPublicSale, deployFairLaunchSale,deployPublicSaleERC,deployFairLaunchSaleERC20,deployPrivateErSale } from 'utils/deploySale';
 import axios from 'axios';
 import {BACKEND_URL} from 'config/constants/LaunchpadAddress'
 
@@ -19,13 +20,16 @@ export default function PreviewSale({ token, setActive, saleObject, saleType, sa
   const deployFee = useDeploymentFeePublic()
   const [startTime, setStartTime] = useState(null)
   const [endTime, setEndTime] = useState(null)
+  
+  const { open: openLoadingModal, close: closeLoadingModal } =
+  useModal("LoadingModal");
 
 
   useEffect(() => {
     console.log(startTime)
   }, [startTime])
 
-
+  console.log(saleObject)
   useEffect(() => {
     async function getFee() {
       const fee = deployFee;
@@ -37,21 +41,53 @@ export default function PreviewSale({ token, setActive, saleObject, saleType, sa
     getFee()
   }, [deployFee])
 
-  
+  console.log("The name of the token is: ", saleObject.currency.name)
 
   const handleSubmit = async () => {
+    openLoadingModal()
     if (saleType === 'standard') {
-      const finalSaleObject = await deployPublicSale(token, saleObject, library, account, deploymentFee, saleData);
+      let finalSaleObject;
+      if(saleObject.currency.name === 'Binance') {
+      finalSaleObject = await deployPublicSale(token, saleObject, library, account, deploymentFee, saleData);
+      }
+      else {
+        finalSaleObject = await deployPublicSaleERC(token, saleObject, library, account, deploymentFee, saleData);
+      }
       await axios.post(`${BACKEND_URL}/api/sale`, {
         sale: finalSaleObject,
-      })
+      }, {
+        withCredentials: true,
+      });
     }
     else if (saleType === 'private'){
-      const finalSaleObject = await deployPrivateSale(token, saleObject, library, account, deploymentFee, saleData);
+      let finalSaleObject;
+      if (saleObject.currency.name === 'Binance') {
+      finalSaleObject = await deployPrivateSale(token, saleObject, library, account, deploymentFee, saleData);
+      }
+      else {
+        finalSaleObject = await deployPrivateErSale(token, saleObject, library, account, deploymentFee, saleData);
+      }
       await axios.post(`${BACKEND_URL}/api/sale`, {
         sale: finalSaleObject,
-      })
+      }, {
+        withCredentials: true,
+      });
     }
+    else if (saleType === 'fairlaunch') {
+      let finalSaleObject;
+      if (saleObject.currency.name === 'Binance') {
+      finalSaleObject = await deployFairLaunchSale(token, saleObject, library, account, deploymentFee, saleData);
+      }
+      else {
+        finalSaleObject = await deployFairLaunchSaleERC20(token, saleObject, library, account, deploymentFee, saleData);
+      }
+      await axios.post(`${BACKEND_URL}/api/sale`, {
+        sale: finalSaleObject,
+      }, {
+        withCredentials: true,
+      });
+    }
+    closeLoadingModal()
   }
 
   return (
