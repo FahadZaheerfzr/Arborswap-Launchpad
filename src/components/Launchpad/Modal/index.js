@@ -1,10 +1,73 @@
 import React from 'react'
 import ModalField from './ModalField'
+import { useEffect,useState } from 'react'
+import { Contract } from 'ethers'
+import { useEthers } from '@usedapp/core'
+import ERCAbi from '../../../config/abi/ERC20.json'
+import SaleAbi from '../../../config/abi/Sale.json'
+import { formatBigToNum } from 'utils/numberFormat'
+import { parseEther } from 'ethers/lib/utils'
 
-export default function Modal({ showModal, from_symbol, from_icon, to_icon, to_symbol }) {
+export default function Modal({ showModal, from_symbol, from_icon, to_icon, to_symbol,token,sale }) {
+  const [amount, setAmount] = useState(0)
+  //get user balance
+  const { account,library } = useEthers()
+  const [balance, setBalance] = useState(0)
 
-  const handleSubmit = () => {
+  useEffect(() => {
+    if (account) {
+      const contract = new Contract(
+        token.tokenAddress,
+        ERCAbi,
+        library.getSigner(account)
+      )
+      contract.balanceOf(account).then((res) => {
+        setBalance(formatBigToNum(res).replace(/,/g, ''))
+      })
+    }
+  }, [account])
+  
+  const handleSubmit = async () => {
+    console.log("The amount is", amount.toString())
+    //user balance
+    console.log("The balance is", balance)
+    console.log(parseEther(amount.toString()).lt(parseEther(balance.toString())))
+    if (parseEther(amount.toString()).gt(parseEther(balance.toString()))) {
+      alert("Insufficient Balance")
+      return
+    }
+    const saleContractAddress = sale.saleAddress
+    console.log("The sale contract address is", saleContractAddress)
+    const contract = new Contract(
+      saleContractAddress,
+      SaleAbi,
+      library.getSigner(account)
+    )
+    const amountBuy = parseEther(amount.toString()).toString()
+    console.log("The amount to buy is", amountBuy)
+    try {
+      const tx = await contract.participate("0",{
+        value: amountBuy
+      })
+      await tx.wait()
+      alert("Transaction Successful")
+    } catch (err) {
+      console.log(err)
+      alert("Transaction Failed")
+    }
+
     showModal(false)
+  }
+  const handleMax = () => {
+    console.log("The balance is", balance)
+    //balance to number everything after , is not removed
+
+    const amt = parseFloat(balance.replace(/,/g, ''))
+    setAmount(amt)
+  }
+  const handleHalf = () => {
+    const amt = parseFloat(balance.replace(/,/g, ''))
+    setAmount(amt / 2)
   }
 
   return (
@@ -33,27 +96,30 @@ export default function Modal({ showModal, from_symbol, from_icon, to_icon, to_s
             <span className='font-medium text-sm text-dim-text dark:text-dim-text-dark'>
               Balance:
               <span className='text-dark-text dark:text-light-text'>
-                140,114
+                {balance}
               </span>
             </span>
           </div>
         </div>
         <div className='mt-[10px] flex justify-between items-center rounded-md bg-[#F5F1EB] dark:bg-dark-3 px-5 py-5'>
           <div className='flex flex-col'>
-            <span className='font-bold text-xl text-dark-text dark:text-light-text'>
-              138,417
-            </span>
+            <input className='bg-transparent outline-none text-sm font-medium text-dark-text dark:text-light-text' type="number" placeholder="0.0" onChange={(e) => setAmount(Number(e.target.value))} value={amount} />
+
             <span className='mt-3 text-sm font-medium text-gray dark:text-gray-dark'>
               ~ $108,070
             </span>
           </div>
 
           <div className='border-l border-dashed pl-5 border-dim-text dark:border-dim-text-dark '>
-            <div className="rounded-sm bg-[#C29D46] bg-opacity-[0.08] py-[2px] px-4 text-[#C89211] text-sm">
+            <button
+            onClick={handleHalf}
+            className="rounded-sm bg-[#C29D46] bg-opacity-[0.08] py-[2px] px-4 text-[#C89211] text-sm onhover:cursor-pointer">
               Half
-            </div>
+            </button>
 
-            <div className="mt-3 rounded-sm bg-primary-green bg-opacity-[0.08] py-[2px] px-4 text-primary-green text-sm">
+            <div
+            onClick={handleMax}
+            className="mt-3 rounded-sm bg-primary-green bg-opacity-[0.08] py-[2px] px-4 text-primary-green text-sm">
               Max
             </div>
           </div>

@@ -20,13 +20,11 @@ export default function Info({ icon, name, is_private, tags }) {
           </div>
 
           <div className="flex items-center mt-2">
-            {tags.map((tag) => (
-              <div
-                key={tag.id}
-                className="bg-[#F5F1EB] dark:bg-dark-3 mr-[6px] py-[2px] px-[10px] rounded text-xs text-gray dark:text-gray-dark font-medium"
-              >
-                {tag.name}
-              </div>
+            {/* tags are not array, its a string, we have to divide by space*/}
+            {tags.split(' ').map((tag) => (
+              <span className="text-[10px] font-bold bg-[#F6E05E] dark:bg-[#B86363] py-[2px] px-2 text-white rounded-[10px] mr-2">
+                {tag}
+              </span>
             ))}
           </div>
         </div>

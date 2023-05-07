@@ -7,9 +7,9 @@ export default function Timer({time}) {
 
     useEffect(() => {
         if(time){
-        const temp_hours = time.split("-")[0];
-        const temp_minutes = time.split("-")[1];
-        const temp_seconds = time.split("-")[2];
+        const temp_hours = time.getHours();
+        const temp_minutes = time.getMinutes();
+        const temp_seconds = time.getSeconds();
 
         setHours(temp_hours);
         setMinutes(temp_minutes);
@@ -46,3 +46,4 @@ export default function Timer({time}) {
     </div>
   )
 }
+

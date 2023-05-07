@@ -96,7 +96,9 @@ export const deployPublicSale = async (token, saleObject, library, account, depl
         currency: saleObject.currency,
         dex: saleObject.dex,
         whiteisting: saleObject.whiteisting,
+        owner: account,
       }
+      console.log("The final sale object is: ", finalSaleObject)
 
       return finalSaleObject
     } catch (error) {
@@ -175,7 +177,9 @@ export const deployPublicSaleERC= async (token, saleObject, library, account, de
         currency: saleObject.currency,
         dex: saleObject.dex,
         whiteisting: saleObject.whiteisting,
+        owner: account,
       }
+      console.log("The final sale object is: ", finalSaleObject)
 
       return finalSaleObject
     } catch (error) {
@@ -237,6 +241,7 @@ export const deployPrivateSale = async (token, saleObject, library, account, dep
         currency: saleObject.currency,
         dex: saleObject.dex,
         whiteisting: saleObject.whiteisting,
+        owner: account,
       }
 
       return finalSaleObject
@@ -305,6 +310,7 @@ export const deployPrivateSale = async (token, saleObject, library, account, dep
         currency: saleObject.currency,
         dex: saleObject.dex,
         whiteisting: saleObject.whiteisting,
+        owner: account,
       }
 
       return finalSaleObject
@@ -366,7 +372,8 @@ export const deployPrivateSale = async (token, saleObject, library, account, dep
         endDate: saleObject.endDate,
         hardCap: parseEther(Number(saleObject.hardCap).toString()).toString(),
         softCap: parseEther(Number(saleObject.softCap).toString()).toString(),
-        currency: saleObject.currency,        
+        currency: saleObject.currency,   
+        owner: account,     
       }
 
       return finalSaleObject
@@ -436,7 +443,8 @@ export const deployPrivateSale = async (token, saleObject, library, account, dep
         endDate: saleObject.endDate,
         hardCap: parseEther(Number(saleObject.hardCap).toString()).toString(),
         softCap: parseEther(Number(saleObject.softCap).toString()).toString(),
-        currency: saleObject.currency,        
+        currency: saleObject.currency,    
+        owner: account,    
       }
 
       return finalSaleObject

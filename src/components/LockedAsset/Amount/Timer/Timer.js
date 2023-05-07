@@ -6,31 +6,20 @@ const Timer = ({ date }) => {
   const [hours, setHours] = useState(0)
   const [minutes, setMinutes] = useState(0)
   const [seconds, setSeconds] = useState(0)
-  let countDownDate = new Date(date)
 
   useEffect(() => {
     var updateTime = setInterval(() => {
-      var now = new Date().getTime()
+      const time = date - Date.parse(new Date())
+      const seconds = Math.floor((time / 1000) % 60)
+      const minutes = Math.floor((time / 1000 / 60) % 60)
+      const hours = Math.floor((time / (1000 * 60 * 60)) % 24)
+      const days = Math.floor(time / (1000 * 60 * 60 * 24))
 
-      var difference = countDownDate - now
-      var newDays = Math.floor(difference / (1000 * 60 * 60 * 24))
-      var newHours = Math.floor((difference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60))
-      var newMinutes = Math.floor((difference % (1000 * 60 * 60)) / (1000 * 60))
-      var newSeconds = Math.floor((difference % (1000 * 60)) / 1000)
-
-      setDays(newDays)
-      setHours(newHours)
-      setMinutes(newMinutes)
-      setSeconds(newSeconds)
-
-      if (difference <= 0) {
-        clearInterval(updateTime)
-        setDays(0)
-        setHours(0)
-        setMinutes(0)
-        setSeconds(0)
-      }
-    })
+      setDays(days)
+      setHours(hours)
+      setMinutes(minutes)
+      setSeconds(seconds)
+    }, 1000)
 
     return () => {
       clearInterval(updateTime)

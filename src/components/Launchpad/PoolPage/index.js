@@ -13,15 +13,16 @@ export default function PoolPageBase({ pool, showModal, admin }) {
           <div className="w-full md:w-[65%] bg-white dark:bg-dark-1 rounded-[10px]">
             <Preview
               name={pool.name}
-              icon={pool.icon}
-              is_private={pool.private}
+              icon={pool.image}
+              is_private={pool.saleType === 'Private'}
               tags={pool.tags}
+              token={pool.token}
               description={pool.description}
-              address={pool.address}
-              starts_on={pool.presale_starts}
-              ends_on={pool.presale_ends}
-              soft_cap={pool.soft_cap}
-              hard_cap={pool.hard_cap}
+              address={pool.saleAddress}
+              starts_on={pool.startDate}
+              ends_on={pool.endDate}
+              soft_cap={pool.softCap}
+              hard_cap={pool.hardCap}
               soft_cap_icon={pool.soft_cap_icon}
               hard_cap_icon={pool.hard_cap_icon}
               first_release={pool.first_release}
@@ -32,20 +33,20 @@ export default function PoolPageBase({ pool, showModal, admin }) {
           <div className="mt-14 md:mt-0 md:w-[35%] ">
 
             {admin ?
-              <AdminPanel icon={pool.hard_cap_icon} status={pool.status} hard_cap={pool.hard_cap} filled_percent={pool.filled_percent}/>
-              : <SaleBox hard_cap={pool.hard_cap} hard_cap_icon={pool.hard_cap_icon}
-                min_allocation={pool.min_allocation} max_allocation={pool.max_allocation} status={pool.status}
-                filled_percent={pool.filled_percent} ends_on={pool.presale_ends} showModal={showModal} />
+              <AdminPanel icon={pool.image} status={pool.saleType} hard_cap={pool.hardCap} filled_percent={pool.filled_percent}/>
+              : <SaleBox hard_cap={pool.hardCap} hard_cap_icon={pool.image}
+                min_allocation={pool.minAllocation} max_allocation={pool.maxAllocation} status={pool.saleType}
+                filled_percent={pool.filled_percent} ends_on={pool.endDate} showModal={showModal} token = {pool.token} />
             }
             {
               admin && pool.status === 'Ended' &&
               <div className='mt-[30px]'>
-                <FundRaised icon={pool.hard_cap_icon} />
+                <FundRaised icon={pool.image} pool = {pool}/>
               </div>
             }
             {pool.sale_type !== 'Private' && !admin &&
               <div className='mt-[30px]'>
-                <UserPanel icon={pool.icon} />
+                <UserPanel icon={pool.image} pool = {pool}/>
               </div>
             }
           </div>

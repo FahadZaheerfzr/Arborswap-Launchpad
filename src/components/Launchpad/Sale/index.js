@@ -1,7 +1,7 @@
 import Timer from 'components/LockedAsset/Amount/Timer/Timer'
 import React from 'react'
 
-export default function SaleBox({ hard_cap, hard_cap_icon, min_allocation, max_allocation, filled_percent, ends_on, showModal, status }) {
+export default function SaleBox({ hard_cap, hard_cap_icon, min_allocation, max_allocation, filled_percent, ends_on, showModal, status,token }) {
 
     return (
         <div className="p-9 bg-white dark:bg-dark-1 rounded-[20px]">
@@ -26,7 +26,7 @@ export default function SaleBox({ hard_cap, hard_cap_icon, min_allocation, max_a
                     Min Allocation
                 </span>
                 <span className='font-bold text-sm text-dark-text dark:text-light-text'>
-                    {min_allocation&& min_allocation.toLocaleString()} RBA
+                    {min_allocation&& min_allocation.toLocaleString()} {token.tokenSymbol}
                 </span>
             </div>
 
@@ -35,7 +35,7 @@ export default function SaleBox({ hard_cap, hard_cap_icon, min_allocation, max_a
                     Max Allocation
                 </span>
                 <span className='font-bold text-sm text-dark-text dark:text-light-text'>
-                    {max_allocation && max_allocation.toLocaleString()} RBA
+                    {max_allocation && max_allocation.toLocaleString()} {token.tokenSymbol}
                 </span>
             </div>
 
@@ -47,7 +47,7 @@ export default function SaleBox({ hard_cap, hard_cap_icon, min_allocation, max_a
             }
 
                 <span className="text-xs  text-dim-text dark:text-dim-text-dark">
-                    {hard_cap} RBA
+                    {hard_cap} {token.tokenSymbol}
                 </span>
             </div>
 
@@ -73,7 +73,7 @@ export default function SaleBox({ hard_cap, hard_cap_icon, min_allocation, max_a
                 </span>
             </div>
             
-            <Timer date={ends_on} />
+            <Timer date={new Date(ends_on)} />
         </div>
     )
 }

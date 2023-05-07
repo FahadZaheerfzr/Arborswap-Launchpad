@@ -20,6 +20,7 @@ export default function Preview({
     icon,
     name,
     is_private,
+    token,
     tags,
     description,
     address,
@@ -33,6 +34,7 @@ export default function Preview({
     vesting_release,
 }) {
     const [slide, setSlide] = useState('Presale')
+    console.log(token)
 
     return (
         <div className="px-9 py-9 my-4">
@@ -61,11 +63,11 @@ export default function Preview({
             }
             {slide === 'Token' &&
                 <div className="mt-5">
-                    <PreviewDetails name={'Token Name'} value={TokkenDetails.TokenName} />
-                    <PreviewDetails name={'Token Symbol'} value={TokkenDetails.TokenSymbol} />
-                    <PreviewDetails name={'Token Decimals'} value={TokkenDetails.TokenDecimals} />
-                    <PreviewDetails name={'Total Supply'} value={TokkenDetails.TotalSupply && TokkenDetails.TotalSupply.toLocaleString()} />
-                    <PreviewDetails name={'Token Address'} value={address} enable_copy />
+                    <PreviewDetails name={'Token Name'} value={token.tokenName} />
+                    <PreviewDetails name={'Token Symbol'} value={token.tokenSymbol} />
+                    <PreviewDetails name={'Token Decimals'} value={token.tokenDecimals} />
+                    <PreviewDetails name={'Total Supply'} value={token.tokenSupply && token.tokenSupply.toLocaleString()} />
+                    <PreviewDetails name={'Token Address'} value={token.tokenAddress} enable_copy />
 
                     <div className='mt-10'>
                         <span className="font-semibold text-dark-text dark:text-light-text">Token Metrics</span>
