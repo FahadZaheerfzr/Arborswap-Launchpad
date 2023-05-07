@@ -1,5 +1,5 @@
+import PreviewDetails from 'components/Common/PreviewDetails'
 import React from 'react'
-import PreviewDetails from '../../../Common/PreviewDetails';
 
 export default function SaleBox({ icon }) {
 

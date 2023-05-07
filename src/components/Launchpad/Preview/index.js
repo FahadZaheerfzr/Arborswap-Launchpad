@@ -1,11 +1,12 @@
 import React, { useState } from 'react'
 import Info from './Subcomponents/Info'
-import PreviewDetails from '../../../Common/PreviewDetails'
-import TwitterSVG from '../../../../svgs/Socials/twitter';
-import DribbleSVG from '../../../../svgs/Socials/dribble';
+
 import TabSwitch from './Subcomponents/TabSwitch';
 import DonutChart from './Subcomponents/DonutChart';
 import Labels from './Subcomponents/Labels';
+import TwitterSVG from 'svgs/Socials/twitter';
+import DribbleSVG from 'svgs/Socials/dribble';
+import PreviewDetails from 'components/Common/PreviewDetails';
 
 const TokkenDetails = {
     TokenName: "Swipe Coin",
@@ -52,8 +53,8 @@ export default function Preview({
                     <PreviewDetails name={'Presale Address'} value={address} enable_copy />
                     <PreviewDetails name={'Presale Starts on'} value={starts_on} />
                     <PreviewDetails name={'Presale Ends on'} value={ends_on} />
-                    <PreviewDetails name={'Soft Cap'} value={soft_cap.toLocaleString()} icon={soft_cap_icon} />
-                    <PreviewDetails name={'Hard Cap'} value={hard_cap.toLocaleString()} icon={hard_cap_icon} />
+                    <PreviewDetails name={'Soft Cap'} value={soft_cap && soft_cap.toLocaleString()} icon={soft_cap_icon} />
+                    <PreviewDetails name={'Hard Cap'} value={hard_cap && hard_cap.toLocaleString()} icon={hard_cap_icon} />
                     <PreviewDetails name={'First Release'} value={first_release} />
                     <PreviewDetails name={'Vesting Release'} value={vesting_release} />
                 </div>
@@ -63,7 +64,7 @@ export default function Preview({
                     <PreviewDetails name={'Token Name'} value={TokkenDetails.TokenName} />
                     <PreviewDetails name={'Token Symbol'} value={TokkenDetails.TokenSymbol} />
                     <PreviewDetails name={'Token Decimals'} value={TokkenDetails.TokenDecimals} />
-                    <PreviewDetails name={'Total Supply'} value={TokkenDetails.TotalSupply.toLocaleString()} />
+                    <PreviewDetails name={'Total Supply'} value={TokkenDetails.TotalSupply && TokkenDetails.TotalSupply.toLocaleString()} />
                     <PreviewDetails name={'Token Address'} value={address} enable_copy />
 
                     <div className='mt-10'>

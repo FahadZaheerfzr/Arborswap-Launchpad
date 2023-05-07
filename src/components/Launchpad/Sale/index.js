@@ -1,5 +1,5 @@
+import Timer from 'components/LockedAsset/Amount/Timer/Timer'
 import React from 'react'
-import Timer from '../../../LockedAsset/Amount/Timer/Timer';
 
 export default function SaleBox({ hard_cap, hard_cap_icon, min_allocation, max_allocation, filled_percent, ends_on, showModal, status }) {
 
@@ -17,7 +17,7 @@ export default function SaleBox({ hard_cap, hard_cap_icon, min_allocation, max_a
                 <img src={hard_cap_icon} alt="hard-cap-currency" className="w-7 h-7" />
 
                 <div className="ml-3">
-                    <span className="text-dark-text dark:text-light-text text-2xl font-bold">{hard_cap.toLocaleString()}</span>
+                    <span className="text-dark-text dark:text-light-text text-2xl font-bold">{hard_cap && hard_cap.toLocaleString()}</span>
                 </div>
             </div>
 
@@ -26,7 +26,7 @@ export default function SaleBox({ hard_cap, hard_cap_icon, min_allocation, max_a
                     Min Allocation
                 </span>
                 <span className='font-bold text-sm text-dark-text dark:text-light-text'>
-                    {min_allocation.toLocaleString()} RBA
+                    {min_allocation&& min_allocation.toLocaleString()} RBA
                 </span>
             </div>
 
@@ -35,14 +35,16 @@ export default function SaleBox({ hard_cap, hard_cap_icon, min_allocation, max_a
                     Max Allocation
                 </span>
                 <span className='font-bold text-sm text-dark-text dark:text-light-text'>
-                    {max_allocation.toLocaleString()} RBA
+                    {max_allocation && max_allocation.toLocaleString()} RBA
                 </span>
             </div>
 
             <div className="flex items-center justify-between mt-5">
+            {hard_cap && filled_percent &&
                 <span className="text-xs  text-gray dark:text-gray-dark">
                     {(hard_cap * (filled_percent / 100)).toLocaleString()} RBA
                 </span>
+            }
 
                 <span className="text-xs  text-dim-text dark:text-dim-text-dark">
                     {hard_cap} RBA

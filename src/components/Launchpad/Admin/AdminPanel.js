@@ -1,5 +1,5 @@
+import PreviewDetails from 'components/Common/PreviewDetails'
 import React from 'react'
-import PreviewDetails from '../../../Common/PreviewDetails';
 
 export default function AdminPanel({ icon, status, hard_cap, filled_percent }) {
 
@@ -38,9 +38,11 @@ export default function AdminPanel({ icon, status, hard_cap, filled_percent }) {
             {status !== "Upcoming" &&
                 <div className='mt-7'>
                     <div className="flex items-center justify-between">
+                    {hard_cap && filled_percent &&
                         <span className="text-xs  text-gray dark:text-gray-dark">
                             {(hard_cap * (filled_percent / 100)).toLocaleString()} RBA
                         </span>
+                    }
 
                         <span className="text-xs  text-dim-text dark:text-dim-text-dark">
                             {hard_cap} RBA
