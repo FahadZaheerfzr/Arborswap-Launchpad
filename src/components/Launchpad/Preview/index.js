@@ -57,8 +57,12 @@ export default function Preview({
                     <PreviewDetails name={'Presale Ends on'} value={new Date(ends_on*1000).toUTCString()} />
                     <PreviewDetails name={'Soft Cap'} value={soft_cap && soft_cap.toLocaleString()} icon={soft_cap_icon} />
                     <PreviewDetails name={'Hard Cap'} value={hard_cap && hard_cap.toLocaleString()} icon={hard_cap_icon} />
+                    {first_release &&
                     <PreviewDetails name={'First Release'} value={first_release} />
+                    }
+                    {vesting_release && 
                     <PreviewDetails name={'Vesting Release'} value={vesting_release} />
+                    }
                 </div>
             }
             {slide === 'Token' &&

@@ -36,7 +36,7 @@ export default function PoolPageBase({ pool, showModal, admin }) {
               <AdminPanel icon={pool.image} status={pool.saleType} hard_cap={pool.hardCap} filled_percent={pool.filled_percent}/>
               : <SaleBox hard_cap={pool.hardCap} hard_cap_icon={pool.image}
                 min_allocation={pool.minAllocation} max_allocation={pool.maxAllocation} status={pool.saleType}
-                filled_percent={pool.filled_percent} ends_on={pool.endDate} showModal={showModal} token = {pool.token} presale_address={pool.saleAddress} />
+                currency={pool.currency} ends_on={pool.endDate} showModal={showModal} token = {pool.token} presale_address={pool.saleAddress} />
             }
             {
               admin && pool.status === 'Ended' &&

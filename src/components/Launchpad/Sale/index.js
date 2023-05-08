@@ -1,12 +1,10 @@
 import Timer from 'components/LockedAsset/Amount/Timer/Timer'
-import React, { useEffect } from 'react'
-import { Contract } from 'ethers'
-import { useEthers } from '@usedapp/core';
+import React, { useEffect, useState } from 'react'
 import useSaleInfo from 'utils/getSaleInfo';
 import { formatBigToNum } from 'utils/numberFormat';
-export default function SaleBox({ hard_cap, hard_cap_icon, min_allocation, max_allocation, filled_percent, ends_on, showModal, status,token, presale_address }) {
-    const {library} = useEthers();
-    
+
+export default function SaleBox({ hard_cap, hard_cap_icon, min_allocation, max_allocation, ends_on, showModal, status,token, presale_address, currency }) {
+    const [filled_percent, setFilledPercent] = useState(0)
     const sale = useSaleInfo(presale_address);
 
     useEffect(()=>{
@@ -16,8 +14,7 @@ export default function SaleBox({ hard_cap, hard_cap_icon, min_allocation, max_a
             const percents = await sale.totalBNBRaised.mul(100).div(sale.hardCap);
             const newRaised = formatBigToNum(sale.totalBNBRaised.toString(), 18, 4)
             const newPercent = formatBigToNum(percents.toString(), 0, 10)
-
-            console.log(newPercent)
+            setFilledPercent(newPercent)
         }
         if(sale){
         getFilledPercent();
@@ -35,8 +32,7 @@ export default function SaleBox({ hard_cap, hard_cap_icon, min_allocation, max_a
             </div>
 
             <div className="mt-3 flex">
-                <img src={hard_cap_icon} alt="hard-cap-currency" className="w-7 h-7" />
-
+                <img src={currency.icon} alt="hard-cap-currency" className="w-7 h-7" />
                 <div className="ml-3">
                     <span className="text-dark-text dark:text-light-text text-2xl font-bold">{hard_cap && hard_cap.toLocaleString()}</span>
                 </div>
@@ -47,7 +43,7 @@ export default function SaleBox({ hard_cap, hard_cap_icon, min_allocation, max_a
                     Min Allocation
                 </span>
                 <span className='font-bold text-sm text-dark-text dark:text-light-text'>
-                    {min_allocation&& min_allocation.toLocaleString()} {token.tokenSymbol}
+                    {min_allocation&& min_allocation.toLocaleString()} {currency.symbol}
                 </span>
             </div>
 
@@ -56,19 +52,19 @@ export default function SaleBox({ hard_cap, hard_cap_icon, min_allocation, max_a
                     Max Allocation
                 </span>
                 <span className='font-bold text-sm text-dark-text dark:text-light-text'>
-                    {max_allocation && max_allocation.toLocaleString()} {token.tokenSymbol}
+                    {max_allocation && max_allocation.toLocaleString()} {currency.symbol}
                 </span>
             </div>
 
             <div className="flex items-center justify-between mt-5">
             {hard_cap && filled_percent &&
                 <span className="text-xs  text-gray dark:text-gray-dark">
-                    {(hard_cap * (filled_percent / 100)).toLocaleString()} RBA
+                    {(hard_cap * (filled_percent / 100)).toLocaleString()} {currency.symbol}
                 </span>
             }
 
                 <span className="text-xs  text-dim-text dark:text-dim-text-dark">
-                    {hard_cap} {token.tokenSymbol}
+                    {hard_cap} {currency.symbol}
                 </span>
             </div>
 
