@@ -7,13 +7,25 @@ import PublicSaleAbi from '../../../config/abi/PublicSale.json'
 import { formatEther, parseEther } from 'ethers/lib/utils'
 import { API_URL, API_KEY } from 'config/constants/api'
 import axios from 'axios'
+import useSaleInfo from 'utils/getSaleInfo'
+import { formatBigToNum } from 'utils/numberFormat'
 
-export default function Modal({ showModal, from_symbol, from_icon, to_icon, to_symbol,token,sale,account }) {
+export default function Modal({ showModal, from_symbol, from_icon, to_icon, to_symbol,sale,account }) {
   const { library } = useEthers()
   const [amount, setAmount] = useState(sale.minAllocation)
   const [bnbUSD, setBnbUSD] = useState(317);
   const [usdAmount, setUsdAmount] = useState(sale.minAllocation * bnbUSD);
+  const sale_info = useSaleInfo(sale.saleAddress);
+  const [tokenPrice, setTokenPrice] = useState(0);
+  const [tokenAmount, setTokenAmount] = useState(0);
 
+
+  useEffect(() => {
+    if (sale_info) {
+      const price = formatBigToNum(sale_info.tokenPriceInBNB.toString(), 18, 4);
+      setTokenPrice(price)
+    }
+  }, [sale_info])
 
   const convertBNBtoUSD = async () => {
     try{
@@ -73,7 +85,8 @@ export default function Modal({ showModal, from_symbol, from_icon, to_icon, to_s
 
   const handleInput = async(e) => {
     setAmount(Number(e.target.value))
-    setUsdAmount((Number(e.target.value) * bnbUSD).toFixed(3))
+    setUsdAmount((Number(e.target.value) * bnbUSD).toFixed(3));
+    setTokenAmount((Number(e.target.value) * tokenPrice).toFixed(4));
   }
 
   const handleMax = () => {
@@ -161,7 +174,7 @@ export default function Modal({ showModal, from_symbol, from_icon, to_icon, to_s
         <div className='mt-[10px]  rounded-md bg-[#F5F1EB] dark:bg-dark-3 px-5 py-5'>
           <div className='flex justify-between items-center'>
             <span className='font-bold text-xl text-dark-text dark:text-light-text'>
-              18,070
+              {tokenAmount}
             </span>
             <span className='text-sm font-medium text-gray dark:text-gray-dark'>
               ~ $---
