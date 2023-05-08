@@ -17,6 +17,7 @@ const TokkenDetails = {
 
 
 export default function Preview({
+    pool,
     icon,
     name,
     is_private,
@@ -35,12 +36,13 @@ export default function Preview({
 }) {
     const [slide, setSlide] = useState('Presale')
     
-
+    
     return (
         <div className="px-9 py-9 my-4">
-            <Info name={name} icon={icon} is_private={is_private} tags={tags} />
+            <Info name={name} icon={icon} is_private={is_private} tags={tags} pool={pool} />
 
             <div className='mt-6 flex md:hidden gap-5 ml-[70px]'>
+                
                 <TwitterSVG className="fill-dark-text dark:fill-light-text " />
                 <DribbleSVG className="fill-dark-text dark:fill-light-text " />
             </div>

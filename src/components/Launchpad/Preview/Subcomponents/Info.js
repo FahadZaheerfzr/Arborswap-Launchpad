@@ -1,9 +1,10 @@
 import Options from 'components/LockedAsset/Preview/Subcomponents/Options'
 import React from 'react'
+import { Link } from 'react-router-dom'
 import DribbleSVG from 'svgs/Socials/dribble'
 import TwitterSVG from 'svgs/Socials/twitter'
 
-export default function Info({ icon, name, is_private, tags }) {
+export default function Info({ icon, name, is_private, tags, pool }) {
   return (
     <div className="flex items-center justify-between">
       <div className="flex items-center">
@@ -31,8 +32,16 @@ export default function Info({ icon, name, is_private, tags }) {
       </div>
 
       <div className="flex items-center gap-5">
-        <TwitterSVG className="fill-dark-text dark:fill-light-text hidden md:block" />
+        {pool.twitter !== "" &&
+        <Link to={pool.twitter} target="_blank" rel="noopener noreferrer" >
+          <TwitterSVG className="fill-dark-text dark:fill-light-text hidden md:block" />
+          </Link>
+        }
+        {pool.website !== "" &&
+        <Link to={pool.website} target="_blank" rel="noopener noreferrer" >
         <DribbleSVG className="fill-dark-text dark:fill-light-text hidden md:block" />
+        </Link>
+        }
         <Options width={'w-7'} height={'h-7'} color={'[#FAF8F5]'} dark_color={'dark-2'} />
       </div>
     </div>

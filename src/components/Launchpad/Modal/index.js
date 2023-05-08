@@ -58,7 +58,7 @@ export default function Modal({ showModal, from_symbol, from_icon, to_icon, to_s
     //user balance
     
     
-    if (parseEther(amount.toString()).gt(parseEther(balance.toString()))) {
+    if (parseEther(amount.toString()).gt(balance)) {
       alert("Insufficient Balance")
       return
     }
@@ -86,7 +86,7 @@ export default function Modal({ showModal, from_symbol, from_icon, to_icon, to_s
   const handleInput = async(e) => {
     setAmount(Number(e.target.value))
     setUsdAmount((Number(e.target.value) * bnbUSD).toFixed(3));
-    setTokenAmount((Number(e.target.value) * tokenPrice).toFixed(4));
+    setTokenAmount((Number(e.target.value) * tokenPrice).toFixed(2));
   }
 
   const handleMax = () => {
