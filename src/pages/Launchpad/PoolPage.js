@@ -15,17 +15,17 @@ export default function PoolPage() {
   const [admin, setAdmin] = useState(false);
   const [adminMode, setAdminMode] = useState(false);
   const { account } = useEthers();
-  console.log(pool);
+  
   useEffect(() => {
     //get pool data from api
     axios
       .get(`http://localhost:8080/api/sale/${id}`)
       .then((res) => {
         setPool(res.data);
-        console.log("The pool is", res.data);
+        
       })
       .catch((err) => {
-        console.log(err);
+        
       });
 
     //gonna check if the user is admin or not
@@ -44,12 +44,13 @@ export default function PoolPage() {
           <div className="fixed z-50  top-0 left-0">
             <Modal
               showModal={showModal}
-              from_symbol={pool.sale.token.tokenSymbol}
-              from_icon={pool.sale.token.image}
+              from_symbol={pool.sale.currency.symbol}
+              from_icon={pool.sale.currency.icon}
               to_icon={pool.sale.token.image}
               to_symbol={pool.sale.token.tokenSymbol}
               token = {pool.sale.token}
               sale = {pool.sale}
+              account={account}
             />
           </div>
         )}

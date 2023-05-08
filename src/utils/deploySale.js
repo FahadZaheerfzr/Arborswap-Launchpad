@@ -18,15 +18,15 @@ export const approveTokens = async (library, token, factoryContractAddress) => {
   )
 
   const amount = ethers.constants.MaxUint256
-  console.log(`amount`, amount)
+  
 
   try {
-    console.log(`factoryContractAddress`, factoryContractAddress);
+    
     const approval = await contract.approve(factoryContractAddress, amount)
 
     await approval.wait()
   } catch (error) {
-    console.log(error)
+    
     return false
   }
   return true
@@ -67,7 +67,7 @@ export const deployPublicSale = async (token, saleObject, library, account, depl
       await tx.wait()
 
       const deployedAddress = await contract.saleIdToAddress(saleId.toNumber())
-      console.log("Sale public deployed")
+      
 
       const finalSaleObject ={
         saleId: saleId.toNumber(),
@@ -98,11 +98,11 @@ export const deployPublicSale = async (token, saleObject, library, account, depl
         whiteisting: saleObject.whiteisting,
         owner: account,
       }
-      console.log("The final sale object is: ", finalSaleObject)
+      
 
       return finalSaleObject
     } catch (error) {
-      console.log(error)
+      
     }
   }
 
@@ -148,7 +148,7 @@ export const deployPublicSaleERC= async (token, saleObject, library, account, de
       await tx.wait()
 
       const deployedAddress = await contract.saleIdToAddress(saleId.toNumber())
-      console.log("Sale public ERC deployed")
+      
 
       const finalSaleObject ={
         saleId: saleId.toNumber(),
@@ -179,11 +179,11 @@ export const deployPublicSaleERC= async (token, saleObject, library, account, de
         whiteisting: saleObject.whiteisting,
         owner: account,
       }
-      console.log("The final sale object is: ", finalSaleObject)
+      
 
       return finalSaleObject
     } catch (error) {
-      console.log(error)
+      
     }
   }
 
@@ -214,7 +214,7 @@ export const deployPrivateSale = async (token, saleObject, library, account, dep
         { value: utils.parseEther(deploymentFee) }
       );
       await tx.wait();
-      console.log("Sale private deployed");
+      
 
       const deployedAddress = await contract.saleIdToAddress(saleId.toNumber())
 
@@ -232,12 +232,12 @@ export const deployPrivateSale = async (token, saleObject, library, account, dep
         tags: saleData.tags,
         token: token,
         firstRelease: saleObject.firstRelease,
-        minAllocation: parseEther(Number(saleObject.minAllocation).toString()).toString(),        
-        maxAllocation: parseEther(Number(saleObject.maxAllocation).toString()).toString(),       
+        minAllocation: saleObject.minAllocation,        
+        maxAllocation: saleObject.maxAllocation,       
         endDate: saleObject.endDate,
         startDate: saleObject.startDate,
-        hardCap: parseEther(Number(saleObject.hardCap).toString()).toString(),
-        softCap: parseEther(Number(saleObject.softCap).toString()).toString(),
+        hardCap: saleObject.hardCap,
+        softCap: saleObject.softCap,
         currency: saleObject.currency,
         dex: saleObject.dex,
         whiteisting: saleObject.whiteisting,
@@ -246,11 +246,11 @@ export const deployPrivateSale = async (token, saleObject, library, account, dep
 
       return finalSaleObject
     } catch (error) {
-      console.log(error);
+      
     }
   };
 
-  export const deployPrivateErSale = async (token, saleObject, library, account, deploymentFee, saleData) => {
+export const deployPrivateErSale = async (token, saleObject, library, account, deploymentFee, saleData) => {
     const contract = new Contract(
       PrivateErc_FACTORYADRESS,
       PrivateErcAbi,
@@ -285,7 +285,7 @@ export const deployPrivateSale = async (token, saleObject, library, account, dep
       await tx.wait()
 
       const deployedAddress = await contract.saleIdToAddress(saleId.toNumber())
-      console.log("Sale private ERC deployed")
+      
 
       const finalSaleObject ={
         saleId: saleId.toNumber(),
@@ -301,12 +301,12 @@ export const deployPrivateSale = async (token, saleObject, library, account, dep
         tags: saleData.tags,
         token: token,
         firstRelease: saleObject.firstRelease,
-        minAllocation: parseEther(Number(saleObject.minAllocation).toString()).toString(),        
-        maxAllocation: parseEther(Number(saleObject.maxAllocation).toString()).toString(),       
+        minAllocation: saleObject.minAllocation,        
+        maxAllocation: saleObject.maxAllocation,       
         endDate: saleObject.endDate,
         startDate: saleObject.startDate,
-        hardCap: parseEther(Number(saleObject.hardCap).toString()).toString(),
-        softCap: parseEther(Number(saleObject.softCap).toString()).toString(),
+        hardCap: saleObject.hardCap,
+        softCap: saleObject.softCap,
         currency: saleObject.currency,
         dex: saleObject.dex,
         whiteisting: saleObject.whiteisting,
@@ -315,7 +315,7 @@ export const deployPrivateSale = async (token, saleObject, library, account, dep
 
       return finalSaleObject
     } catch (error) {
-      console.log(error);
+      
     }
   };
 
@@ -347,7 +347,7 @@ export const deployPrivateSale = async (token, saleObject, library, account, dep
         { value: utils.parseEther(deploymentFee) }
       );
       await tx.wait();
-      console.log("Sale fairlaunch deployed");
+      
 
       const deployedAddress = await contract.saleIdToAddress(saleId.toNumber())
 
@@ -364,21 +364,21 @@ export const deployPrivateSale = async (token, saleObject, library, account, dep
         description: saleData.description,
         tags: saleData.tags,
         token: token,
-        minAllocation: parseEther(Number(saleObject.minAllocation).toString()).toString(),
-        maxAllocation: parseEther(Number(saleObject.maxAllocation).toString()).toString(),
+        minAllocation: saleObject.minAllocation,
+        maxAllocation: saleObject.maxAllocation,
         amountLiquidity: saleObject.amountLiquidity,
         lockup: saleObject.lockup,
         startDate: saleObject.startDate,
         endDate: saleObject.endDate,
-        hardCap: parseEther(Number(saleObject.hardCap).toString()).toString(),
-        softCap: parseEther(Number(saleObject.softCap).toString()).toString(),
+        hardCap:saleObject.hardCap,
+        softCap: saleObject.softCap,
         currency: saleObject.currency,   
         owner: account,     
       }
 
       return finalSaleObject
     } catch (error) {
-      console.log(error);
+      
     }
   };
 
@@ -418,7 +418,7 @@ export const deployPrivateSale = async (token, saleObject, library, account, dep
         { value: utils.parseEther(deploymentFee) }
       );
       await tx.wait();
-      console.log("Sale fairlaunch erc deployed");
+      
 
       const deployedAddress = await contract.saleIdToAddress(saleId.toNumber())
 
@@ -435,14 +435,14 @@ export const deployPrivateSale = async (token, saleObject, library, account, dep
         description: saleData.description,
         tags: saleData.tags,
         token: token,
-        minAllocation: parseEther(Number(saleObject.minAllocation).toString()).toString(),
-        maxAllocation: parseEther(Number(saleObject.maxAllocation).toString()).toString(),
+        minAllocation: saleObject.minAllocation,
+        maxAllocation: saleObject.maxAllocation,
         amountLiquidity: saleObject.amountLiquidity,
         lockup: saleObject.lockup,
         startDate: saleObject.startDate,
         endDate: saleObject.endDate,
-        hardCap: parseEther(Number(saleObject.hardCap).toString()).toString(),
-        softCap: parseEther(Number(saleObject.softCap).toString()).toString(),
+        hardCap: saleObject.hardCap,
+        softCap: saleObject.softCap,
         currency: saleObject.currency,    
         owner: account,    
       }
@@ -450,7 +450,7 @@ export const deployPrivateSale = async (token, saleObject, library, account, dep
       return finalSaleObject
     }
     catch (error) {
-      console.log(error);
+      
     }
   };
 

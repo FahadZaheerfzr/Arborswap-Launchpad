@@ -34,7 +34,7 @@ export default function Preview({
     vesting_release,
 }) {
     const [slide, setSlide] = useState('Presale')
-    console.log(token)
+    
 
     return (
         <div className="px-9 py-9 my-4">
@@ -53,8 +53,8 @@ export default function Preview({
             {slide === 'Presale' &&
                 <div className="mt-5">
                     <PreviewDetails name={'Presale Address'} value={address} enable_copy />
-                    <PreviewDetails name={'Presale Starts on'} value={starts_on} />
-                    <PreviewDetails name={'Presale Ends on'} value={ends_on} />
+                    <PreviewDetails name={'Presale Starts on'} value={new Date(starts_on*1000).toUTCString()} />
+                    <PreviewDetails name={'Presale Ends on'} value={new Date(ends_on*1000).toUTCString()} />
                     <PreviewDetails name={'Soft Cap'} value={soft_cap && soft_cap.toLocaleString()} icon={soft_cap_icon} />
                     <PreviewDetails name={'Hard Cap'} value={hard_cap && hard_cap.toLocaleString()} icon={hard_cap_icon} />
                     <PreviewDetails name={'First Release'} value={first_release} />

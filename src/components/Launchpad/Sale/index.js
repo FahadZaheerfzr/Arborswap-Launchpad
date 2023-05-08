@@ -1,7 +1,28 @@
 import Timer from 'components/LockedAsset/Amount/Timer/Timer'
-import React from 'react'
+import React, { useEffect } from 'react'
+import { Contract } from 'ethers'
+import { useEthers } from '@usedapp/core';
+import useSaleInfo from 'utils/getSaleInfo';
+import { formatBigToNum } from 'utils/numberFormat';
+export default function SaleBox({ hard_cap, hard_cap_icon, min_allocation, max_allocation, filled_percent, ends_on, showModal, status,token, presale_address }) {
+    const {library} = useEthers();
+    
+    const sale = useSaleInfo(presale_address);
 
-export default function SaleBox({ hard_cap, hard_cap_icon, min_allocation, max_allocation, filled_percent, ends_on, showModal, status,token }) {
+    useEffect(()=>{
+
+        const getFilledPercent = async () => {
+            console.log(formatBigToNum(sale.hardCap.toString(), 18, 4))
+            const percents = await sale.totalBNBRaised.mul(100).div(sale.hardCap);
+            const newRaised = formatBigToNum(sale.totalBNBRaised.toString(), 18, 4)
+            const newPercent = formatBigToNum(percents.toString(), 0, 10)
+
+            console.log(newPercent)
+        }
+        if(sale){
+        getFilledPercent();
+        }
+    },[sale])
 
     return (
         <div className="p-9 bg-white dark:bg-dark-1 rounded-[20px]">
@@ -73,7 +94,7 @@ export default function SaleBox({ hard_cap, hard_cap_icon, min_allocation, max_a
                 </span>
             </div>
             
-            <Timer date={new Date(ends_on)} />
+            <Timer date={new Date(ends_on*1000)} />
         </div>
     )
 }

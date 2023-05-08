@@ -141,7 +141,7 @@ export default function Presale({ setActive, saleType, setSaleObject, token }) {
       lockup: lockup,
       owner : account,
     };
-    console.log(presaleObject);
+    
     setSaleObject(presaleObject);
     closeLoadingModal();
     setActive("Project Details");
@@ -159,20 +159,20 @@ export default function Presale({ setActive, saleType, setSaleObject, token }) {
     );
     try {
       const balance = await contract.balanceOf(account);
-      console.log("user", balance.toString());
+      
       if (balance.gt(amountRequired)) {
         return true;
       }
       return false;
     } catch (error) {
-      console.log(error);
+      
       return false;
     }
   };
 
   //use effect in which we will set required token if hardcap, softcap, listing price, amount liquidity, presale price changes
   useEffect(() => {
-    console.log(token);
+    
     if (
       hardCap > 0 &&
       softCap > 0 &&
@@ -193,7 +193,7 @@ export default function Presale({ setActive, saleType, setSaleObject, token }) {
       // const presaleRateBNB = tokenRate(presaleRateToken, "18")
 
       setRequiredToken(reqHard.add(reqLP).toString());
-      console.log("requiredToken", requiredToken);
+      
       //consolelog if user has enough balance
       //wait till return true from handleCheckBalance
       //if true then set required token
@@ -209,16 +209,16 @@ export default function Presale({ setActive, saleType, setSaleObject, token }) {
 
   // //for fairlaunch
   // useEffect(() => {
-  //     console.log(token);
+  //     
   //     if (presalePrice > 0 && softCap > 0 && amountLiquidity > 0 && saleType === "fairlaunch") {
   //       const totalSupply = ethers.utils.parseUnits(presalePrice.toString(), token.tokenDecimals.toString());
-  //       console.log("totalSupply", totalSupply.toString());
+  //       
   //       const liquidityAmount = ethers.utils.parseUnits(amountLiquidity.toString(), 18);
-  //         console.log("liquidityAmount", liquidityAmount.toString());
+  //         
   //       const requiredToken = totalSupply.mul(liquidityAmount).div(ethers.utils.parseUnits("1", "18"));
 
   //       setRequiredToken(requiredToken.toString());
-  //       console.log("requiredToken", requiredToken.toString());
+  //       
   //       // consolelog if user has enough balance
   //       // wait till return true from handleCheckBalance
   //       // if true then set required token
@@ -231,14 +231,14 @@ export default function Presale({ setActive, saleType, setSaleObject, token }) {
 
   // //for private sale
   // useEffect(() => {
-  //     console.log(token);
+  //     
   //     if (hardCap > 0 && softCap > 0 && presalePrice > 0) {
   //       const hardCapBNB = ethers.utils.parseUnits(hardCap.toString(), 18);
   //       const totalSupply = ethers.utils.parseUnits(presalePrice.toString(), token.tokenDecimals.toString());
   //       const presaleRateBNB = hardCapBNB.div(totalSupply);
 
   //       setRequiredToken(hardCapBNB.toString());
-  //       console.log("requiredToken", hardCapBNB.toString());
+  //       
   //       // consolelog if user has enough balance
   //       // wait till return true from handleCheckBalance
   //       // if true then set required token
@@ -247,7 +247,7 @@ export default function Presale({ setActive, saleType, setSaleObject, token }) {
 
   async function checkBalance() {
     const check = await handleCheckBalance();
-    console.log("check", check);
+    
     if (check) {
       setEnoughBalance(true);
     } else {

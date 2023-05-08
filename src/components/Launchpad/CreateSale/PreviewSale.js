@@ -25,10 +25,10 @@ export default function PreviewSale({ token, setActive, saleObject, saleType, sa
   useModal("LoadingModal");
 
   useEffect(() => {
-    console.log(startTime)
+    
   }, [startTime])
 
-  console.log(saleObject)
+  
   useEffect(() => {
     async function getFee() {
       const fee = deployFee;
@@ -40,7 +40,7 @@ export default function PreviewSale({ token, setActive, saleObject, saleType, sa
     getFee()
   }, [deployFee])
 
-  console.log(saleObject)
+  
   const handleSubmit = async () => {
     openLoadingModal()
     if (saleType === 'standard') {

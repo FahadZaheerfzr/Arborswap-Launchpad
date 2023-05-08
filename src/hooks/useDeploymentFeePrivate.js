@@ -11,7 +11,7 @@ function useDeploymentFeePrivate() {
         args: [],
         }) ?? {};
     if (error) {
-        // console.log(error)
+        // 
         return error;
     }
     return value?.[0];

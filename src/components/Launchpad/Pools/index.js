@@ -8,7 +8,7 @@ import { BACKEND_URL } from 'config/constants/LaunchpadAddress'
 export default function PoolsBase({ activeStatus }) {
     const [pools, setPools] = useState([])
     const [loading, setLoading] = useState(true)
-    console.log(pools)
+    
 
     //we will get data for pools from api
     useEffect(() => {
@@ -19,7 +19,7 @@ export default function PoolsBase({ activeStatus }) {
                 setPools(res.data)
             })
             .catch((err) => {
-                console.log(err)
+                
             })
         
         setLoading(false)
@@ -30,17 +30,17 @@ export default function PoolsBase({ activeStatus }) {
         const currentDate = new Date()
         const startDate = new Date(item.sale.startDate * 1000)
         const endDate = new Date(item.sale.endDate * 1000)
-        console.log(currentDate, startDate, endDate)
+        
         if (currentDate < startDate) {
-            console.log('Upcoming')
+            
             return 'Upcoming'
         }
         else if (currentDate > startDate && currentDate < endDate) {
-            console.log('Live')
+            
             return 'Live'
         }
         else {
-            console.log('Ended')
+            
             return 'Ended'
         }
     }
@@ -68,7 +68,7 @@ export default function PoolsBase({ activeStatus }) {
                                     <div className='flex items-center mt-2'>
                                         {/* tags are not array, its a string, we have to divide by space*/}
                                         {pool.sale.tags.split(' ').map((tag) => (
-                                            <span className='text-[10px] font-bold bg-[#F6E05E] dark:bg-[#B86363] py-[2px] px-2 text-white rounded-[10px] mr-2'>
+                                            <span key={tag} className='text-[10px] font-bold bg-[#F6E05E] dark:bg-[#B86363] py-[2px] px-2 text-white rounded-[10px] mr-2'>
                                                 {tag}
                                             </span>
                                         ))}

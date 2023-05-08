@@ -41,7 +41,7 @@ export default function TokenInfo({
     if (isAddress(e.target.value)) {
       openLoadingModal();
       const tokenInfo = await getTokenInfo(e.target.value);
-      console.log(tokenInfo)
+      
       if (tokenInfo.success) {
         setSaleData((prevState) => ({
             ...prevState,

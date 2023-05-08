@@ -2,64 +2,52 @@ import React from 'react'
 import ModalField from './ModalField'
 import { useEffect,useState } from 'react'
 import { Contract } from 'ethers'
-import { useEthers } from '@usedapp/core'
+import { useEtherBalance, useEthers } from '@usedapp/core'
 import ERCAbi from '../../../config/abi/ERC20.json'
-import SaleAbi from '../../../config/abi/Sale.json'
+import PublicSaleAbi from '../../../config/abi/PublicSale.json'
 import { formatBigToNum } from 'utils/numberFormat'
-import { parseEther } from 'ethers/lib/utils'
+import { formatEther, parseEther } from 'ethers/lib/utils'
 
-export default function Modal({ showModal, from_symbol, from_icon, to_icon, to_symbol,token,sale }) {
+export default function Modal({ showModal, from_symbol, from_icon, to_icon, to_symbol,token,sale,account }) {
+  const { library } = useEthers()
   const [amount, setAmount] = useState(0)
-  //get user balance
-  const { account,library } = useEthers()
-  const [balance, setBalance] = useState(0)
+  
 
-  useEffect(() => {
-    if (account) {
-      const contract = new Contract(
-        token.tokenAddress,
-        ERCAbi,
-        library.getSigner(account)
-      )
-      contract.balanceOf(account).then((res) => {
-        setBalance(formatBigToNum(res).replace(/,/g, ''))
-      })
-    }
-  }, [account])
+  //get user balance
+  
+  const balance = useEtherBalance(account)
   
   const handleSubmit = async () => {
-    console.log("The amount is", amount.toString())
+    
     //user balance
-    console.log("The balance is", balance)
-    console.log(parseEther(amount.toString()).lt(parseEther(balance.toString())))
+    
+    
     if (parseEther(amount.toString()).gt(parseEther(balance.toString()))) {
       alert("Insufficient Balance")
       return
     }
     const saleContractAddress = sale.saleAddress
-    console.log("The sale contract address is", saleContractAddress)
+    
     const contract = new Contract(
       saleContractAddress,
-      SaleAbi,
+      PublicSaleAbi,
       library.getSigner(account)
     )
     const amountBuy = parseEther(amount.toString()).toString()
-    console.log("The amount to buy is", amountBuy)
+    
     try {
-      const tx = await contract.participate("0",{
+      const tx = await contract.participate({
         value: amountBuy
       })
       await tx.wait()
-      alert("Transaction Successful")
+      showModal(false)
     } catch (err) {
-      console.log(err)
-      alert("Transaction Failed")
+      
     }
 
-    showModal(false)
   }
   const handleMax = () => {
-    console.log("The balance is", balance)
+    
     //balance to number everything after , is not removed
 
     const amt = parseFloat(balance.replace(/,/g, ''))
@@ -96,7 +84,7 @@ export default function Modal({ showModal, from_symbol, from_icon, to_icon, to_s
             <span className='font-medium text-sm text-dim-text dark:text-dim-text-dark'>
               Balance:
               <span className='text-dark-text dark:text-light-text'>
-                {balance}
+                {balance && formatEther(balance).substring(0, 6)}
               </span>
             </span>
           </div>

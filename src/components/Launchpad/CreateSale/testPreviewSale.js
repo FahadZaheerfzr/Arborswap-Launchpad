@@ -37,7 +37,7 @@ export default function PreviewSale({
   const deployFeeFair = useDeploymentFeeFair();
   const deployFeePrivate = useDeploymentFeePrivate();
 
-  console.log(saleObject);
+  
 
   useEffect(() => {
     async function getFee() {
@@ -71,7 +71,7 @@ export default function PreviewSale({
     );
     const routerAddress = ROUTER_ADDRESS;
     const adminAddress = ADMIN_ADDRESS;
-    console.log(contract);
+    
     const startTime = Math.floor(
       new Date(saleObject.startDate).getTime() / 1000
     );
@@ -102,9 +102,9 @@ export default function PreviewSale({
         { value: utils.parseEther(deploymentFee) }
       );
       await tx.wait();
-      console.log("Sale deployed");
+      
     } catch (error) {
-      console.log(error);
+      
     }
   };
 
@@ -140,9 +140,9 @@ export default function PreviewSale({
         { value: utils.parseEther(deploymentFee) }
       );
       await tx.wait();
-      console.log("Sale deployed");
+      
     } catch (error) {
-      console.log(error);
+      
     }
   };
 
@@ -173,9 +173,9 @@ export default function PreviewSale({
       try {
         const tx = await contract.approve(Public_FACTORYADRESS, amount);
         await tx.wait();
-        console.log("Approved");
+        
       } catch (error) {
-        console.log(error);
+        
       }
     }
     if (saleType === "fairlaunch") {
@@ -190,9 +190,9 @@ export default function PreviewSale({
         const tx = await contract.approve(FairLaunch_FACTORYADRESS, amount);
         await tx.wait();
 
-        console.log("Approved");
+        
       } catch (error) {
-        console.log(error);
+        
       }
     }
     if (saleType === "private") {
@@ -207,9 +207,9 @@ export default function PreviewSale({
         const tx = await contract.approve(Private_FACTORYADRESS, amount);
         await tx.wait();
 
-        console.log("Approved");
+        
       } catch (error) {
-        console.log(error);
+        
       }
     }
   };
