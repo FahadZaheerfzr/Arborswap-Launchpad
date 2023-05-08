@@ -37,7 +37,7 @@ export default function Modal({ showModal, from_symbol, from_icon, to_icon, to_s
       params:{'slug': 'bnb', 'convert': 'USD'}
     })
 
-    console.log("res",res)
+    //console.log("res",res)
   } catch{
     setBnbUSD(317)
   }

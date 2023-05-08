@@ -1,7 +1,28 @@
+import { useEthers } from '@usedapp/core'
 import PreviewDetails from 'components/Common/PreviewDetails'
-import React from 'react'
+import { Contract } from 'ethers'
+import React, { useEffect, useState } from 'react'
+import PublicSale from 'config/abi/PublicSale.json'
+import { formatBigToNum } from 'utils/numberFormat'
 
-export default function SaleBox({ icon }) {
+
+export default function SaleBox({ icon, sale }) {
+    const {account, library} = useEthers()
+    const [allocated, setAllocated] = useState(0)
+    const [bought, setBought] = useState(0)
+
+    const getUserParticipation = async () => {
+        const contract = new Contract(sale.saleAddress,PublicSale, library.getSigner());
+        const userParticipation = await contract.getParticipation(account)        
+        setBought(formatBigToNum(userParticipation[0].toString(), 18, 4))
+        setAllocated(formatBigToNum(userParticipation[1].toString(), 18, 4))
+    }
+
+    useEffect(()=>{
+        if(sale){
+            getUserParticipation()
+        }
+    },[sale])
 
     return (
         <div className="px-9 pb-9 bg-white dark:bg-dark-1 rounded-[20px]">
@@ -13,8 +34,8 @@ export default function SaleBox({ icon }) {
                 </div>
             </div>
 
-            <PreviewDetails name={"Amount Allocated"} value={"5,000 RBA"} />
-            <PreviewDetails name={"Amount Bought"} value={"411,285 SXP"} />
+            <PreviewDetails name={"Amount Allocated"} value={allocated + " " + sale.currency.symbol} />
+            <PreviewDetails name={"Amount Bought"} value={bought + " " + sale.token.tokenSymbol} />
 
 
             <div className="flex flex-col items-center">

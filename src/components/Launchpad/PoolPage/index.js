@@ -47,7 +47,7 @@ export default function PoolPageBase({ pool, showModal, admin }) {
             }
             {pool.sale_type !== 'Private' && !admin &&
               <div className='mt-[30px]'>
-                <UserPanel icon={pool.image} pool = {pool}/>
+                <UserPanel icon={pool.image} sale={pool}/>
               </div>
             }
           </div>

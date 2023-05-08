@@ -10,7 +10,6 @@ export default function SaleBox({ hard_cap, hard_cap_icon, min_allocation, max_a
     useEffect(()=>{
 
         const getFilledPercent = async () => {
-            console.log(formatBigToNum(sale.hardCap.toString(), 18, 4))
             const percents = await sale.totalBNBRaised.mul(100).div(sale.hardCap);
             const newRaised = formatBigToNum(sale.totalBNBRaised.toString(), 18, 4)
             const newPercent = formatBigToNum(percents.toString(), 0, 10)
