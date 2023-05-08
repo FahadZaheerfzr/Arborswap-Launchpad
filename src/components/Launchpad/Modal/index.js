@@ -3,14 +3,38 @@ import ModalField from './ModalField'
 import { useEffect,useState } from 'react'
 import { Contract } from 'ethers'
 import { useEtherBalance, useEthers } from '@usedapp/core'
-import ERCAbi from '../../../config/abi/ERC20.json'
 import PublicSaleAbi from '../../../config/abi/PublicSale.json'
-import { formatBigToNum } from 'utils/numberFormat'
 import { formatEther, parseEther } from 'ethers/lib/utils'
+import { API_URL, API_KEY } from 'config/constants/api'
+import axios from 'axios'
 
 export default function Modal({ showModal, from_symbol, from_icon, to_icon, to_symbol,token,sale,account }) {
   const { library } = useEthers()
-  const [amount, setAmount] = useState(0)
+  const [amount, setAmount] = useState(sale.minAllocation)
+  const [bnbUSD, setBnbUSD] = useState(317);
+  const [usdAmount, setUsdAmount] = useState(sale.minAllocation * bnbUSD);
+
+
+  const convertBNBtoUSD = async () => {
+    try{
+    const res = await axios.get(`${API_URL}`, {
+      headers: {
+        'Accepts': 'application/json',
+        'X-CMC_PRO_API_KEY': API_KEY
+      },
+      params:{'slug': 'bnb', 'convert': 'USD'}
+    })
+
+    console.log("res",res)
+  } catch{
+    setBnbUSD(317)
+  }
+  }
+
+
+  useEffect(() => {
+    convertBNBtoUSD()
+  },[])
   
 
   //get user balance
@@ -46,15 +70,22 @@ export default function Modal({ showModal, from_symbol, from_icon, to_icon, to_s
     }
 
   }
+
+  const handleInput = async(e) => {
+    setAmount(Number(e.target.value))
+    setUsdAmount((Number(e.target.value) * bnbUSD).toFixed(3))
+  }
+
   const handleMax = () => {
     
     //balance to number everything after , is not removed
-
-    const amt = parseFloat(balance.replace(/,/g, ''))
+    let bal = formatEther(balance).substring(0, 6)
+    const amt = parseFloat(bal)
     setAmount(amt)
   }
   const handleHalf = () => {
-    const amt = parseFloat(balance.replace(/,/g, ''))
+    let bal = formatEther(balance).substring(0, 6)
+    const amt = parseFloat(bal)
     setAmount(amt / 2)
   }
 
@@ -91,10 +122,10 @@ export default function Modal({ showModal, from_symbol, from_icon, to_icon, to_s
         </div>
         <div className='mt-[10px] flex justify-between items-center rounded-md bg-[#F5F1EB] dark:bg-dark-3 px-5 py-5'>
           <div className='flex flex-col'>
-            <input className='bg-transparent outline-none text-sm font-medium text-dark-text dark:text-light-text' type="number" placeholder="0.0" onChange={(e) => setAmount(Number(e.target.value))} value={amount} />
+            <input className='bg-transparent outline-none text-sm font-medium text-dark-text dark:text-light-text' type="number" placeholder="0.0" onChange={handleInput} value={amount} step={0.001} max={sale.maxAllocation} min={sale.minAllocation} />
 
             <span className='mt-3 text-sm font-medium text-gray dark:text-gray-dark'>
-              ~ $108,070
+              ~ ${usdAmount}
             </span>
           </div>
 
