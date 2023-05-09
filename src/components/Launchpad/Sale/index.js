@@ -11,8 +11,8 @@ export default function SaleBox({ hard_cap, hard_cap_icon, min_allocation, max_a
 
         const getFilledPercent = async () => {
             const percents = await sale.totalBNBRaised.mul(100).div(sale.hardCap);
-            const newRaised = formatBigToNum(sale.totalBNBRaised.toString(), 18, 4)
-            const newPercent = formatBigToNum(percents.toString(), 0, 10)
+            //const newRaised = formatBigToNum(sale.totalBNBRaised.toString(), 18, 4)
+            const newPercent = formatBigToNum(percents.toString(), 0, 1)
             setFilledPercent(newPercent)
         }
         if(sale){
