@@ -3,6 +3,7 @@ import PreviewDetails from 'components/Common/PreviewDetails'
 import { Contract } from 'ethers'
 import React, { useEffect, useState } from 'react'
 import PublicSale from 'config/abi/PublicSale.json'
+import PublicSaleErcAbi from 'config/abi/PublicSaleErcAbi.json'
 import { formatBigToNum } from 'utils/numberFormat'
 
 

@@ -16,7 +16,7 @@ export default function PoolPage() {
   const [adminMode, setAdminMode] = useState(false);
   const { account } = useEthers();
   
-  useEffect(() => {
+  useEffect(()  => {
     //get pool data from api
     axios
       .get(`http://localhost:8080/api/sale/${id}`)
