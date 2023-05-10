@@ -3,12 +3,18 @@ import CalendarSVG from '../../../../svgs/TokenLocker/calendar'
 import Datetime from 'react-datetime'
 import { ThemeContext } from '../../../../context/ThemeContext/ThemeProvider'
 import HeadingTags from '../../../TokenLocker/Subcomponents/HeadingTags'
+import moment from 'moment'
 
 export default function CalendarField({ heading, setFunction }) {
     const { theme } = React.useContext(ThemeContext)
     const valid = (current) => {
-        return current.isAfter(new Date()-86400000)
-    }
+        const now = moment()
+        const selected = moment(current)
+        const oneHourLater = moment(now).add(1, 'hour')
+        return selected.isAfter(now) && selected.isAfter(oneHourLater)
+      }
+      
+      
 
     const handleChange = (e) => {
         setFunction(e.unix())

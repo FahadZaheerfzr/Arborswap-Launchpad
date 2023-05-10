@@ -5,6 +5,10 @@ import { Contract, ethers } from "ethers";
 import { useEtherBalance, useEthers } from "@usedapp/core";
 import PublicSaleAbi from "../../../config/abi/PublicSale.json";
 import PublicSaleErcAbi from "../../../config/abi/PublicSaleErcAbi.json";
+import PrivateSaleAbi from "../../../config/abi/PrivateSale.json";
+import PrivateSaleErcAbi from "../../../config/abi/PrivateSaleErcAbi.json";
+import FairLaunchAbi from "../../../config/abi/FairlaunchSale.json";
+import FairLaunchErcAbi from "../../../config/abi/FairlaunchErcAbi.json";
 import { formatEther, parseEther } from "ethers/lib/utils";
 import { API_URL, API_KEY } from "config/constants/api";
 import axios from "axios";
@@ -51,7 +55,7 @@ export default function Modal({
 
   useEffect(() => {
     console.log("sale", sale);
-    if(sale.currency.symbol !== "BNB"){
+    if (sale.currency.symbol !== "BNB") {
       const contract = new Contract(
         sale.currency.address,
         ERC20,
@@ -59,19 +63,26 @@ export default function Modal({
       );
       const getBalance = async () => {
         const balance = await contract.balanceOf(account);
-        setBalance(formatBigToNum(balance,18,4));
-      }
+        setBalance(formatBigToNum(balance, 18, 4));
+      };
       getBalance();
-    } else{
-      if(!balanceBNB) return;
+    } else {
+      if (!balanceBNB) return;
       setBalance(formatEther(balanceBNB).substring(0, 6));
     }
-  }, [balanceBNB]); 
+  }, [balanceBNB]);
   useEffect(() => {
-    if (sale_info_public && sale_info_public_erc && sale_info_private && sale_info_private_erc && sale_info_fairlaunch && sale_info_fairlaunch_erc) {
+    if (
+      sale_info_public &&
+      sale_info_public_erc &&
+      sale_info_private &&
+      sale_info_private_erc &&
+      sale_info_fairlaunch &&
+      sale_info_fairlaunch_erc
+    ) {
       if (sale.currency.symbol === "BNB") {
         if (sale.saleType === "standard") {
-          console.log("sale_info_public", sale_info_public.tokenPriceInBNB)
+          console.log("sale_info_public", sale_info_public.tokenPriceInBNB);
           const price = formatBigToNum(
             sale_info_public.tokenPriceInBNB.toString(),
             18,
@@ -96,10 +107,12 @@ export default function Modal({
         //   );
         //   setTokenPrice(price);
         // }
-
-      }else {
+      } else {
         if (sale.saleType === "standard") {
-          console.log("sale_info_public_erc", sale_info_public_erc.tokenPriceInERC20)
+          console.log(
+            "sale_info_public_erc",
+            sale_info_public_erc.tokenPriceInERC20
+          );
           const price = formatBigToNum(
             sale_info_public_erc.tokenPriceInERC20.toString(),
             18,
@@ -149,9 +162,18 @@ export default function Modal({
 
   //get user balanceBNB
 
-
   const handleSubmit = async () => {
     //user balanceBNB
+    //check if sale started
+    console.log(sale)
+    const start = new Date(sale.startDate);
+    const now = new Date();
+    console.log("start", start, "now", now);
+    if (now < start) {
+      alert("Sale not started yet");
+      return;
+    }
+    
 
     if (parseFloat(amount) > parseFloat(balance)) {
       alert("Insufficient Balance");
@@ -159,19 +181,29 @@ export default function Modal({
     }
     const saleContractAddress = sale.saleAddress;
 
-    let abi
+    let abi;
     if (sale.currency.symbol === "BNB") {
       if (sale.saleType === "standard") {
-        abi = PublicSaleAbi
+        abi = PublicSaleAbi;
       }
-    }
-    else {
+      else if (sale.saleType === "private") {
+        abi = PrivateSaleAbi;
+      }
+      else{
+        abi = FairLaunchAbi;
+      }
+    } else {
       if (sale.saleType === "standard") {
-        abi = PublicSaleErcAbi
+        abi = PublicSaleErcAbi;
+      }
+      else if (sale.saleType === "private") {
+        abi = PrivateSaleErcAbi;
+      }
+      else {
+        abi = FairLaunchErcAbi;
       }
     }
 
-    
     const contract = new Contract(
       saleContractAddress,
       abi,
@@ -182,24 +214,28 @@ export default function Modal({
 
     try {
       if (sale.currency.symbol !== "BNB") {
-        const approvalContract = new Contract(sale.currency.address, ERC20, library.getSigner())
-        const approval = await approvalContract.approve(sale.saleAddress, ethers.constants.MaxUint256)
-        await approval.wait()
+        const approvalContract = new Contract(
+          sale.currency.address,
+          ERC20,
+          library.getSigner()
+        );
+        const approval = await approvalContract.approve(
+          sale.saleAddress,
+          ethers.constants.MaxUint256
+        );
+        await approval.wait();
       }
 
-      if(sale.saleType === "standard"){
-        if (sale.currency.symbol === "BNB") {
+      if (sale.currency.symbol === "BNB") {
           const tx = await contract.participate({
             value: amountBuy,
           });
           await tx.wait();
-        }
-        else{
-        const tx = await contract.participate(account,amountBuy);
+      } else {
+        const tx = await contract.participate(amountBuy);
         await tx.wait();
-        }
       }
-      
+
       showModal(false);
     } catch (err) {
       console.log(err);
@@ -228,7 +264,7 @@ export default function Modal({
     <div
       className={`w-screen h-screen flex backdrop-blur-[7px] flex-col justify-center items-center bg-[#F2F3F5] dark:bg-dark dark:bg-opacity-40 bg-opacity-40`}
     >
-      <div className="w-[90%] max-w-[420px] rounded-[10px] px-9 py-7 bg-white dark:bg-dark-1"> 
+      <div className="w-[90%] max-w-[420px] rounded-[10px] px-9 py-7 bg-white dark:bg-dark-1">
         <div className="flex justify-between items-center  ">
           <span className="text-dark-text dark:text-light-text font-gilroy font-semibold text-lg">
             Join Pool

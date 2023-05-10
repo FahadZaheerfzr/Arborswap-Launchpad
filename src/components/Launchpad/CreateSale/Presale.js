@@ -89,6 +89,11 @@ export default function Presale({ setActive, saleType, setSaleObject, token }) {
     useModal("LoadingModal");
 
   const handleSubmit = async () => {
+    if(!enoughBalance)
+    {
+      alert("You don't have enough balance");
+      return;
+    }
     if (amountLiquidity<51)
     {
         alert("Liquidity should be atleast 51%");
@@ -482,7 +487,6 @@ export default function Presale({ setActive, saleType, setSaleObject, token }) {
           <button
             className="bg-primary-green hover:opacity-40 disabled:bg-light-text text-white font-gilroy font-bold px-8 py-3 rounded-md"
             // disabled={address.length < 5}
-            disabled={!enoughBalance}
             onClick={handleSubmit}
           >
             Next

@@ -2,11 +2,10 @@ import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import BaseLayout from "../../components/BaseLayout/BaseLayout";
 import PoolPageBase from "../../components/Launchpad/PoolPage";
-import { Pools } from "../../data/pools";
 import { useEthers } from "@usedapp/core";
 import Modal from "components/Launchpad/Modal";
 import axios from "axios";
-import { Contract } from "ethers";
+import { useModal } from "react-simple-modal-provider";
 import { BACKEND_URL } from "config/constants/LaunchpadAddress";
 
 export default function PoolPage() {
@@ -16,17 +15,21 @@ export default function PoolPage() {
   const [admin, setAdmin] = useState(false);
   const [adminMode, setAdminMode] = useState(false);
   const { account } = useEthers();
+  const { open: openLoadingModal, close: closeLoadingModal } =
+  useModal("LoadingModal");
   
   useEffect(()  => {
     //get pool data from api
+    openLoadingModal()
     axios
       .get(`${BACKEND_URL}/api/sale/${id}`)
       .then((res) => {
         setPool(res.data);
-        
+        closeLoadingModal()
       })
       .catch((err) => {
-        
+        alert ("Something went wrong")
+        closeLoadingModal()
       });
 
     //gonna check if the user is admin or not
