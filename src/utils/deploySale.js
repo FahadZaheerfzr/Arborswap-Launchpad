@@ -33,7 +33,7 @@ export const approveTokens = async (library, token, factoryContractAddress) => {
 }
 
 
-export const deployPublicSale = async (token, saleObject, library, account, deploymentFee, saleData) => {
+export const deployPublicSale = async (token, saleObject, library, account, deploymentFee, saleData, closeLoadingModal) => {
     const contract = new Contract(
       Public_FACTORYADRESS,
       PublicAbi,
@@ -102,11 +102,12 @@ export const deployPublicSale = async (token, saleObject, library, account, depl
 
       return finalSaleObject
     } catch (error) {
-      
+      alert("Transaction Failed")
+      closeLoadingModal()
     }
   }
 
-export const deployPublicSaleERC= async (token, saleObject, library, account, deploymentFee, saleData) => {
+export const deployPublicSaleERC= async (token, saleObject, library, account, deploymentFee, saleData, closeLoadingModal) => {
     const contract = new Contract(
       PublicErc_FACTORYADRESS,
       PublicErcAbi,
@@ -183,13 +184,14 @@ export const deployPublicSaleERC= async (token, saleObject, library, account, de
 
       return finalSaleObject
     } catch (error) {
-      
+      alert("Transaction Failed")
+      closeLoadingModal()
     }
   }
 
 
 
-export const deployPrivateSale = async (token, saleObject, library, account, deploymentFee, saleData) => {
+export const deployPrivateSale = async (token, saleObject, library, account, deploymentFee, saleData, closeLoadingModal) => {
     const contract = new Contract(
       Private_FACTORYADRESS,
       PrivateAbi,
@@ -246,11 +248,12 @@ export const deployPrivateSale = async (token, saleObject, library, account, dep
 
       return finalSaleObject
     } catch (error) {
-      
+      alert("Transaction Failed")
+      closeLoadingModal()
     }
   };
 
-export const deployPrivateErSale = async (token, saleObject, library, account, deploymentFee, saleData) => {
+export const deployPrivateErSale = async (token, saleObject, library, account, deploymentFee, saleData, closeLoadingModal) => {
     const contract = new Contract(
       PrivateErc_FACTORYADRESS,
       PrivateErcAbi,
@@ -315,12 +318,13 @@ export const deployPrivateErSale = async (token, saleObject, library, account, d
 
       return finalSaleObject
     } catch (error) {
-      
+      alert("Transaction Failed")
+      closeLoadingModal()
     }
   };
 
 
-  export const deployFairLaunchSale = async (token, saleObject, library, account, deploymentFee, saleData) => {
+  export const deployFairLaunchSale = async (token, saleObject, library, account, deploymentFee, saleData, closeLoadingModal) => {
     const contract = new Contract(
       FairLaunch_FACTORYADRESS,
       FairAbi,
@@ -378,11 +382,12 @@ export const deployPrivateErSale = async (token, saleObject, library, account, d
 
       return finalSaleObject
     } catch (error) {
-      
+      alert("Transaction Failed")
+      closeLoadingModal()
     }
   };
 
-  export const deployFairLaunchSaleERC20 = async (token, saleObject, library, account, deploymentFee, saleData) => {
+  export const deployFairLaunchSaleERC20 = async (token, saleObject, library, account, deploymentFee, saleData, closeLoadingModal) => {
     const contract = new Contract(
       FairLaunchErc_FACTORYADRESS,
       FairErcAbi,
@@ -450,7 +455,8 @@ export const deployPrivateErSale = async (token, saleObject, library, account, d
       return finalSaleObject
     }
     catch (error) {
-      
+      alert("Transaction Failed")
+      closeLoadingModal()
     }
   };
 

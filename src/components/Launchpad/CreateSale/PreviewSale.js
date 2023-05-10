@@ -46,10 +46,10 @@ export default function PreviewSale({ token, setActive, saleObject, saleType, sa
     if (saleType === 'standard') {
       let finalSaleObject;
       if(saleObject.currency.name === 'Binance') {
-      finalSaleObject = await deployPublicSale(token, saleObject, library, account, deploymentFee, saleData);
+      finalSaleObject = await deployPublicSale(token, saleObject, library, account, deploymentFee, saleData, closeLoadingModal);
       }
       else {
-        finalSaleObject = await deployPublicSaleERC(token, saleObject, library, account, deploymentFee, saleData);
+        finalSaleObject = await deployPublicSaleERC(token, saleObject, library, account, deploymentFee, saleData, closeLoadingModal);
       }
       await axios.post(`${BACKEND_URL}/api/sale`, {
         sale: finalSaleObject,
@@ -60,24 +60,25 @@ export default function PreviewSale({ token, setActive, saleObject, saleType, sa
     else if (saleType === 'private'){
       let finalSaleObject;
       if (saleObject.currency.name === 'Binance') {
-      finalSaleObject = await deployPrivateSale(token, saleObject, library, account, deploymentFee, saleData);
+      finalSaleObject = await deployPrivateSale(token, saleObject, library, account, deploymentFee, saleData, closeLoadingModal);
       }
       else {
-        finalSaleObject = await deployPrivateErSale(token, saleObject, library, account, deploymentFee, saleData);
+        finalSaleObject = await deployPrivateErSale(token, saleObject, library, account, deploymentFee, saleData, closeLoadingModal);
       }
       await axios.post(`${BACKEND_URL}/api/sale`, {
         sale: finalSaleObject,
       }, {
         withCredentials: true,
       });
+
     }
     else if (saleType === 'fairlaunch') {
       let finalSaleObject;
       if (saleObject.currency.name === 'Binance') {
-      finalSaleObject = await deployFairLaunchSale(token, saleObject, library, account, deploymentFee, saleData);
+      finalSaleObject = await deployFairLaunchSale(token, saleObject, library, account, deploymentFee, saleData, closeLoadingModal);
       }
       else {
-        finalSaleObject = await deployFairLaunchSaleERC20(token, saleObject, library, account, deploymentFee, saleData);
+        finalSaleObject = await deployFairLaunchSaleERC20(token, saleObject, library, account, deploymentFee, saleData, closeLoadingModal);
       }
       await axios.post(`${BACKEND_URL}/api/sale`, {
         sale: finalSaleObject,
@@ -86,6 +87,8 @@ export default function PreviewSale({ token, setActive, saleObject, saleType, sa
       });
     }
     closeLoadingModal()
+    //redirect to home page
+    window.location.href = '/'
   }
 
   return (
