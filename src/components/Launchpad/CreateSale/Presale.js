@@ -22,6 +22,9 @@ import {
   PublicErc_FACTORYADRESS,
   PrivateErc_FACTORYADRESS,
   FairLaunchErc_FACTORYADRESS,
+  USDT_ADDRESS,
+  RBA_ADDRESS,
+  GUSD_ADDRESS,
 } from "config/constants/LaunchpadAddress";
 
 const currencies = [
@@ -30,24 +33,28 @@ const currencies = [
     name: "Binance",
     symbol: "BNB",
     icon: "/images/cards/bnb.svg",
+    address: "",
   },
   {
     id: 2,
     name: "Roburna",
     symbol: "RBA",
     icon: "/images/cards/arb.svg",
+    address: RBA_ADDRESS,
   },
   {
     id: 3,
     name: "Gnosis",
     symbol: "GUSD",
     icon: "/images/cards/gusd.svg",
+    address: GUSD_ADDRESS,
   },
   {
     id: 4,
     name: "Tether",
     symbol: "USDT",
     icon: "/images/cards/usdt.svg",
+    address: USDT_ADDRESS,
   },
 ];
 

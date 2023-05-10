@@ -8,17 +8,21 @@ import moment from 'moment'
 export default function CalendarField({ heading, setFunction }) {
     const { theme } = React.useContext(ThemeContext)
     const valid = (current) => {
-        const now = moment()
-        const selected = moment(current)
-        const oneHourLater = moment(now).add(1, 'hour')
-        return selected.isAfter(now) && selected.isAfter(oneHourLater)
-      }
-      
-      
+        return current.isAfter(new Date()-86400000)
+    }
 
     const handleChange = (e) => {
-        setFunction(e.unix())
-    }
+        const selected = moment(e);
+        const now = moment();
+        const oneHourLater = moment(now).add(1, "hour");
+        if (
+          (selected.isSame(now, "day") && selected.isAfter(oneHourLater)) ||
+          selected.isAfter(now)
+        ) {
+          setFunction(selected.unix());
+        }
+      };
+      
 
     return (
         <div className='w-full'>
