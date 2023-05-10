@@ -9,92 +9,65 @@ import { ethers } from "ethers"
 import { useEthers } from '@usedapp/core';
 import { useEffect } from 'react';
 import { useModal } from "react-simple-modal-provider";
-import { deployPrivateSale, deployPublicSale, deployFairLaunchSale,deployPublicSaleERC,deployFairLaunchSaleERC20,deployPrivateErSale } from 'utils/deploySale';
+import { deployPrivateSale, deployPublicSale, deployFairLaunchSale, deployPublicSaleERC, deployFairLaunchSaleERC20, deployPrivateErSale } from 'utils/deploySale';
 import axios from 'axios';
-import {BACKEND_URL} from 'config/constants/LaunchpadAddress'
+import { BACKEND_URL } from 'config/constants/LaunchpadAddress'
 
 
 export default function PreviewSale({ token, setActive, saleObject, saleType, saleData }) {
   const [deploymentFee, setDeploymentFee] = useState(0.0)
-  const {account, library} = useEthers()
+  const { account, library } = useEthers()
   const deployFee = useDeploymentFeePublic()
   const [startTime, setStartTime] = useState(null)
   const [endTime, setEndTime] = useState(null)
-  
+
   const { open: openLoadingModal, close: closeLoadingModal } =
-  useModal("LoadingModal");
+    useModal("LoadingModal");
 
   useEffect(() => {
-    
+
   }, [startTime])
 
-  
+
   useEffect(() => {
     async function getFee() {
       const fee = deployFee;
       setDeploymentFee(ethers.utils.formatEther(fee))
     }
 
-    setStartTime(new Date(saleObject.startDate*1000))
-    setEndTime(new Date(saleObject.endDate*1000))
+    setStartTime(new Date(saleObject.startDate * 1000))
+    setEndTime(new Date(saleObject.endDate * 1000))
     getFee()
   }, [deployFee])
 
-  
+
   const handleSubmit = async () => {
     openLoadingModal()
     if (saleType === 'standard') {
       let finalSaleObject;
-      if(saleObject.currency.name === 'Binance') {
-       finalSaleObject = await deployPublicSale(token, saleObject, library, account, deploymentFee, saleData, closeLoadingModal);
+      if (saleObject.currency.name === 'Binance') {
+        // finalSaleObject = await deployPublicSale(token, saleObject, library, account, deploymentFee, saleData, closeLoadingModal);
       }
       else {
         finalSaleObject = await deployPublicSaleERC(token, saleObject, library, account, deploymentFee, saleData, closeLoadingModal);
       }
+      
       await axios.post(`${BACKEND_URL}/api/sale`, {
         sale: finalSaleObject,
       }, {
         withCredentials: true,
       });
     }
-    else if (saleType === 'private'){
+    else if (saleType === 'private') {
       let finalSaleObject;
       if (saleObject.currency.name === 'Binance') {
-    //  finalSaleObject = await deployPrivateSale(token, saleObject, library, account, deploymentFee, saleData, closeLoadingModal);
+        finalSaleObject = await deployPrivateSale(token, saleObject, library, account, deploymentFee, saleData, closeLoadingModal);
       }
       else {
         finalSaleObject = await deployPrivateErSale(token, saleObject, library, account, deploymentFee, saleData, closeLoadingModal);
       }
 
-       finalSaleObject = {
-        saleId: "test2",
-        saleAddress: "test",
-        saleType: saleData.type,
-        github: saleData.github,
-        website: saleData.website,
-        twitter: saleData.twitter,
-        linkedin: saleData.linkedin,
-        image: saleData.image,
-        name: saleData.name,
-        description: saleData.description,
-        tags: saleData.tags,
-        token: token,
-        minAllocation: saleObject.minAllocation,
-        maxAllocation: saleObject.maxAllocation,
-        amountLiquidity: saleObject.amountLiquidity,
-        listing: saleObject.listing,
-        lockup: saleObject.lockup,
-        presalePrice: saleObject.presalePrice,
-        endDate: saleObject.endDate,
-        startDate: saleObject.startDate,
-        hardCap: saleObject.hardCap,
-        softCap: saleObject.softCap,
-        unsoldToken: saleObject.unsoldToken,
-        currency: saleObject.currency,
-        dex: saleObject.dex,
-        whiteisting: saleObject.whiteisting,
-        owner: account,
-       }
+
       await axios.post(`${BACKEND_URL}/api/sale`, {
         sale: finalSaleObject,
       }, {
@@ -105,7 +78,7 @@ export default function PreviewSale({ token, setActive, saleObject, saleType, sa
     else if (saleType === 'fairlaunch') {
       let finalSaleObject;
       if (saleObject.currency.name === 'Binance') {
-      finalSaleObject = await deployFairLaunchSale(token, saleObject, library, account, deploymentFee, saleData, closeLoadingModal);
+        finalSaleObject = await deployFairLaunchSale(token, saleObject, library, account, deploymentFee, saleData, closeLoadingModal);
       }
       else {
         finalSaleObject = await deployFairLaunchSaleERC20(token, saleObject, library, account, deploymentFee, saleData, closeLoadingModal);
@@ -193,28 +166,28 @@ export default function PreviewSale({ token, setActive, saleObject, saleType, sa
 
       <PreviewHeader heading={"Time Details"} />
       {startTime &&
-      <PreviewDetails name={"Presale Start Date"} value={startTime.toUTCString()} />
+        <PreviewDetails name={"Presale Start Date"} value={startTime.toUTCString()} />
       }
 
       {endTime &&
-      <PreviewDetails name={"Presale End Date"} value={endTime.toUTCString()} />
+        <PreviewDetails name={"Presale End Date"} value={endTime.toUTCString()} />
       }
       {saleType !== "private" &&
-      <div>
-      <PreviewHeader heading={"More Details"} />
+        <div>
+          <PreviewHeader heading={"More Details"} />
 
-      <PreviewDetails name={"Unsold Tokens"} value={saleObject.unsoldToken} />
-      <PreviewDetails name={"Liquidity Lockup"} value={saleObject.lockup + " Days"} />
-      </div>
+          <PreviewDetails name={"Unsold Tokens"} value={saleObject.unsoldToken} />
+          <PreviewDetails name={"Liquidity Lockup"} value={saleObject.lockup + " Days"} />
+        </div>
       }
 
       {saleType === "private" &&
         <div>
-            <PreviewHeader heading={"Token Vesting Details"} />
+          <PreviewHeader heading={"Token Vesting Details"} />
 
-            <PreviewDetails name={"First Release On Sale"} value={saleObject.firstRelease+"%"} />
-            <PreviewDetails name={"Vesting Period each Cycle"} value={saleObject.vestingPeriod + " Days"} />
-            <PreviewDetails name={"Vesting Release each Cycles"} value={saleObject.vestingRelease + "%"} />
+          <PreviewDetails name={"First Release On Sale"} value={saleObject.firstRelease + "%"} />
+          <PreviewDetails name={"Vesting Period each Cycle"} value={saleObject.vestingPeriod + " Days"} />
+          <PreviewDetails name={"Vesting Release each Cycles"} value={saleObject.vestingRelease + "%"} />
         </div>
       }
       <div className="mt-10">
