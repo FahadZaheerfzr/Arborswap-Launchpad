@@ -1,7 +1,7 @@
 import React from "react";
 import ModalField from "./ModalField";
 import { useEffect, useState } from "react";
-import { Contract } from "ethers";
+import { Contract, ethers } from "ethers";
 import { useEtherBalance, useEthers } from "@usedapp/core";
 import PublicSaleAbi from "../../../config/abi/PublicSale.json";
 import PublicSaleErcAbi from "../../../config/abi/PublicSaleErcAbi.json";
@@ -63,9 +63,10 @@ export default function Modal({
       }
       getBalance();
     } else{
+      if(!balanceBNB) return;
       setBalance(formatEther(balanceBNB).substring(0, 6));
     }
-  }, []); 
+  }, [balanceBNB]); 
   useEffect(() => {
     if (sale_info_public && sale_info_public_erc && sale_info_private && sale_info_private_erc && sale_info_fairlaunch && sale_info_fairlaunch_erc) {
       if (sale.currency.symbol === "BNB") {
@@ -180,11 +181,25 @@ export default function Modal({
     const amountBuy = parseEther(amount.toString()).toString();
 
     try {
-      const tx = await contract.participate({
-        account,
-        value: amountBuy,
-      });
-      await tx.wait();
+      if (sale.currency.symbol !== "BNB") {
+        const approvalContract = new Contract(sale.currency.address, ERC20, library.getSigner())
+        const approval = await approvalContract.approve(sale.saleAddress, ethers.constants.MaxUint256)
+        await approval.wait()
+      }
+
+      if(sale.saleType === "standard"){
+        if (sale.currency.symbol === "BNB") {
+          const tx = await contract.participate({
+            value: amountBuy,
+          });
+          await tx.wait();
+        }
+        else{
+        const tx = await contract.participate(account,amountBuy);
+        await tx.wait();
+        }
+      }
+      
       showModal(false);
     } catch (err) {
       console.log(err);
