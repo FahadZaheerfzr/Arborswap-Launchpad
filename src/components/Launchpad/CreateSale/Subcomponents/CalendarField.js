@@ -7,7 +7,7 @@ import HeadingTags from '../../../TokenLocker/Subcomponents/HeadingTags'
 export default function CalendarField({ heading, setFunction }) {
     const { theme } = React.useContext(ThemeContext)
     const valid = (current) => {
-        return current.isAfter(new Date())
+        return current.isAfter(new Date()-86400000)
     }
 
     const handleChange = (e) => {

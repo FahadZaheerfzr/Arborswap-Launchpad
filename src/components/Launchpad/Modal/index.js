@@ -15,6 +15,7 @@ import usePrivateErcSaleInfo from "utils/getPrivateErcSaleInfo";
 import useFairlaunchSaleInfo from "utils/getFairLaunchSaleInfo";
 import useFairlaunchErcSaleInfo from "utils/getFairLaunchErcSaleInfo";
 import { formatBigToNum } from "utils/numberFormat";
+import ERC20 from "config/abi/ERC20.json";
 
 export default function Modal({
   showModal,
@@ -35,10 +36,11 @@ export default function Modal({
   const sale_info_private_erc = usePrivateErcSaleInfo(sale.saleAddress);
   const sale_info_fairlaunch = useFairlaunchSaleInfo(sale.saleAddress);
   const sale_info_fairlaunch_erc = useFairlaunchErcSaleInfo(sale.saleAddress);
+  const balanceBNB = useEtherBalance(account);
+  const [balance, setBalance] = useState(0);
 
   const [tokenPrice, setTokenPrice] = useState(0);
   const [tokenAmount, setTokenAmount] = useState(0);
-
   // console.log("sale_info_public", sale_info_public)
   // console.log("sale_info_public_erc", sale_info_public_erc)
   // console.log("sale_info_public", sale_info_public)
@@ -47,6 +49,23 @@ export default function Modal({
   // console.log("sale_info_fairlaunch", sale_info_fairlaunch)
   // console.log("sale_info_fairlaunch_erc", sale_info_fairlaunch_erc)
 
+  useEffect(() => {
+    console.log("sale", sale);
+    if(sale.currency.symbol !== "BNB"){
+      const contract = new Contract(
+        sale.currency.address,
+        ERC20,
+        library.getSigner()
+      );
+      const getBalance = async () => {
+        const balance = await contract.balanceOf(account);
+        setBalance(formatBigToNum(balance,18,4));
+      }
+      getBalance();
+    } else{
+      setBalance(formatEther(balanceBNB).substring(0, 6));
+    }
+  }, []); 
   useEffect(() => {
     if (sale_info_public && sale_info_public_erc && sale_info_private && sale_info_private_erc && sale_info_fairlaunch && sale_info_fairlaunch_erc) {
       if (sale.currency.symbol === "BNB") {
@@ -127,14 +146,13 @@ export default function Modal({
     convertBNBtoUSD();
   }, []);
 
-  //get user balance
+  //get user balanceBNB
 
-  const balance = useEtherBalance(account);
 
   const handleSubmit = async () => {
-    //user balance
+    //user balanceBNB
 
-    if (parseEther(amount.toString()).gt(balance)) {
+    if (parseFloat(amount) > parseFloat(balance)) {
       alert("Insufficient Balance");
       return;
     }
@@ -180,13 +198,13 @@ export default function Modal({
   };
 
   const handleMax = () => {
-    //balance to number everything after , is not removed
-    let bal = formatEther(balance).substring(0, 6);
+    //balanceBNB to number everything after , is not removed
+    let bal = balance;
     const amt = parseFloat(bal);
     setAmount(amt);
   };
   const handleHalf = () => {
-    let bal = formatEther(balance).substring(0, 6);
+    let bal = balance;
     const amt = parseFloat(bal);
     setAmount(amt / 2);
   };
@@ -226,7 +244,7 @@ export default function Modal({
             <span className="font-medium text-sm text-dim-text dark:text-dim-text-dark">
               Balance:
               <span className="text-dark-text dark:text-light-text">
-                {balance && formatEther(balance).substring(0, 6)}
+                {balance && balance}
               </span>
             </span>
           </div>
