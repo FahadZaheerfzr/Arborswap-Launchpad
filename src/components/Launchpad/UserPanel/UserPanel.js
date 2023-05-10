@@ -35,8 +35,8 @@ export default function SaleBox({ icon, sale }) {
                 </div>
             </div>
 
-            <PreviewDetails name={"Amount Allocated"} value={allocated + " " + sale.currency.symbol} />
-            <PreviewDetails name={"Amount Bought"} value={bought + " " + sale.token.tokenSymbol} />
+            <PreviewDetails name={"My Contribution"} value={allocated + " " + sale.currency.symbol} />
+            <PreviewDetails name={"My Reserved Tokens"} value={bought + " " + sale.token.tokenSymbol} />
 
 
             <div className="flex flex-col items-center">
