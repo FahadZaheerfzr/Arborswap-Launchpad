@@ -46,7 +46,7 @@ export default function PreviewSale({ token, setActive, saleObject, saleType, sa
     if (saleType === 'standard') {
       let finalSaleObject;
       if(saleObject.currency.name === 'Binance') {
-      finalSaleObject = await deployPublicSale(token, saleObject, library, account, deploymentFee, saleData, closeLoadingModal);
+       finalSaleObject = await deployPublicSale(token, saleObject, library, account, deploymentFee, saleData, closeLoadingModal);
       }
       else {
         finalSaleObject = await deployPublicSaleERC(token, saleObject, library, account, deploymentFee, saleData, closeLoadingModal);
@@ -60,11 +60,41 @@ export default function PreviewSale({ token, setActive, saleObject, saleType, sa
     else if (saleType === 'private'){
       let finalSaleObject;
       if (saleObject.currency.name === 'Binance') {
-      finalSaleObject = await deployPrivateSale(token, saleObject, library, account, deploymentFee, saleData, closeLoadingModal);
+    //  finalSaleObject = await deployPrivateSale(token, saleObject, library, account, deploymentFee, saleData, closeLoadingModal);
       }
       else {
         finalSaleObject = await deployPrivateErSale(token, saleObject, library, account, deploymentFee, saleData, closeLoadingModal);
       }
+
+       finalSaleObject = {
+        saleId: "test2",
+        saleAddress: "test",
+        saleType: saleData.type,
+        github: saleData.github,
+        website: saleData.website,
+        twitter: saleData.twitter,
+        linkedin: saleData.linkedin,
+        image: saleData.image,
+        name: saleData.name,
+        description: saleData.description,
+        tags: saleData.tags,
+        token: token,
+        minAllocation: saleObject.minAllocation,
+        maxAllocation: saleObject.maxAllocation,
+        amountLiquidity: saleObject.amountLiquidity,
+        listing: saleObject.listing,
+        lockup: saleObject.lockup,
+        presalePrice: saleObject.presalePrice,
+        endDate: saleObject.endDate,
+        startDate: saleObject.startDate,
+        hardCap: saleObject.hardCap,
+        softCap: saleObject.softCap,
+        unsoldToken: saleObject.unsoldToken,
+        currency: saleObject.currency,
+        dex: saleObject.dex,
+        whiteisting: saleObject.whiteisting,
+        owner: account,
+       }
       await axios.post(`${BACKEND_URL}/api/sale`, {
         sale: finalSaleObject,
       }, {
