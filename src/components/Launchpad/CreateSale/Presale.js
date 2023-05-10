@@ -160,7 +160,7 @@ export default function Presale({ setActive, saleType, setSaleObject, token }) {
     try {
       const balance = await contract.balanceOf(account);
       
-      if (balance.gt(amountRequired)) {
+      if (balance.gte(amountRequired)) {
         return true;
       }
       return false;
