@@ -40,7 +40,7 @@ export default function PoolPage() {
         // setAdminMode(true);
       }
     }
-  }, [id]);
+  }, []);
   return (
     pool && (
       <div className="w-full">

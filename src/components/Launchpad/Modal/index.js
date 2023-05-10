@@ -238,6 +238,7 @@ export default function Modal({
 
       showModal(false);
     } catch (err) {
+      alert("Transaction Failed")
       console.log(err);
     }
   };
