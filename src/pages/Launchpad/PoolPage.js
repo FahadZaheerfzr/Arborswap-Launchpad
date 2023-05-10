@@ -7,6 +7,7 @@ import { useEthers } from "@usedapp/core";
 import Modal from "components/Launchpad/Modal";
 import axios from "axios";
 import { Contract } from "ethers";
+import { BACKEND_URL } from "config/constants/LaunchpadAddress";
 
 export default function PoolPage() {
   const { id } = useParams();
@@ -19,7 +20,7 @@ export default function PoolPage() {
   useEffect(()  => {
     //get pool data from api
     axios
-      .get(`http://localhost:8080/api/sale/${id}`)
+      .get(`${BACKEND_URL}/api/sale/${id}`)
       .then((res) => {
         setPool(res.data);
         
