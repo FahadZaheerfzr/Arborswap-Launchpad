@@ -1,5 +1,5 @@
 import { Contract } from "ethers"
-import PublicSale from 'config/abi/PublicSale.json'
+import PrivateSaleAbi from 'config/abi/PrivateSale.json'
 
 import { useCall, useEthers } from "@usedapp/core"
 
@@ -8,7 +8,7 @@ function usePrivateSaleInfo(saleAddress) {
   const { value, error } =
     useCall(
       {
-        contract: new Contract(saleAddress, PublicSale),
+        contract: new Contract(saleAddress, PrivateSaleAbi),
         method: "sale",
         args: [],
       },

@@ -39,13 +39,13 @@ export default function Modal({
   const [tokenPrice, setTokenPrice] = useState(0);
   const [tokenAmount, setTokenAmount] = useState(0);
 
-  console.log("sale_info_public", sale_info_public)
-  console.log("sale_info_public_erc", sale_info_public_erc)
-  console.log("sale_info_public", sale_info_public)
-  console.log("sale_info_private", sale_info_private)
-  console.log("sale_info_private_erc", sale_info_private_erc)
-  console.log("sale_info_fairlaunch", sale_info_fairlaunch)
-  console.log("sale_info_fairlaunch_erc", sale_info_fairlaunch_erc)
+  // console.log("sale_info_public", sale_info_public)
+  // console.log("sale_info_public_erc", sale_info_public_erc)
+  // console.log("sale_info_public", sale_info_public)
+  // console.log("sale_info_private", sale_info_private)
+  // console.log("sale_info_private_erc", sale_info_private_erc)
+  // console.log("sale_info_fairlaunch", sale_info_fairlaunch)
+  // console.log("sale_info_fairlaunch_erc", sale_info_fairlaunch_erc)
 
   useEffect(() => {
     if (sale_info_public && sale_info_public_erc && sale_info_private && sale_info_private_erc && sale_info_fairlaunch && sale_info_fairlaunch_erc) {
@@ -59,22 +59,23 @@ export default function Modal({
           );
           setTokenPrice(price);
         }
-        else if (sale.saleType === "private") {
-          const price = formatBigToNum(
-            sale_info_private.tokenPriceInBNB.toString(),
-            18,
-            4
-          );
-          setTokenPrice(price);
-        }
-        else if (sale.saleType === "fairlaunch") {
-          const price = formatBigToNum(
-            sale_info_fairlaunch.tokenPriceInBNB.toString(),
-            18,
-            4
-          );
-          setTokenPrice(price);
-        }
+        // else if (sale.saleType === "private") {
+        //   console.log("sale_info_private", sale_info_private)
+        //   const price = formatBigToNum(
+        //     sale_info_private.tokenPriceInBNB.toString(),
+        //     18,
+        //     4
+        //   );
+        //   setTokenPrice(price);
+        // }
+        // else if (sale.saleType === "fairlaunch") {
+        //   const price = formatBigToNum(
+        //     sale_info_fairlaunch.tokenPriceInBNB.toString(),
+        //     18,
+        //     4
+        //   );
+        //   setTokenPrice(price);
+        // }
 
       }else {
         if (sale.saleType === "standard") {
@@ -86,22 +87,22 @@ export default function Modal({
           );
           setTokenPrice(price);
         }
-        else if (sale.saleType === "private") {
-          const price = formatBigToNum(
-            sale_info_private_erc.tokenPriceInERC20.toString(),
-            18,
-            4
-          );
-          setTokenPrice(price);
-        }
-        else if (sale.saleType === "fairlaunch") {
-          const price = formatBigToNum(
-            sale_info_fairlaunch_erc.tokenPriceInERC20.toString(),
-            18,
-            4
-          );
-          setTokenPrice(price);
-        }
+        // else if (sale.saleType === "private") {
+        //   const price = formatBigToNum(
+        //     sale_info_private_erc.tokenPriceInERC20.toString(),
+        //     18,
+        //     4
+        //   );
+        //   setTokenPrice(price);
+        // }
+        // else if (sale.saleType === "fairlaunch") {
+        //   const price = formatBigToNum(
+        //     sale_info_fairlaunch_erc.tokenPriceInERC20.toString(),
+        //     18,
+        //     4
+        //   );
+        //   setTokenPrice(price);
+        // }
       }
     }
   }, [sale_info_public, sale_info_public_erc]);
@@ -151,20 +152,25 @@ export default function Modal({
       }
     }
 
+    
     const contract = new Contract(
       saleContractAddress,
       abi,
-      library.getSigner(account)
+      library.getSigner()
     );
+    console.log("contract", contract);
     const amountBuy = parseEther(amount.toString()).toString();
 
     try {
       const tx = await contract.participate({
+        account,
         value: amountBuy,
       });
       await tx.wait();
       showModal(false);
-    } catch (err) {}
+    } catch (err) {
+      console.log(err);
+    }
   };
 
   const handleInput = async (e) => {

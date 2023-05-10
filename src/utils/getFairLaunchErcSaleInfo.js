@@ -1,5 +1,5 @@
 import { Contract } from "ethers"
-import PublicSaleAbi from 'config/abi/PublicSaleErcAbi.json'
+import FairlaunchSaleAbi from 'config/abi/FairlaunchErcAbi.json'
 
 import { useCall, useEthers } from "@usedapp/core"
 
@@ -7,7 +7,7 @@ function useFairlaunchErcSaleInfo(saleAddress) {
   const { value, error } =
     useCall(
       {
-        contract: new Contract(saleAddress, PublicSaleAbi),
+        contract: new Contract(saleAddress, FairlaunchSaleAbi),
         method: "sale",
         args: [],
       },
