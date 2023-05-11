@@ -6,23 +6,9 @@ import axios from "axios";
 import { BACKEND_URL } from "config/constants/LaunchpadAddress";
 import PercentFilled from "./Subcomponents/PercentFilled";
 
-export default function PoolsBase({ activeStatus }) {
-  const [pools, setPools] = useState([]);
-  const [loading, setLoading] = useState(true);
+export default function PoolsBase({ activeStatus,pools,loading }) {
 
-  //we will get data for pools from api
-  useEffect(() => {
-    //api request to localhost:8080/api/sale
-    setLoading(true);
-    axios
-      .get(`${BACKEND_URL}/api/sale`)
-      .then((res) => {
-        setPools(res.data);
-      })
-      .catch((err) => {});
 
-    setLoading(false);
-  }, []);
 
   const checkStatus = (item) => {
     //from item.sale.start_date and item.sale.end_date we will check the status of the pool

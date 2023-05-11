@@ -1,9 +1,10 @@
-import React, { useState } from 'react'
-import SearchSVG from '../../svgs/search'
-import Carousel from './Slider/Slider'
-import ItemSwitch from './Switches/ItemSwitch'
-import Tab from './Switches/Tab'
-import ViewSwitch from './Switches/ViewSwitch'
+import React, { useState, useEffect } from 'react';
+import SearchSVG from '../../svgs/search';
+import Carousel from './Slider/Slider';
+import ItemSwitch from './Switches/ItemSwitch';
+import Tab from './Switches/Tab';
+import ViewSwitch from './Switches/ViewSwitch';
+
 
 export default function HomeLayout({
   children,
@@ -14,14 +15,25 @@ export default function HomeLayout({
   tabs,
   activeTab,
   setActiveTab,
-  airdrop
+  airdrop,
+  setFilteredPools,
+  pools,
 }) {
-  //   const [sortFilter, setSortFilter] = useState('')
-  const [on, setOn] = useState(true)
+  const [searchQuery, setSearchQuery] = useState('');
+  const [on, setOn] = useState(true);
 
   const handleToggle = () => {
-    setOn(!on)
-  }
+    setOn(!on);
+  };
+
+  const filteredPools = pools.filter((pool) =>
+    pool.sale.name.toLowerCase().includes(searchQuery.toLowerCase())
+  );
+
+  useEffect(() => {
+    setFilteredPools(filteredPools);
+  }, [searchQuery]);
+  
 
   return (
     <div className="w-full flex flex-col items-center ">
@@ -52,8 +64,7 @@ export default function HomeLayout({
           {!tabs && <ItemSwitch itemSelected={itemSelected} setItemSelected={setItemSelected} />}
           <div className="px-5 py-3 rounded-md bg-white dark:bg-dark-1 flex justify-center items-center">
             <span className="text-gray dark:text-gray-dark font-gilroy font-semibold text-sm">
-              {airdrop? 'Whitelisted': 'My Locks'}
-              
+              {airdrop ? 'Whitelisted' : 'My Locks'}
             </span>
 
             <label htmlFor="lock-toggle" className="inline-flex relative items-center cursor-pointer ml-[10px]">
@@ -79,7 +90,9 @@ export default function HomeLayout({
           <div className="hidden md:flex items-center justify-between border-2 border-white dark:border-dark-1 bg-[#F5F1EB] dark:bg-dark-3 rounded-md px-5 py-3">
             <input
               className="bg-transparent placeholder:text-dim-text dark:placeholder:text-dim-text-dark focus:outline-none w-60"
-              placeholder={airdrop? "Search Airdrops" :"Search token or liquidity pair"}
+              placeholder={airdrop ? 'Search Airdrops' : 'Search token or liquidity pair'}
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
             />
 
             <SearchSVG className="fill-dark-text dark:fill-light-text" />
@@ -98,6 +111,8 @@ export default function HomeLayout({
             <input
               className="pl-2 bg-transparent placeholder:text-dim-text dark:placeholder:text-dim-text-dark focus:outline-none"
               placeholder="Search token or liquidity pair"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
             />
 
             <SearchSVG className="relative -left-3 fill-dark-text dark:fill-light-text" />
@@ -107,5 +122,5 @@ export default function HomeLayout({
         {children}
       </div>
     </div>
-  )
+  );
 }

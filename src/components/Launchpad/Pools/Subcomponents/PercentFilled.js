@@ -4,7 +4,6 @@ import useSaleInfo from 'utils/getSaleInfo';
 import { formatBigToNum } from 'utils/numberFormat';
 
 export default function PercentFilled(address) {
-    console.log(address.address)
     const [filled_percent, setFilledPercent] = useState(0);
     const sale = useSaleInfo(address.address);
     // console.log(sale)
