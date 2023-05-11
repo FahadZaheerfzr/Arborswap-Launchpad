@@ -4,8 +4,20 @@ import SaleBox from '../Sale'
 import UserPanel from '../UserPanel/UserPanel';
 import AdminPanel from '../Admin/AdminPanel';
 import FundRaised from '../Admin/FundRaised';
+import { useState } from 'react';
+import { useEffect } from 'react';
 
 export default function PoolPageBase({ pool, showModal, admin }) {
+  const [status, setStatus] = useState('Live')
+  console.log(status)
+  useEffect(() => {
+    //if endDate is less than current date, set status to ended
+    if (pool.endDate < new Date().getTime()) {
+      setStatus('Ended')
+    }
+  }, [])
+
+
   return (
     pool && (
       <div className="w-full flex justify-center">
@@ -34,9 +46,9 @@ export default function PoolPageBase({ pool, showModal, admin }) {
           <div className="mt-14 md:mt-0 md:w-[35%] ">
 
             {admin ?
-              <AdminPanel icon={pool.image} status={pool.saleType} hard_cap={pool.hardCap} filled_percent={pool.filled_percent}/>
+              <AdminPanel icon={pool.image} status={pool.saleType} hard_cap={pool.hardCap} filled_percent={pool.filled_percent} soft_cap={pool.softCap} sale={pool} />
               : <SaleBox hard_cap={pool.hardCap} hard_cap_icon={pool.image}
-                min_allocation={pool.minAllocation} max_allocation={pool.maxAllocation} status={pool.saleType}
+                min_allocation={pool.minAllocation} max_allocation={pool.maxAllocation} status={status}
                 currency={pool.currency} ends_on={pool.endDate} showModal={showModal} token = {pool.token} presale_address={pool.saleAddress} />
             }
             {

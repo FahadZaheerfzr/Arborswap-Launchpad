@@ -97,6 +97,7 @@ export const deployPublicSale = async (token, saleObject, library, account, depl
         dex: saleObject.dex,
         whiteisting: saleObject.whiteisting,
         owner: account,
+        isFinished:false,
       }
       
 
@@ -179,6 +180,7 @@ export const deployPublicSaleERC= async (token, saleObject, library, account, de
         dex: saleObject.dex,
         whiteisting: saleObject.whiteisting,
         owner: account,
+        isFinished:false,
       }
       
 
@@ -244,12 +246,14 @@ export const deployPrivateSale = async (token, saleObject, library, account, dep
         dex: saleObject.dex,
         whiteisting: saleObject.whiteisting,
         owner: account,
+        isFinished:false,
       }
 
       return finalSaleObject
     } catch (error) {
       alert("Transaction Failed")
       closeLoadingModal()
+
     }
   };
 
@@ -314,6 +318,7 @@ export const deployPrivateErSale = async (token, saleObject, library, account, d
         dex: saleObject.dex,
         whiteisting: saleObject.whiteisting,
         owner: account,
+        isFinished:false,
       }
 
       return finalSaleObject
@@ -377,7 +382,8 @@ export const deployPrivateErSale = async (token, saleObject, library, account, d
         hardCap:saleObject.hardCap,
         softCap: saleObject.softCap,
         currency: saleObject.currency,   
-        owner: account,     
+        owner: account,
+        isFinished:false,     
       }
 
       return finalSaleObject
@@ -449,7 +455,8 @@ export const deployPrivateErSale = async (token, saleObject, library, account, d
         hardCap: saleObject.hardCap,
         softCap: saleObject.softCap,
         currency: saleObject.currency,    
-        owner: account,    
+        owner: account,
+        isFinished:false,    
       }
 
       return finalSaleObject

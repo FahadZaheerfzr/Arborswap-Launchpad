@@ -150,8 +150,8 @@ export default function PoolsBase({ activeStatus }) {
                             <span className='text-xs font-medium text-gray dark:text-gray-dark'>
                                 Ends in
                             </span>
-
-                            <Timer time={new Date(pool.sale.endDate * 1000)} />
+                            
+                            <Timer date={pool.sale.endDate} />
                         </div>
                     </div>
                 </Link>

@@ -152,6 +152,7 @@ export default function Presale({ setActive, saleType, setSaleObject, token }) {
       unsoldToken: unsoldToken,
       lockup: lockup,
       owner : account,
+      isFinished : false,
     };
     
     setSaleObject(presaleObject);

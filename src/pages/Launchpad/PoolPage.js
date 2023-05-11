@@ -25,22 +25,23 @@ export default function PoolPage() {
       .get(`${BACKEND_URL}/api/sale/${id}`)
       .then((res) => {
         setPool(res.data);
+
+        // Check if the user is admin
+        console.log(res.data.sale.owner.toLowerCase(), account.toLowerCase())
+        if (account && res.data.sale.owner.toLowerCase() === account.toLowerCase()) {
+          setAdmin(true);
+          setAdminMode(true);
+        }
+
         closeLoadingModal()
       })
       .catch((err) => {
         alert ("Something went wrong")
         closeLoadingModal()
       });
-
-    //gonna check if the user is admin or not
-    //also gonna check if pool is empty or not
-    if (account && pool) {
-      if (pool.sale.owner.toLowerCase() === account.toLowerCase()) {
-        // setAdmin(true);
-        // setAdminMode(true);
-      }
-    }
   }, []);
+
+  console.log(adminMode, admin)
   return (
     pool && (
       <div className="w-full">
@@ -55,6 +56,7 @@ export default function PoolPage() {
               token = {pool.sale.token}
               sale = {pool.sale}
               account={account}
+              
             />
           </div>
         )}

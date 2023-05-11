@@ -77,19 +77,25 @@ export default function SaleBox({ hard_cap, hard_cap_icon, min_allocation, max_a
             </div>
 
             <div className="flex mt-10">
-                <button className={`w-full ${status!=="Ended" ? "bg-primary-green" : "bg-dim-text bg-opacity-50 dark:bg-dim-text-dark"} rounded-md text-white font-bold py-4`}
+                <button
+                 disabled = {status==="Ended" ? true : false}
+                className={`w-full ${status!=="Ended" ? "bg-primary-green" : "bg-dim-text bg-opacity-50 dark:bg-dim-text-dark"} rounded-md text-white font-bold py-4`}
                     onClick={()=>showModal(true)}>
                     {status!=="Ended" ? "Join Sale" : "Ended"}
                 </button>
             </div>
 
             <div className="flex justify-center mt-7">
-                <span className="text-sm font-medium text-gray dark:text-gray-dark">
+                <span
+                className="text-sm font-medium text-gray dark:text-gray-dark ">
                     {status!=="Ended" ? "Sale Ends in" : "Sale Ended"}
                 </span>
             </div>
-            
-            <Timer date={new Date(ends_on*1000)} />
+            {/* if sale ended then just write Sale has ended */}
+            {/* if sale is live then show timer */}
+            {
+                status!=="Ended" && <Timer ends_on={ends_on} />
+            }
         </div>
     )
 }
