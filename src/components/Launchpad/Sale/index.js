@@ -3,10 +3,10 @@ import React, { useEffect, useState } from 'react'
 import useSaleInfo from 'utils/getSaleInfo';
 import { formatBigToNum } from 'utils/numberFormat';
 
-export default function SaleBox({ hard_cap, hard_cap_icon, min_allocation, max_allocation, ends_on, showModal, status,token, presale_address, currency }) {
+export default function SaleBox({ hard_cap, hard_cap_icon, min_allocation, max_allocation, ends_on, showModal, status,token, presale_address, currency, start_date }) {
     const [filled_percent, setFilledPercent] = useState(0)
     const sale = useSaleInfo(presale_address);
-
+    console.log(ends_on)
     useEffect(()=>{
 
         const getFilledPercent = async () => {
@@ -26,7 +26,7 @@ export default function SaleBox({ hard_cap, hard_cap_icon, min_allocation, max_a
                 <span className="text-gray dark:text-gray-dark text-sm font-medium">Soft/Hard Cap</span>
 
                 <div className="bg-primary-green bg-opacity-[0.08] px-3 py-[3px] rounded-[10px] border-[0.5px] border-dashed border-primary-green">
-                    <span className="rounded-[10px] text-primary-green">Live</span>
+                    <span className="rounded-[10px] text-primary-green">{status}</span>
                 </div>
             </div>
 
@@ -75,7 +75,21 @@ export default function SaleBox({ hard_cap, hard_cap_icon, min_allocation, max_a
                     {filled_percent}%
                 </div>
             </div>
+            {/* if sale is upcoming then show countdown */}
 
+            {
+                status==="Upcoming" ?
+                <div>
+                <div className="flex justify-center mt-7">
+                    <span
+                    className="text-sm font-medium text-gray dark:text-gray-dark ">
+                        Sale Starts in
+                    </span>
+
+                </div>
+                <Timer date={new Date(start_date*1000)} />
+                </div>
+            :
             <div className="flex mt-10">
                 <button
                  disabled = {status==="Ended" ? true : false}
@@ -84,17 +98,19 @@ export default function SaleBox({ hard_cap, hard_cap_icon, min_allocation, max_a
                     {status!=="Ended" ? "Join Sale" : "Ended"}
                 </button>
             </div>
-
+            }
+            {status!=="Upcoming" && 
             <div className="flex justify-center mt-7">
                 <span
                 className="text-sm font-medium text-gray dark:text-gray-dark ">
                     {status!=="Ended" ? "Sale Ends in" : "Sale Ended"}
                 </span>
             </div>
+            }
             {/* if sale ended then just write Sale has ended */}
             {/* if sale is live then show timer */}
             {
-                status!=="Ended" && <Timer ends_on={ends_on} />
+                status!=="Ended" && status!=="Upcoming" && <Timer date={new Date(ends_on*1000)} />
             }
         </div>
     )

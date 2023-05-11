@@ -1,10 +1,14 @@
 import Options from 'components/LockedAsset/Preview/Subcomponents/Options'
-import React from 'react'
+import { ThemeContext } from 'context/ThemeContext/ThemeProvider'
+import React, { useContext } from 'react'
 import { Link } from 'react-router-dom'
 import DribbleSVG from 'svgs/Socials/dribble'
+import GithubSVG from 'svgs/Socials/github'
 import TwitterSVG from 'svgs/Socials/twitter'
 
 export default function Info({ icon, name, is_private, tags, pool }) {
+  const { theme } = useContext(ThemeContext);
+
   return (
     <div className="flex items-center justify-between">
       <div className="flex items-center">
@@ -32,6 +36,15 @@ export default function Info({ icon, name, is_private, tags, pool }) {
       </div>
 
       <div className="flex items-center gap-5">
+          {pool.github !== "" &&
+          <Link to={pool.github} target="_blank" rel="noopener noreferrer" >
+          <GithubSVG
+            className="w-5 h-5"
+            outer={`${theme === "dark" ? "#fff" : "#464754"}`}
+            inner={`${theme === "dark" ? "#464754" : "#fff"}`}
+          />
+          </Link>
+          }
         {pool.twitter !== "" &&
         <Link to={pool.twitter} target="_blank" rel="noopener noreferrer" >
           <TwitterSVG className="fill-dark-text dark:fill-light-text hidden md:block" />

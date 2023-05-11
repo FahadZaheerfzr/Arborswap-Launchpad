@@ -11,9 +11,12 @@ export default function PoolPageBase({ pool, showModal, admin }) {
   const [status, setStatus] = useState('Live')
   console.log(status)
   useEffect(() => {
+
     //if endDate is less than current date, set status to ended
-    if (pool.endDate < new Date().getTime()) {
+    if (pool.endDate < new Date().getTime()/1000) {
       setStatus('Ended')
+    } else if (pool.startDate > new Date().getTime()/1000){
+      setStatus('Upcoming')
     }
   }, [])
 
@@ -46,9 +49,9 @@ export default function PoolPageBase({ pool, showModal, admin }) {
           <div className="mt-14 md:mt-0 md:w-[35%] ">
 
             {admin ?
-              <AdminPanel icon={pool.image} status={pool.saleType} hard_cap={pool.hardCap} filled_percent={pool.filled_percent} soft_cap={pool.softCap} sale={pool} />
-              : <SaleBox hard_cap={pool.hardCap} hard_cap_icon={pool.image}
-                min_allocation={pool.minAllocation} max_allocation={pool.maxAllocation} status={status}
+              <AdminPanel icon={pool.image} status={status && status} hard_cap={pool.hardCap} filled_percent={pool.filled_percent} soft_cap={pool.softCap} sale={pool} />
+              : <SaleBox hard_cap={pool.hardCap} hard_cap_icon={pool.image} start_date={pool.startDate}
+                min_allocation={pool.minAllocation} max_allocation={pool.maxAllocation} status={status&& status}
                 currency={pool.currency} ends_on={pool.endDate} showModal={showModal} token = {pool.token} presale_address={pool.saleAddress} />
             }
             {

@@ -6,7 +6,7 @@ const Timer = ({ date }) => {
   const [hours, setHours] = useState(0)
   const [minutes, setMinutes] = useState(0)
   const [seconds, setSeconds] = useState(0)
-
+  console.log(date)
   useEffect(() => {
     var updateTime = setInterval(() => {
       const time = date - Date.parse(new Date())

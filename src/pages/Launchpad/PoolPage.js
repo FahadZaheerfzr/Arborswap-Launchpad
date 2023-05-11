@@ -36,7 +36,8 @@ export default function PoolPage() {
         closeLoadingModal()
       })
       .catch((err) => {
-        alert ("Something went wrong")
+        console.log(err);
+        //alert ("Something went wrong")
         closeLoadingModal()
       });
   }, []);

@@ -54,7 +54,7 @@ export default function AdminPanel({
       await tx.wait();
       console.log(tx);
     } catch (err) {
-      alert("Something went wrong");
+//      alert("Something went wrong");
       setShowModal(false);
       console.log(err);
     }
