@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import CalendarSVG from '../../../../svgs/TokenLocker/calendar'
 import Datetime from 'react-datetime'
 import { ThemeContext } from '../../../../context/ThemeContext/ThemeProvider'
@@ -7,11 +7,13 @@ import moment from 'moment'
 
 export default function CalendarField({ heading, setFunction }) {
     const { theme } = React.useContext(ThemeContext)
+    const [date, setDate] = React.useState(new Date());
     const valid = (current) => {
         return current.isAfter(new Date()-86400000)
     }
 
-    const handleChange = (e) => {
+    
+    const handleChange = (e) => {    
         const selected = moment(e);
         const now = moment();
         const oneHourLater = moment(now).add(1, "hour");
@@ -20,6 +22,9 @@ export default function CalendarField({ heading, setFunction }) {
           selected.isAfter(now)
         ) {
           setFunction(selected.unix());
+          setDate(selected.toDate());
+        } else{
+            setDate(new Date())
         }
       };
       
@@ -39,6 +44,7 @@ export default function CalendarField({ heading, setFunction }) {
                     onChange={handleChange}
                     dateFormat="DD/MM/YYYY"
                     timeFormat="HH:mm:ss"
+                    value={moment(date)}
                     utc={true}
                 />
             </div>
