@@ -46,7 +46,7 @@ export default function PreviewSale({ token, setActive, saleObject, saleType, sa
     if (saleType === 'standard') {
       let finalSaleObject;
       if (saleObject.currency.name === 'Binance') {
-        // finalSaleObject = await deployPublicSale(token, saleObject, library, account, deploymentFee, saleData, closeLoadingModal);
+        finalSaleObject = await deployPublicSale(token, saleObject, library, account, deploymentFee, saleData, closeLoadingModal);
       }
       else {
         finalSaleObject = await deployPublicSaleERC(token, saleObject, library, account, deploymentFee, saleData, closeLoadingModal);
