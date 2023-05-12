@@ -52,7 +52,7 @@ export default function PoolPageBase({ pool, showModal, admin }) {
               <AdminPanel icon={pool.image} status={status && status} hard_cap={pool.hardCap} filled_percent={pool.filled_percent} soft_cap={pool.softCap} sale={pool} />
               : <SaleBox hard_cap={pool.hardCap} hard_cap_icon={pool.image} start_date={pool.startDate}
                 min_allocation={pool.minAllocation} max_allocation={pool.maxAllocation} status={status&& status}
-                currency={pool.currency} ends_on={pool.endDate} showModal={showModal} token = {pool.token} presale_address={pool.saleAddress} />
+                currency={pool.currency} ends_on={pool.endDate} showModal={showModal} token = {pool.token} presale_address={pool.saleAddress} sale={pool} />
             }
             {
               admin && pool.status === 'Ended' &&
@@ -60,9 +60,9 @@ export default function PoolPageBase({ pool, showModal, admin }) {
                 <FundRaised icon={pool.image} pool = {pool}/>
               </div>
             }
-            {pool.sale_type !== 'Private' && !admin &&
+            {pool.saleType !== 'private' && !admin &&
               <div className='mt-[30px]'>
-                <UserPanel icon={pool.image} sale={pool}/>
+                <UserPanel icon={pool.image} sale={pool} status={status && status} />
               </div>
             }
           </div>
