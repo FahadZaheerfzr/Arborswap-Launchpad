@@ -1,4 +1,4 @@
-const BACKEND_URL = "http://3.91.222.195"
+const BACKEND_URL = "http://localhost:8080"
 
 
 const FairLaunch_FACTORYADRESS = "0x28b97c21ef92b9e272dd4c2c579e76ed68315d11"
