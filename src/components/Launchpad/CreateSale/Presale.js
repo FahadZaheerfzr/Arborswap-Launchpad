@@ -451,6 +451,7 @@ export default function Presale({ setActive, saleType, setSaleObject, token }) {
         <div>
           <PreviewHeader heading={"More Details"} />
           <PresaleStandard
+          unsoldToken={unsoldToken}
             setUnsoldTokens={setUnsoldTokens}
             setLockup={setLockup}
           />

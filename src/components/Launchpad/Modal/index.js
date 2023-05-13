@@ -232,7 +232,7 @@ export default function Modal({
           });
           await tx.wait();
       } else {
-        const tx = await contract.participate(amountBuy);
+        const tx = await contract.participate(account, amountBuy);
         await tx.wait();
       }
 

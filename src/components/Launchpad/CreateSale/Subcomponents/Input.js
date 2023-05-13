@@ -1,14 +1,15 @@
 import Tooltip from 'components/Common/Tooltip'
-import React from 'react'
+import React, { useState } from 'react'
 import HeadingTags from '../../../TokenLocker/Subcomponents/HeadingTags'
 
-export default function Input({heading, tooltip, icon, value, disabled, currencies, currencySelected, nothing, text, changeState}) {
+export default function Input({ heading, tooltip, icon, value, disabled, currencies, currencySelected, nothing, text, changeState }) {
+    const [dropdown, setDropdown] = useState(false)
     return (
         <div className='w-full'>
             <div className="flex items-center">
                 <HeadingTags name={heading} required />
                 {tooltip &&
-                <Tooltip text={tooltip} />
+                    <Tooltip text={tooltip} />
                 }
             </div>
 
@@ -18,17 +19,35 @@ export default function Input({heading, tooltip, icon, value, disabled, currenci
                     type={'text'}
                     value={value}
                     disabled={disabled}
-                    onChange={(e)=>changeState(e.target.value)}
+                    onChange={(e) => changeState(e.target.value)}
                     placeholder="70"
                 />
                 {currencySelected ?
-                <img className='w-5 h-5' src={currencies[currencySelected - 1].icon} alt='currency-icon' />
-                : 
-                icon? <img className='w-5 h-5' src={icon} alt='currency-icon' />
-                : !nothing ? 
-                text ? <span className='font-semibold'>{text}</span> :<span>%</span>  : null
+                    <img className='w-5 h-5' src={currencies[currencySelected - 1].icon} alt='currency-icon' />
+                    :
+                    icon ? <img className='w-5 h-5' src={icon} alt='currency-icon' onClick={() => {
+                        setDropdown(!dropdown)
+                    }} />
+                        : !nothing ?
+                            text ? <span className='font-semibold'>{text}</span> : <span>%</span> : null
                 }
             </div>
+            {
+                dropdown &&
+                <div className='relative z-10'>
+                    <div className='absolute top-0  mt-1 rounded-lg  w-full bg-white dark:bg-dark-3'>
+                        {["Burn", "Refund"].map((item, index) => (
+                            <div key={index} className='w-full text-white  py-3 flex border-b border-dashed border-dark-2 justify-center items-center hover:bg-white hover:text-dark-1'
+                            onClick={()=>changeState(item)}>
+                                    {item}                                
+                            </div>
+                        )
+                        )}
+
+
+                    </div>
+                </div>
+            }
         </div>
     )
 }
