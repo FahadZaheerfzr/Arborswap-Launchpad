@@ -12,6 +12,9 @@ import useParticipated from "utils/getParticipated";
 import { formatBigToNum } from "utils/numberFormat";
 import ConfirmModal from "../Admin/subComponents/ConfirmModal";
 import { useModal } from "react-simple-modal-provider";
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+
 
 export default function SaleBox({ icon, sale, status }) {
   const { account, library } = useEthers();
@@ -30,16 +33,17 @@ export default function SaleBox({ icon, sale, status }) {
       PublicSaleAbi,
       library.getSigner()
     );
-    const userParticipation = await contract.getParticipation(account);
+    const userParticipation = await contract.userToParticipation(account);
     setBought(formatBigToNum(userParticipation[0].toString(), 18, 4));
     setAllocated(formatBigToNum(userParticipation[1].toString(), 18, 4));
+    console.log("userParticipation", userParticipation);
   };
 
   const withdrawTokens = async () => {
     openLoadingModal()
     setShowModal(false);
     if (participated[0] === false) {
-      alert("You have not participated in this sale");
+      toast.error("You have not participated in this sale");
       return;
     }
     let contract;
@@ -77,9 +81,9 @@ export default function SaleBox({ icon, sale, status }) {
     try {
       const tx = await contract.withdraw();
       await tx.wait();
-      alert("Tokens Withdrawn");
+      toast.success("Tokens Withdrawn");
     } catch (err) {
-      alert("Transaction Failed");
+      toast.error("Transaction Failed");
       console.log(err);
       closeLoadingModal()
     }
@@ -91,7 +95,7 @@ export default function SaleBox({ icon, sale, status }) {
     openLoadingModal()
     setShowModal(false);
     if (participated[0] === false) {
-      alert("You have not participated in this sale");
+      toast.error("You have not participated in this sale");
       return;
     }
     let contract;
@@ -113,9 +117,9 @@ export default function SaleBox({ icon, sale, status }) {
     try {
       const tx = await contract.withdrawParticipation();
       await tx.wait();
-      alert("Tokens Withdrawn");
+      toast.success("Participation Withdrawn");
     } catch (err) {
-      alert("Transaction Failed");
+      toast.error("Transaction Failed");
       console.log(err);
       closeLoadingModal()
     }

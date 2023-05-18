@@ -20,6 +20,9 @@ import useFairlaunchSaleInfo from "utils/getFairLaunchSaleInfo";
 import useFairlaunchErcSaleInfo from "utils/getFairLaunchErcSaleInfo";
 import { formatBigToNum } from "utils/numberFormat";
 import ERC20 from "config/abi/ERC20.json";
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import useAmountParticipated from "utils/getAmountParticipated";
 
 export default function Modal({
   showModal,
@@ -35,6 +38,7 @@ export default function Modal({
   const [bnbUSD, setBnbUSD] = useState(317);
   const [usdAmount, setUsdAmount] = useState(sale.minAllocation * bnbUSD);
   const sale_info_public_erc = usePublicErcSaleInfo(sale.saleAddress);
+  
   const sale_info_public = useSaleInfo(sale.saleAddress);
   const sale_info_private = usePrivateSaleInfo(sale.saleAddress);
   const sale_info_private_erc = usePrivateErcSaleInfo(sale.saleAddress);
@@ -42,6 +46,7 @@ export default function Modal({
   const sale_info_fairlaunch_erc = useFairlaunchErcSaleInfo(sale.saleAddress);
   const balanceBNB = useEtherBalance(account);
   const [balance, setBalance] = useState(0);
+  const bought = useAmountParticipated(sale.saleAddress, account);
 
   const [tokenPrice, setTokenPrice] = useState(0);
   const [tokenAmount, setTokenAmount] = useState(0);
@@ -52,7 +57,7 @@ export default function Modal({
   // console.log("sale_info_private_erc", sale_info_private_erc)
   // console.log("sale_info_fairlaunch", sale_info_fairlaunch)
   // console.log("sale_info_fairlaunch_erc", sale_info_fairlaunch_erc)
-
+  
   useEffect(() => {
     console.log("sale", sale);
     if (sale.currency.symbol !== "BNB") {
@@ -161,22 +166,26 @@ export default function Modal({
   }, []);
 
   //get user balanceBNB
-
   const handleSubmit = async () => {
     //user balanceBNB
     //check if sale started
+    const userAllocation = formatBigToNum(bought[0].toString(), 18, 4);
+    if (userAllocation>=sale.maxAllocation){
+      toast.error("You have reached the maximum allocation");
+      return;
+    }
     console.log(sale)
     const start = new Date(sale.startDate);
     const now = new Date();
     console.log("start", start, "now", now);
     if (now < start) {
-      alert("Sale not started yet");
+      toast.error("Sale not started yet");
       return;
     }
     
 
     if (parseFloat(amount) > parseFloat(balance)) {
-      alert("Insufficient Balance");
+      toast.error("Insufficient balance");
       return;
     }
     const saleContractAddress = sale.saleAddress;
@@ -238,7 +247,7 @@ export default function Modal({
 
       showModal(false);
     } catch (err) {
-      alert("Transaction Failed")
+      toast.error("Transaction failed");
       console.log(err);
     }
   };
@@ -370,6 +379,7 @@ export default function Modal({
           Buy
         </button>
       </div>
+      <ToastContainer />
     </div>
   );
 }

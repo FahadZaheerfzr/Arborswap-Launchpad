@@ -110,7 +110,7 @@ export default function PoolsBase({ activeStatus,pools,loading }) {
                     <PercentFilled address={pool.sale.saleAddress} />
 
                     <div className="flex items-center justify-between mt-6">
-                      {pool.sale.amountLiquidity && (
+
                         <div className="flex flex-col justify-between">
                           <span className="text-xs font-medium text-gray dark:text-gray-dark">
                             Liquidity %
@@ -118,23 +118,20 @@ export default function PoolsBase({ activeStatus,pools,loading }) {
 
                           <span className="font-medium text-dim-text dark:text-dim-text-dark">
                             <span className="text-dark-text dark:text-light-text font-semibold">
-                              {pool.sale.amountLiquidity}
+                              {pool.sale.amountLiquidity?pool.sale.amountLiquidity:"---"}
                             </span>{" "}
                             of 100
                           </span>
                         </div>
-                      )}
-                      {pool.sale.lockup && (
                       <div className="flex flex-col justify-between items-center">
                         <span className="text-xs font-medium text-gray dark:text-gray-dark">
                           Lockup Period
                         </span>
 
                         <span className="text-dark-text dark:text-light-text font-semibold">
-                          {pool.sale.lockup} days
+                          {pool.sale.lockup?pool.sale.lockup:"---"} days
                         </span>
                       </div>
-                    )}
                     </div>
                   </div>
                   {/* here we will check the status of the pool and show the status accordingly */}

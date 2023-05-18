@@ -13,6 +13,8 @@ import FairLaunchErcAbi from "../../../config/abi/FairlaunchErcAbi.json";
 import useSuccessPublic from "utils/successfulPublic";
 import useParticipated from "utils/getParticipated";
 import ConfirmModal from "../Admin/subComponents/ConfirmModal";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 export default function SaleBox({
   hard_cap,
@@ -26,7 +28,7 @@ export default function SaleBox({
   presale_address,
   currency,
   start_date,
-  sale
+  sale,
 }) {
   const [filled_percent, setFilledPercent] = useState(0);
   const [showModal2, setShowModal2] = useState(false);
@@ -39,10 +41,11 @@ export default function SaleBox({
   console.log(ends_on);
   useEffect(() => {
     const getFilledPercent = async () => {
-      const percents = await saleInfo.totalBNBRaised.mul(100).div(saleInfo.hardCap);
+      const percents = await saleInfo.totalBNBRaised
+        .mul(100)
+        .div(saleInfo.hardCap);
       //const newRaised = formatBigToNum(saleInfo.totalBNBRaised.toString(), 18, 4)
-      console.log(saleInfo.totalBNBRaised.toString())
-      console.log("PERCENTS",percents.toString())
+      console.log("PERCENTS", percents.toString());
       const newPercent = formatBigToNum(percents.toString(), 0, 1);
       setFilledPercent(newPercent);
     };
@@ -53,7 +56,7 @@ export default function SaleBox({
 
   const withdrawFunds = async () => {
     if (participated[0] === false) {
-      alert("You have not participated in this sale");
+      toast.error("You have not participated in this sale");
       return;
     }
     let contract;
@@ -109,13 +112,12 @@ export default function SaleBox({
     try {
       const tx = await contract.withdrawUserFundsIfSaleCancelled();
       await tx.wait();
-      alert("Funds withdrawn successfully");
+      toast.success("Funds withdrawn successfully");
     } catch (err) {
-      alert("Error withdrawing funds");
+      console.log(err);
+      toast.error("Error withdrawing funds");
     }
   };
-
-
 
   return (
     <>
@@ -198,29 +200,37 @@ export default function SaleBox({
         ) : (
           <div className="flex mt-10">
             <button
-              disabled={status === "Ended" ? true : false}
+              disabled={status === "Ended" || (saleInfo && saleInfo.totalBNBRaised.toString() - saleInfo.hardCap.toString()) === 0 ? true : false}
               className={`w-full ${
                 status !== "Ended"
                   ? "bg-primary-green"
                   : "bg-dim-text bg-opacity-50 dark:bg-dim-text-dark"
-              } rounded-md text-white font-bold py-4`}
+              } rounded-md text-white font-bold py-4 disabled:bg-dim-text disabled:opacity-50 disabled:dark:bg-dim-text-dark`}
               onClick={() => showModal(true)}
             >
-              {status !== "Ended" ? "Join Sale" : "Ended"}
+              {status === "Ended"
+                ? "Ended"
+                : saleInfo &&
+                  saleInfo.totalBNBRaised.toString() -
+                    saleInfo.hardCap.toString() ===
+                    0
+                ? "Hard Cap Reached"
+                : "Join Sale"}
             </button>
           </div>
         )}
-        {status !== "Upcoming" && status!=="Ended" && (
+        {status !== "Upcoming" && status !== "Ended" && (
           <>
             <div className="flex justify-center mt-7">
               <span className="text-sm font-medium text-gray dark:text-gray-dark ">
-              Sale Ends in
+                Sale Ends in
               </span>
             </div>
           </>
         )}
 
-        {saleSuccess && status==="Ended" &&
+        {saleSuccess &&
+          status === "Ended" &&
           (saleSuccess[0] === false ? (
             <div className="mt-7">
               <button

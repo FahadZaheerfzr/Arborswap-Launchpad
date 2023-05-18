@@ -12,6 +12,8 @@ import { useModal } from "react-simple-modal-provider";
 import { deployPrivateSale, deployPublicSale, deployFairLaunchSale, deployPublicSaleERC, deployFairLaunchSaleERC20, deployPrivateErSale } from 'utils/deploySale';
 import axios from 'axios';
 import { BACKEND_URL } from 'config/constants/LaunchpadAddress'
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 
 export default function PreviewSale({ token, setActive, saleObject, saleType, saleData }) {
@@ -28,7 +30,7 @@ export default function PreviewSale({ token, setActive, saleObject, saleType, sa
 
   }, [startTime])
 
-
+  console.log(saleObject.unsoldToken, "saleObject.unsoldTokens")
   useEffect(() => {
     async function getFee() {
       const fee = deployFee;
@@ -43,6 +45,7 @@ export default function PreviewSale({ token, setActive, saleObject, saleType, sa
 
   const handleSubmit = async () => {
     openLoadingModal()
+    
     if (saleType === 'standard') {
       let finalSaleObject;
       if (saleObject.currency.name === 'Binance') {

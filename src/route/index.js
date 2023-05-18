@@ -11,7 +11,7 @@ import CreateSale from 'pages/Launchpad/CreateSale'
 
 export default function WebRouter() {
   let routes = useRoutes([
-    { path: '/', element: <Airdrops /> }, // Redirect to /airdropper/airdrops
+    { path: '/', element: <Pools /> }, // Redirect to /airdropper/airdrops
     // { path: '/locked-assets', element: <Locker /> },
     // { path: '/locked-assets/token/:id', element: <LockedAsset type={'token'} /> },
     // { path: '/locked-assets/lp-token/:id', element: <LockedAsset type={'lp-token'} /> },

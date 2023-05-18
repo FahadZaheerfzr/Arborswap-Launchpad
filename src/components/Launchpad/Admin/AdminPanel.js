@@ -17,6 +17,10 @@ import useParticipated from "utils/getParticipated";
 import ConfirmModal from "./subComponents/ConfirmModal";
 import useIsFinished from "utils/getFinished";
 import { useModal } from "react-simple-modal-provider";
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import PercentFilled from "../Pools/Subcomponents/PercentFilled";
+
 
 export default function AdminPanel({
   icon,
@@ -41,7 +45,7 @@ export default function AdminPanel({
     openLoadingModal();
     if (isFinished[0]===false)
     {
-      alert("The sale is not finished yet");
+      toast.error("The sale is not finished yet");
       setShowModal(false);
       return;
     }
@@ -91,11 +95,11 @@ export default function AdminPanel({
     try {
       const tx = await contract.withdrawEarnings();
       await tx.wait();
-      alert("Earnings withdrawn successfully");
+      toast.success("Earnings withdrawn successfully");
       closeLoadingModal();
       
     } catch (err) {
-      alert("Error withdrawing earnings");
+      toast.error("Error withdrawing earnings");
       closeLoadingModal();
     }
   };
@@ -218,14 +222,7 @@ export default function AdminPanel({
               </span>
             </div>
 
-            <div className="w-full bg-[#F5F1EB] dark:bg-dark-3 rounded-[5px] h-[18px] mt-[6px]">
-              <div
-                className={`h-18px filled rounded-[5px] pr-2 flex justify-end items-center text-xs text-white`}
-                style={{ width: `${filled_percent}%` }}
-              >
-                {filled_percent}%
-              </div>
-            </div>
+            <PercentFilled address = {sale.saleAddress} />
           </div>
         )}
 
@@ -245,7 +242,11 @@ export default function AdminPanel({
             <div className="mt-7">
               <button
                 disabled={status === "Upcoming" && status === "Live"}
-                onClick={() => setShowModal(true)}
+                onClick={() => {
+                  if (status === "Live") {
+                    setShowModal(true);
+                  }
+                }}
                 className={`w-full ${
                   status === "Upcoming"
                     ? "bg-light dark:bg-dark text-dark-text dark:text-light-text"
@@ -301,6 +302,7 @@ export default function AdminPanel({
           setShowModal={setShowModal}
         />
       )}
+      <ToastContainer />
     </>
   );
 }

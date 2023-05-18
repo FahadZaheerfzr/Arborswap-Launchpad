@@ -5,6 +5,8 @@ import HeadingTags from "../../TokenLocker/Subcomponents/HeadingTags";
 import CalendarField from "./Subcomponents/CalendarField";
 import CurrencyOptions from "./Subcomponents/CurrencyOption";
 import DexOptions from "./Subcomponents/DexOption";
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 import Input from "./Subcomponents/Input";
 import PresaleStandard from "./Subcomponents/PresaleStandard";
@@ -96,15 +98,26 @@ export default function Presale({ setActive, saleType, setSaleObject, token }) {
     useModal("LoadingModal");
 
   const handleSubmit = async () => {
+    //if start date is less than current date and time, and also if end date is less than start date
+    const now = new Date();
+    if (startDate < now.unix()) {
+      toast.error("Start date should be greater than current date and time");
+      return
+    }
+    console.log(endDate, startDate)
+    if (endDate < startDate) {
+      toast.error("End date should be greater than start date");
+      return
+    }
     if(!enoughBalance)
     {
-      alert("You don't have enough balance");
+      toast.error("Insufficient Balance");
       return;
     }
     if (amountLiquidity<51)
     {
-        alert("Liquidity should be atleast 51%");
-        return;
+      toast.error("Liquidity should be greater than 50%");
+      return;
     }
     let res = false;
     openLoadingModal();
@@ -501,6 +514,7 @@ export default function Presale({ setActive, saleType, setSaleObject, token }) {
             Next
           </button>
         </div>
+      <ToastContainer />
       </div>
     </div>
   );

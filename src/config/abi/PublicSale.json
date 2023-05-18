@@ -20,6 +20,11 @@
         "internalType": "uint256",
         "name": "_serviceFee",
         "type": "uint256"
+      },
+      {
+        "internalType": "bool",
+        "name": "_burn",
+        "type": "bool"
       }
     ],
     "stateMutability": "nonpayable",
@@ -283,6 +288,19 @@
   },
   {
     "inputs": [],
+    "name": "burn",
+    "outputs": [
+      {
+        "internalType": "bool",
+        "name": "",
+        "type": "bool"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
     "name": "calculateMaxTokensForLiquidity",
     "outputs": [
       {
@@ -423,53 +441,6 @@
     "name": "finishSale",
     "outputs": [],
     "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "inputs": [],
-    "name": "getNumberOfRegisteredUsers",
-    "outputs": [
-      {
-        "internalType": "uint256",
-        "name": "",
-        "type": "uint256"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "address",
-        "name": "_user",
-        "type": "address"
-      }
-    ],
-    "name": "getParticipation",
-    "outputs": [
-      {
-        "internalType": "uint256",
-        "name": "",
-        "type": "uint256"
-      },
-      {
-        "internalType": "uint256",
-        "name": "",
-        "type": "uint256"
-      },
-      {
-        "internalType": "bool",
-        "name": "",
-        "type": "bool"
-      },
-      {
-        "internalType": "bool",
-        "name": "",
-        "type": "bool"
-      }
-    ],
-    "stateMutability": "view",
     "type": "function"
   },
   {
@@ -661,24 +632,6 @@
     "type": "function"
   },
   {
-    "inputs": [
-      {
-        "internalType": "address",
-        "name": "token",
-        "type": "address"
-      },
-      {
-        "internalType": "address",
-        "name": "beneficiary",
-        "type": "address"
-      }
-    ],
-    "name": "removeStuckTokens",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
     "inputs": [],
     "name": "sale",
     "outputs": [
@@ -700,11 +653,6 @@
       {
         "internalType": "bool",
         "name": "leftoverWithdrawn",
-        "type": "bool"
-      },
-      {
-        "internalType": "bool",
-        "name": "tokensDeposited",
         "type": "bool"
       },
       {

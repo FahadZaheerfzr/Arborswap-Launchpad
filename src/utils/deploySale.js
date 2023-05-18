@@ -75,7 +75,7 @@ console.log([
         parseEther(saleObject.hardCap.toString()).toString(),
         parseEther(saleObject.softCap.toString()).toString()
       ],
-      true,
+      saleObject.unsoldToken === "Burn" ? true : false,
       { value: utils.parseEther(deploymentFee),
         gasLimit: 5000000
       }
@@ -162,7 +162,10 @@ export const deployPublicSaleERC = async (token, saleObject, library, account, d
         parseEther(saleObject.hardCap.toString()).toString(),
         parseEther(saleObject.softCap.toString()).toString()
       ],
-      { value: utils.parseEther(deploymentFee) }
+      saleObject.unsoldToken === "Burn" ? true : false,
+      { value: utils.parseEther(deploymentFee) ,
+        gasLimit: 5000000
+      }
     )
     await tx.wait()
 
@@ -203,6 +206,7 @@ export const deployPublicSaleERC = async (token, saleObject, library, account, d
 
     return finalSaleObject
   } catch (error) {
+    console.log(error)
     alert("Transaction Failed")
     closeLoadingModal()
   }

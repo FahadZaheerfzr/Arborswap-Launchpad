@@ -16,29 +16,30 @@ function useSaleInfo(saleAddress) {
       }
     ) ?? {};
   if (error) {
-    // console.log(error)
+    console.log(error)
     return error;
   }
+  console.log("sale info", value)
   return value;
 }
 
-function LogFinishSale(saleAddress) {
-  const { value, error } =
-    useCall(
-      {
-        contract: new Contract(saleAddress, PublicSaleAbi),
-        method: "LogFinishSale",
-        args: [],
-      },
-      {
-        refresh: "never",
-      }
-    ) ?? {};
-  if (error) {
-    // console.log(error)
-    return error;
-  }
-  return value;
-}
+// function LogFinishSale(saleAddress) {
+//   const { value, error } =
+//     useCall(
+//       {
+//         contract: new Contract(saleAddress, PublicSaleAbi),
+//         method: "LogFinishSale",
+//         args: [],
+//       },
+//       {
+//         refresh: "never",
+//       }
+//     ) ?? {};
+//   if (error) {
+//     // console.log(error)
+//     return error;
+//   }
+//   return value;
+// }
 
 export default useSaleInfo;
