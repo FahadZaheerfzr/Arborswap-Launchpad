@@ -60,10 +60,9 @@ console.log([
   parseEther(saleObject.hardCap.toString()).toString(),
   parseEther(saleObject.softCap.toString()).toString()
 ])
-console.log({ value: utils.parseEther(deploymentFee) })
-  try {
+    try {
     const tx = await contract.deployNormalSale(
-      [routerAddress, adminAddress, token.tokenAddress, "0x5317a31c1ded3f7e86e6c97578507e679cf7b734"],
+      [routerAddress, adminAddress, token.tokenAddress, account],
       [
         parseEther(saleObject.minAllocation.toString()).toString(),
         parseEther(saleObject.maxAllocation.toString()).toString(),
@@ -76,12 +75,11 @@ console.log({ value: utils.parseEther(deploymentFee) })
         parseEther(saleObject.hardCap.toString()).toString(),
         parseEther(saleObject.softCap.toString()).toString()
       ],
-      true,
-      { value: utils.parseEther(deploymentFee) }
+      { value: utils.parseEther(deploymentFee),
+        gasLimit: 5000000
+      }
     )
-    const deployedAddressInitial = await tx.wait()
-    console.log(tx);
-    console.log(deployedAddressInitial);
+    await tx.wait()
 
     const deployedAddress = await contract.saleIdToAddress(saleId.toNumber())
 
