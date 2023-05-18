@@ -75,6 +75,7 @@ console.log([
         parseEther(saleObject.hardCap.toString()).toString(),
         parseEther(saleObject.softCap.toString()).toString()
       ],
+      true,
       { value: utils.parseEther(deploymentFee),
         gasLimit: 5000000
       }
