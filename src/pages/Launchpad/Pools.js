@@ -48,7 +48,7 @@ export default function Pools() {
   return (
     <BaseLayout title={"Launchpad"} title_img={<LaunchpadSVG className="md:hidden fill-dim-text" />} page_name={"Pools"}
       page_description={"Discover upcoming or live sales."}>
-      <HomeLayout tabs={Tabs} activeTab={activeTab} setActiveTab={setActiveTab} pools = {pools} setFilteredPools={setFilteredPools}>
+      <HomeLayout tabs={Tabs} activeTab={activeTab} setActiveTab={setActiveTab} pools = {pools} setFilteredPools={setFilteredPools} launchpad={true}>
           <PoolsBase activeStatus={Tabs[activeTab-1].tabName} pools={filteredPools} loading={loading} />
       </HomeLayout>
     </BaseLayout>

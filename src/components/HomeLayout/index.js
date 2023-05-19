@@ -17,6 +17,7 @@ export default function HomeLayout({
   setActiveTab,
   airdrop,
   setFilteredPools,
+  launchpad,
   pools,
 }) {
   const [searchQuery, setSearchQuery] = useState('');
@@ -62,6 +63,7 @@ export default function HomeLayout({
 
           {!tabs && <ViewSwitch cardFormat={cardFormat} setCardFormat={setCardFormat} />}
           {!tabs && <ItemSwitch itemSelected={itemSelected} setItemSelected={setItemSelected} />}
+          {!launchpad &&
           <div className="px-5 py-3 rounded-md bg-white dark:bg-dark-1 flex justify-center items-center">
             <span className="text-gray dark:text-gray-dark font-gilroy font-semibold text-sm">
               {airdrop ? 'Whitelisted' : 'My Locks'}
@@ -79,6 +81,7 @@ export default function HomeLayout({
               <div className="w-7 h-4 bg-dim-text  bg-opacity-20  peer-focus:outline-none peer-focus:ring-0 peer-focus:ring-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[1px] after:left-[0.8px] after:bg-dim-text after:dark:bg-dim-text-dark  after:rounded-full after:h-[13.5px] after:w-[13.5px] after:transition-all border-[#F5F1EB] " />
             </label>
           </div>
+          }
           <div className="hidden md:block relative z-10">
             {/* <Button
                             buttonText={'Sort By'}
@@ -89,8 +92,8 @@ export default function HomeLayout({
           </div>
           <div className="hidden md:flex items-center justify-between border-2 border-white dark:border-dark-1 bg-[#F5F1EB] dark:bg-dark-3 rounded-md px-5 py-3">
             <input
-              className="bg-transparent placeholder:text-dim-text dark:placeholder:text-dim-text-dark focus:outline-none w-60"
-              placeholder={airdrop ? 'Search Airdrops' : 'Search token or liquidity pair'}
+              className="bg-transparent dark:text-white placeholder:text-dim-text dark:placeholder:text-dim-text-dark focus:outline-none w-60"
+              placeholder={launchpad? "Search Sales" :airdrop ? 'Search Airdrops' : 'Search token or liquidity pair'}
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
             />
@@ -110,7 +113,7 @@ export default function HomeLayout({
           <div className="flex  w-full items-center justify-between border-2 border-white dark:border-dark-1 bg-[#F5F1EB] dark:bg-dark-3 rounded-md py-3">
             <input
               className="pl-2 bg-transparent placeholder:text-dim-text dark:placeholder:text-dim-text-dark focus:outline-none"
-              placeholder="Search token or liquidity pair"
+              placeholder={launchpad? "Search Sales" :"Search token or liquidity pair"}
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
             />

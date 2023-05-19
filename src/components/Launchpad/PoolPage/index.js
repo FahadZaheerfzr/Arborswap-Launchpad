@@ -19,8 +19,7 @@ export default function PoolPageBase({ pool, showModal, admin }) {
       setStatus('Upcoming')
     }
   }, [])
-  console.log("YOOO")
-
+  console.log(pool)
   return (
     pool && (
       <div className="w-full flex justify-center">
@@ -43,6 +42,9 @@ export default function PoolPageBase({ pool, showModal, admin }) {
               hard_cap_icon={pool.hard_cap_icon}
               first_release={pool.first_release}
               vesting_release={pool.vesting_release}
+              unsold_tokens={pool.unsoldToken}
+              liquidity={pool.amountLiquidity}
+              lockup={pool.lockup}
             />
           </div>
 
