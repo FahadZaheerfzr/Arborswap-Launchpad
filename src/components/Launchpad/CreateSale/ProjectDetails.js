@@ -94,9 +94,9 @@ export default function ProjectDetails({
             />
             {/* tooltip to appear above img info tag */}
             {show.includes('info') && (
-              <div className="absolute z-10 bg-dim-text bg-opacity-50 dark:bg-white rounded-[10px] shadow-lg p-1 bottom-3 left-5">
+              <div className="absolute z-10 bg-dim-text bg-opacity-50 dark:bg-white rounded-[10px] shadow-lg p-1 bottom-3 left-5 w-36">
                 <p className="text-light-text dark:text-dark-text font-extralight text-sm">
-                  info
+                  This is the logo of your project (atleast 1000px for quality)
                 </p>
               </div>
             )}
@@ -134,9 +134,9 @@ export default function ProjectDetails({
             />
             {/* tooltip to appear above img info tag */}
             {show.includes("info2") && (
-              <div className="absolute z-10 bg-dim-text bg-opacity-50 dark:bg-white rounded-[10px] shadow-lg p-1 bottom-3 left-5">
+              <div className="absolute z-10 bg-dim-text bg-opacity-50 dark:bg-white rounded-[10px] shadow-lg p-1 bottom-3 left-5 w-24">
                 <p className="text-light-text dark:text-dark-text font-extralight text-sm">
-                  info
+                  This is the description of your project.
                 </p>
               </div>
             )}
@@ -172,9 +172,9 @@ export default function ProjectDetails({
             />
             {/* tooltip to appear above img info tag */}
             {show.includes("info3") && (
-              <div className="absolute z-10 bg-dim-text bg-opacity-50 dark:bg-white rounded-[10px] shadow-lg p-1 bottom-3 left-5">
+              <div className="absolute z-10 bg-dim-text bg-opacity-50 dark:bg-white rounded-[10px] shadow-lg p-1 bottom-3 left-5 w-36">
                 <p className="text-light-text dark:text-dark-text font-extralight text-sm">
-                  info
+                  Labels to categorize your project (e.g Web3)
                 </p>
               </div>
             )}

@@ -100,6 +100,8 @@ export default function Presale({ setActive, saleType, setSaleObject, token }) {
     useModal("LoadingModal");
 
   const handleSubmit = async () => {
+    console.log(listing, presalePrice)
+    console.log(amountLiquidity)
     //if start date is less than current date and time, and also if end date is less than start date
     const now = moment();
     
@@ -116,9 +118,19 @@ export default function Presale({ setActive, saleType, setSaleObject, token }) {
       toast.error("Insufficient Balance");
       return;
     }
-    if (amountLiquidity<51)
+    if (amountLiquidity<51||amountLiquidity===undefined)
     {
       toast.error("Liquidity should be greater than 50%");
+      return;
+    }
+    //listing cant be less than presale rate
+    if (listing > presalePrice) {
+      toast.error("Listing rate can't be lower than presale rate");
+      return
+    }
+    if (lockup===undefined || maxAllocation===undefined || minAllocation===undefined || hardCap===undefined || softCap===undefined || presalePrice===undefined || endDate===undefined || startDate===undefined || amountLiquidity===undefined || listing===undefined)
+    {
+      toast.error("Please fill all the fields");
       return;
     }
     let res = false;
@@ -428,7 +440,7 @@ export default function Presale({ setActive, saleType, setSaleObject, token }) {
                 <Input
                   heading={"Amount for Liquidity"}
                   changeState={setAmountLiquidity}
-                  tooltip={"Hello"}
+                  tooltip={"Ready availability of assets for seamless and hassle-free decentralized financial transactions and activities."}
                 />
               </div>
               <div className="md:hidden">

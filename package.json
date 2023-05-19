@@ -21,6 +21,7 @@
     "react-click-away-listener": "^2.2.2",
     "react-datetime": "^3.2.0",
     "react-dom": "^18.2.0",
+    "react-icons": "^4.8.0",
     "react-router-dom": "^6.4.5",
     "react-scripts": "5.0.1",
     "react-simple-modal": "^1.1.5",

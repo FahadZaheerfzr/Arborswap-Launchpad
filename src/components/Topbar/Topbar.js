@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import ConnectButton from './ConnectButton'
+import SwitchNetworkButton from './SwitchNetwork'
 
 export default function Topbar({
   setSideBarMobile,
@@ -94,6 +95,7 @@ export default function Topbar({
           </div>) 
           
         } 
+        <SwitchNetworkButton />
         <ConnectButton />
       </div>
     </div>
