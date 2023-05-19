@@ -20,8 +20,8 @@ import useFairlaunchSaleInfo from "utils/getFairLaunchSaleInfo";
 import useFairlaunchErcSaleInfo from "utils/getFairLaunchErcSaleInfo";
 import { formatBigToNum } from "utils/numberFormat";
 import ERC20 from "config/abi/ERC20.json";
-import { ToastContainer, toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import useAmountParticipated from "utils/getAmountParticipated";
 
 export default function Modal({
@@ -38,7 +38,7 @@ export default function Modal({
   const [bnbUSD, setBnbUSD] = useState(317);
   const [usdAmount, setUsdAmount] = useState(sale.minAllocation * bnbUSD);
   const sale_info_public_erc = usePublicErcSaleInfo(sale.saleAddress);
-  
+
   const sale_info_public = useSaleInfo(sale.saleAddress);
   const sale_info_private = usePrivateSaleInfo(sale.saleAddress);
   const sale_info_private_erc = usePrivateErcSaleInfo(sale.saleAddress);
@@ -57,9 +57,9 @@ export default function Modal({
   // console.log("sale_info_private_erc", sale_info_private_erc)
   // console.log("sale_info_fairlaunch", sale_info_fairlaunch)
   // console.log("sale_info_fairlaunch_erc", sale_info_fairlaunch_erc)
-  
+
   useEffect(() => {
-    console.log("sale", sale);
+    // console.log("sale", sale);
     if (sale.currency.symbol !== "BNB") {
       const contract = new Contract(
         sale.currency.address,
@@ -87,7 +87,7 @@ export default function Modal({
     ) {
       if (sale.currency.symbol === "BNB") {
         if (sale.saleType === "standard") {
-          console.log("sale_info_public", sale_info_public.tokenPriceInBNB);
+          // console.log("sale_info_public", sale_info_public.tokenPriceInBNB);
           const price = formatBigToNum(
             sale_info_public.tokenPriceInBNB.toString(),
             18,
@@ -114,10 +114,10 @@ export default function Modal({
         // }
       } else {
         if (sale.saleType === "standard") {
-          console.log(
-            "sale_info_public_erc",
-            sale_info_public_erc.tokenPriceInERC20
-          );
+          // console.log(
+          //   "sale_info_public_erc",
+          //   sale_info_public_erc.tokenPriceInERC20
+          // );
           const price = formatBigToNum(
             sale_info_public_erc.tokenPriceInERC20.toString(),
             18,
@@ -170,19 +170,18 @@ export default function Modal({
     //user balanceBNB
     //check if sale started
     const userAllocation = formatBigToNum(bought[0].toString(), 18, 4);
-    if (userAllocation>=sale.maxAllocation){
+    if (userAllocation >= sale.maxAllocation) {
       toast.error("You have reached the maximum allocation");
       return;
     }
-    console.log(sale)
+    // console.log(sale)
     const start = new Date(sale.startDate);
     const now = new Date();
-    console.log("start", start, "now", now);
+    // console.log("start", start, "now", now);
     if (now < start) {
       toast.error("Sale not started yet");
       return;
     }
-    
 
     if (parseFloat(amount) > parseFloat(balance)) {
       toast.error("Insufficient balance");
@@ -194,21 +193,17 @@ export default function Modal({
     if (sale.currency.symbol === "BNB") {
       if (sale.saleType === "standard") {
         abi = PublicSaleAbi;
-      }
-      else if (sale.saleType === "private") {
+      } else if (sale.saleType === "private") {
         abi = PrivateSaleAbi;
-      }
-      else{
+      } else {
         abi = FairLaunchAbi;
       }
     } else {
       if (sale.saleType === "standard") {
         abi = PublicSaleErcAbi;
-      }
-      else if (sale.saleType === "private") {
+      } else if (sale.saleType === "private") {
         abi = PrivateSaleErcAbi;
-      }
-      else {
+      } else {
         abi = FairLaunchErcAbi;
       }
     }
@@ -218,7 +213,7 @@ export default function Modal({
       abi,
       library.getSigner()
     );
-    console.log("contract", contract);
+    // console.log("contract", contract);
     const amountBuy = parseEther(amount.toString()).toString();
 
     try {
@@ -236,10 +231,10 @@ export default function Modal({
       }
 
       if (sale.currency.symbol === "BNB") {
-          const tx = await contract.participate({
-            value: amountBuy,
-          });
-          await tx.wait();
+        const tx = await contract.participate({
+          value: amountBuy,
+        });
+        await tx.wait();
       } else {
         const tx = await contract.participate(account, amountBuy);
         await tx.wait();
@@ -248,7 +243,7 @@ export default function Modal({
       showModal(false);
     } catch (err) {
       toast.error("Transaction failed");
-      console.log(err);
+      // console.log(err);
     }
   };
 
@@ -260,13 +255,31 @@ export default function Modal({
 
   const handleMax = () => {
     //balanceBNB to number everything after , is not removed
+    if (!account) {
+      toast.error("Connect wallet first");
+      return;
+    }
+    //if balance is less than max allocation show error
+    if (parseFloat(balance) < parseFloat(sale.maxAllocation)) {
+      toast.error("Insufficient balance");
+      return;
+    }
     let bal = balance;
-    const amt = parseFloat(bal);
+    const amt = parseFloat(sale.maxAllocation)
     setAmount(amt);
   };
   const handleHalf = () => {
+    if (!account) {
+      toast.error("Connect wallet first");
+      return;
+    }
+    //if balance is less than max allocation show error
+    if (parseFloat(balance) < parseFloat(sale.maxAllocation)) {
+      toast.error("Insufficient balance");
+      return;
+    }
     let bal = balance;
-    const amt = parseFloat(bal);
+    const amt = parseFloat(sale.maxAllocation)
     setAmount(amt / 2);
   };
 

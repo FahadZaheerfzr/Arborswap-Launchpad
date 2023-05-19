@@ -15,7 +15,6 @@ export default function PoolsBase({ activeStatus,pools,loading }) {
     const currentDate = new Date();
     const startDate = new Date(item.sale.startDate * 1000);
     const endDate = new Date(item.sale.endDate * 1000);
-    console.log("THE DATES ARE", startDate, currentDate, endDate);
     if (currentDate < startDate) {
       return "Upcoming";
     } else if (currentDate > startDate && currentDate < endDate) {
@@ -24,7 +23,6 @@ export default function PoolsBase({ activeStatus,pools,loading }) {
       return "Ended";
     }
   };
-
   return (
     <div className="grid grid-cols-1 md:grid-cols-3 gap-5 mt-8">
       {!loading &&

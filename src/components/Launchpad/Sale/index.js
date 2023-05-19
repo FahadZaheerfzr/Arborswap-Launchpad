@@ -36,16 +36,16 @@ export default function SaleBox({
   const saleInfo = useSaleInfo(presale_address);
   const saleSuccess = useSuccessPublic(presale_address);
   const participated = useParticipated(presale_address, account);
-  console.log("filled_percent", filled_percent);
+  // console.log("filled_percent", filled_percent);
 
-  console.log(ends_on);
+  // console.log(ends_on);
   useEffect(() => {
     const getFilledPercent = async () => {
       const percents = await saleInfo.totalBNBRaised
         .mul(100)
         .div(saleInfo.hardCap);
       //const newRaised = formatBigToNum(saleInfo.totalBNBRaised.toString(), 18, 4)
-      console.log("PERCENTS", percents.toString());
+      // console.log("PERCENTS", percents.toString());
       const newPercent = formatBigToNum(percents.toString(), 0, 1);
       setFilledPercent(newPercent);
     };
@@ -62,14 +62,14 @@ export default function SaleBox({
     let contract;
     if (sale.currency.symbol === "BNB") {
       if (sale.saleType === "standard") {
-        console.log("STANDARD NON erc20");
+        // console.log("STANDARD NON erc20");
         contract = new Contract(
           sale.saleAddress,
           PublicSaleAbi,
           library.getSigner()
         );
       } else if (sale.saleType === "private") {
-        console.log("Private NON erc20");
+        // console.log("Private NON erc20");
 
         contract = new Contract(
           sale.saleAddress,
@@ -77,7 +77,7 @@ export default function SaleBox({
           library.getSigner()
         );
       } else if (sale.saleType === "fairlaunch") {
-        console.log("Fairlaunch NON erc20");
+        // console.log("Fairlaunch NON erc20");
         contract = new Contract(
           sale.saleAddress,
           FairLaunchAbi,
@@ -86,21 +86,21 @@ export default function SaleBox({
       }
     } else {
       if (sale.saleType === "standard") {
-        console.log("STANDARD erc20");
+        // console.log("STANDARD erc20");
         contract = new Contract(
           sale.saleAddress,
           PublicSaleErcAbi,
           library.getSigner()
         );
       } else if (sale.saleType === "private") {
-        console.log("Private erc20");
+        // console.log("Private erc20");
         contract = new Contract(
           sale.saleAddress,
           PrivateSaleErcAbi,
           library.getSigner()
         );
       } else if (sale.saleType === "fairlaunch") {
-        console.log("Fairlaunch erc20");
+        // console.log("Fairlaunch erc20");
         contract = new Contract(
           sale.saleAddress,
           FairLaunchErcAbi,
@@ -108,13 +108,13 @@ export default function SaleBox({
         );
       }
     }
-    console.log("contract", contract);
+    // console.log("contract", contract);
     try {
       const tx = await contract.withdrawUserFundsIfSaleCancelled();
       await tx.wait();
       toast.success("Funds withdrawn successfully");
     } catch (err) {
-      console.log(err);
+      // console.log(err);
       toast.error("Error withdrawing funds");
     }
   };

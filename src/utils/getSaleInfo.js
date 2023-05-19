@@ -16,10 +16,10 @@ function useSaleInfo(saleAddress) {
       }
     ) ?? {};
   if (error) {
-    console.log(error)
+    // console.log(error)
     return error;
   }
-  console.log("sale info", value)
+  // console.log("sale info", value)
   return value;
 }
 

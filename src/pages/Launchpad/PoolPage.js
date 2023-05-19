@@ -27,7 +27,6 @@ export default function PoolPage() {
         setPool(res.data);
 
         // Check if the user is admin
-        console.log(res.data.sale.owner.toLowerCase(), account.toLowerCase())
         if (account && res.data.sale.owner.toLowerCase() === account.toLowerCase()) {
           setAdmin(true);
           setAdminMode(true);
@@ -36,13 +35,12 @@ export default function PoolPage() {
         closeLoadingModal()
       })
       .catch((err) => {
-        console.log(err);
+        // console.log(err);
         //alert ("Something went wrong")
         closeLoadingModal()
       });
   }, []);
 
-  console.log(adminMode, admin)
   return (
     pool && (
       <div className="w-full">

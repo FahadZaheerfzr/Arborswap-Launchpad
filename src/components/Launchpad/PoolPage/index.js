@@ -9,7 +9,7 @@ import { useEffect } from 'react';
 
 export default function PoolPageBase({ pool, showModal, admin }) {
   const [status, setStatus] = useState('Live')
-  console.log(status)
+  // console.log(status)
   useEffect(() => {
 
     //if endDate is less than current date, set status to ended
@@ -19,7 +19,7 @@ export default function PoolPageBase({ pool, showModal, admin }) {
       setStatus('Upcoming')
     }
   }, [])
-
+  console.log("YOOO")
 
   return (
     pool && (

@@ -22,7 +22,7 @@ export default function SaleBox({ icon, sale, status }) {
   const [bought, setBought] = useState(0);
   const [showModal, setShowModal] = useState(false);
   const participated = useParticipated(sale.saleAddress, account);
-  console.log(sale.currency.symbol);
+  // console.log(sale.currency.symbol);
 
   const { open: openLoadingModal, close: closeLoadingModal } =
   useModal("LoadingModal");
@@ -36,7 +36,7 @@ export default function SaleBox({ icon, sale, status }) {
     const userParticipation = await contract.userToParticipation(account);
     setBought(formatBigToNum(userParticipation[0].toString(), 18, 4));
     setAllocated(formatBigToNum(userParticipation[1].toString(), 18, 4));
-    console.log("userParticipation", userParticipation);
+    // console.log("userParticipation", userParticipation);
   };
 
   const withdrawTokens = async () => {
@@ -76,7 +76,7 @@ export default function SaleBox({ icon, sale, status }) {
         );
       }
     }
-    console.log("contract withdraw", contract);
+    // console.log("contract withdraw", contract);
 
     try {
       const tx = await contract.withdraw();
@@ -84,14 +84,14 @@ export default function SaleBox({ icon, sale, status }) {
       toast.success("Tokens Withdrawn");
     } catch (err) {
       toast.error("Transaction Failed");
-      console.log(err);
+      // console.log(err);
       closeLoadingModal()
     }
     closeLoadingModal()
   };
 
   const withdrawParticipation = async () => {
-    console.log(participated)
+    // console.log(participated)
     openLoadingModal()
     setShowModal(false);
     if (participated[0] === false) {
@@ -112,7 +112,7 @@ export default function SaleBox({ icon, sale, status }) {
         library.getSigner()
       );
     }
-    console.log("contract withdraw participation", contract);
+    // console.log("contract withdraw participation", contract);
 
     try {
       const tx = await contract.withdrawParticipation();
@@ -120,7 +120,7 @@ export default function SaleBox({ icon, sale, status }) {
       toast.success("Participation Withdrawn");
     } catch (err) {
       toast.error("Transaction Failed");
-      console.log(err);
+      // console.log(err);
       closeLoadingModal()
     }
     closeLoadingModal()
