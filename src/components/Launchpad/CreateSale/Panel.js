@@ -63,8 +63,8 @@ export default function Panel({saleData, setSaleData, initSaleState}) {
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-5 mt-6">
               <LockOptions name={'Standard'}  selected={saleData.type==='standard'} airdropData={saleData} setAirdropData={setSaleData} initAirdropState={initSaleState} />
-              <LockOptions name={'Fairlaunch'}  selected={ saleData.type==='fairlaunch'} airdropData={saleData} setAirdropData={setSaleData} initAirdropState={initSaleState} />
-              <LockOptions name={'Private'}  selected={ saleData.type==='private'} airdropData={saleData} setAirdropData={setSaleData} initAirdropState={initSaleState} />
+              {/* <LockOptions name={'Fairlaunch'}  selected={ saleData.type==='fairlaunch'} airdropData={saleData} setAirdropData={setSaleData} initAirdropState={initSaleState} /> */}
+              {/* <LockOptions name={'Private'}  selected={ saleData.type==='private'} airdropData={saleData} setAirdropData={setSaleData} initAirdropState={initSaleState} /> */}
             </div>
 
             <div className="mt-10 flex justify-end">

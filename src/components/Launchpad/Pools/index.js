@@ -15,16 +15,21 @@ export default function PoolsBase({ activeStatus,pools,loading }) {
     const currentDate = new Date();
     const startDate = new Date(item.sale.startDate * 1000);
     const endDate = new Date(item.sale.endDate * 1000);
-    console.log("THE DATES ARE", startDate, currentDate, endDate);
     if (currentDate < startDate) {
+      console.log("activeStatus",activeStatus)
+      console.log("upcoming");
       return "Upcoming";
     } else if (currentDate > startDate && currentDate < endDate) {
+      console.log("activeStatus",activeStatus)
+      console.log("live");
       return "Live";
     } else {
+      console.log("activeStatus",activeStatus)
+      console.log("ended");
       return "Ended";
     }
   };
-
+  console.log(activeStatus, "activeStatus")
   return (
     <div className="grid grid-cols-1 md:grid-cols-3 gap-5 mt-8">
       {!loading &&
