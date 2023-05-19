@@ -33,10 +33,11 @@ export default function Preview({
     hard_cap_icon,
     first_release,
     vesting_release,
+    unsold_tokens
 }) {
     const [slide, setSlide] = useState('Presale')
     
-    
+    console.log("unsold_tokens", unsold_tokens)
     return (
         <div className="px-9 py-9 my-4">
             <Info name={name} icon={icon} is_private={is_private} tags={tags} pool={pool} />
@@ -65,6 +66,7 @@ export default function Preview({
                     {vesting_release && 
                     <PreviewDetails name={'Vesting Release'} value={vesting_release} />
                     }
+                    
                 </div>
             }
             {slide === 'Token' &&

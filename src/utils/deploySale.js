@@ -46,20 +46,7 @@ export const deployPublicSale = async (token, saleObject, library, account, depl
   const routerAddress = ROUTER_ADDRESS
   const adminAddress = ADMIN_ADDRESS
   // 2nd - with uints [minParticipation, maxParticipation, lp%, dex listing rate,lpLockPeriod, saleEnd, saleStart, hardCap(tokens), softCap(bnb)]
-  console.log([routerAddress, adminAddress, token.tokenAddress, account]);
 
-console.log([
-  parseEther(saleObject.minAllocation.toString()).toString(),
-  parseEther(saleObject.maxAllocation.toString()).toString(),
-  (saleObject.amountLiquidity * 100).toString(),
-  parseUnits(saleObject.listing.toString(), token.tokenDecimals).toString(),
-  (saleObject.lockup * 86400).toString(),
-  parseUnits(saleObject.presalePrice.toString(), token.tokenDecimals).toString(),
-  saleObject.endDate,
-  saleObject.startDate,
-  parseEther(saleObject.hardCap.toString()).toString(),
-  parseEther(saleObject.softCap.toString()).toString()
-])
     try {
     const tx = await contract.deployNormalSale(
       [routerAddress, adminAddress, token.tokenAddress, account],

@@ -76,7 +76,7 @@ const dexes = [
 export default function Presale({ setActive, saleType, setSaleObject, token }) {
   const [currencySelected, setCurrencySelected] = useState(1);
   const [tempfixed, setTempFixed] = useState(true);
-  const [dex, setDex] = useState(1);
+  const [dex, setDex] = useState(2);
   const [presalePrice, setPresalePrice] = useState();
   const [softCap, setSoftCap] = useState();
   const [hardCap, setHardCap] = useState();
