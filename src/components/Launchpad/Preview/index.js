@@ -33,7 +33,9 @@ export default function Preview({
     hard_cap_icon,
     first_release,
     vesting_release,
-    unsold_tokens
+    unsold_tokens,
+    liquidity,
+    lockup
 }) {
     const [slide, setSlide] = useState('Presale')
     
@@ -60,6 +62,18 @@ export default function Preview({
                     <PreviewDetails name={'Presale Ends on'} value={new Date(ends_on*1000).toUTCString()} />
                     <PreviewDetails name={'Soft Cap'} value={soft_cap && soft_cap.toLocaleString()} icon={soft_cap_icon} />
                     <PreviewDetails name={'Hard Cap'} value={hard_cap && hard_cap.toLocaleString()} icon={hard_cap_icon} />
+                    {
+                        unsold_tokens &&
+                        <PreviewDetails name={'Unsold Tokens'} value={unsold_tokens} />
+                    }
+                    {
+                        liquidity &&
+                        <PreviewDetails name={'Tokens for Liquidity (%)'} value={liquidity+"%"} />
+                    }
+                    {
+                        lockup &&
+                        <PreviewDetails name={'Liquidity Lockup Time (Days)'} value={lockup} />
+                    }
                     {first_release &&
                     <PreviewDetails name={'First Release'} value={first_release} />
                     }
