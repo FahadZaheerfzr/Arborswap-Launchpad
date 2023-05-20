@@ -409,8 +409,7 @@ export default function Presale({ setActive, saleType, setSaleObject, token }) {
             <span className="text-gray dark:text-gray-dark font-semibold text-sm">
               Note
               <span className="font-medium">
-                &nbsp;: When turned on Only Users you submit there address can
-                participate
+                &nbsp;: When turned on only users that are whitelisted will be able to participate in the presale.
               </span>
             </span>
           </div>
