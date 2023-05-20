@@ -5,10 +5,9 @@ import HeadingTags from "../../TokenLocker/Subcomponents/HeadingTags";
 import CalendarField from "./Subcomponents/CalendarField";
 import CurrencyOptions from "./Subcomponents/CurrencyOption";
 import DexOptions from "./Subcomponents/DexOption";
-import { ToastContainer, toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
-import moment from 'moment'
-
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import moment from "moment";
 
 import Input from "./Subcomponents/Input";
 import PresaleStandard from "./Subcomponents/PresaleStandard";
@@ -95,41 +94,51 @@ export default function Presale({ setActive, saleType, setSaleObject, token }) {
   const [lockup, setLockup] = useState();
   const { account, library } = useEthers();
   const [enoughBalance, setEnoughBalance] = useState(false);
+  const [whiteListedAddresses, setWhiteListedAddresses] = useState([]);
+  const [whiteListEndDate, setWhiteListEndDate] = useState();
 
   const { open: openLoadingModal, close: closeLoadingModal } =
     useModal("LoadingModal");
 
   const handleSubmit = async () => {
-    console.log(listing, presalePrice)
-    console.log(amountLiquidity)
+    console.log(listing, presalePrice);
+    console.log(amountLiquidity);
     //if start date is less than current date and time, and also if end date is less than start date
     const now = moment();
-    
+
     if (startDate < now.unix()) {
       toast.error("Start date should be greater than current date and time");
-      return
+      return;
     }
     if (endDate < startDate) {
       toast.error("End date should be greater than start date");
-      return
+      return;
     }
-    if(!enoughBalance)
-    {
+    if (!enoughBalance) {
       toast.error("Insufficient Balance");
       return;
     }
-    if (amountLiquidity<51||amountLiquidity===undefined)
-    {
+    if (amountLiquidity < 51 || amountLiquidity === undefined) {
       toast.error("Liquidity should be greater than 50%");
       return;
     }
     //listing cant be less than presale rate
     if (listing > presalePrice) {
       toast.error("Listing rate can't be lower than presale rate");
-      return
+      return;
     }
-    if (lockup===undefined || maxAllocation===undefined || minAllocation===undefined || hardCap===undefined || softCap===undefined || presalePrice===undefined || endDate===undefined || startDate===undefined || amountLiquidity===undefined || listing===undefined)
-    {
+    if (
+      lockup === undefined ||
+      maxAllocation === undefined ||
+      minAllocation === undefined ||
+      hardCap === undefined ||
+      softCap === undefined ||
+      presalePrice === undefined ||
+      endDate === undefined ||
+      startDate === undefined ||
+      amountLiquidity === undefined ||
+      listing === undefined
+    ) {
       toast.error("Please fill all the fields");
       return;
     }
@@ -178,10 +187,10 @@ export default function Presale({ setActive, saleType, setSaleObject, token }) {
       endDate: endDate,
       unsoldToken: unsoldToken,
       lockup: lockup,
-      owner : account,
-      isFinished : false,
+      owner: account,
+      isFinished: false,
     };
-    
+
     setSaleObject(presaleObject);
     closeLoadingModal();
     setActive("Project Details");
@@ -199,20 +208,18 @@ export default function Presale({ setActive, saleType, setSaleObject, token }) {
     );
     try {
       const balance = await contract.balanceOf(account);
-      
+
       if (balance.gte(amountRequired)) {
         return true;
       }
       return false;
     } catch (error) {
-      
       return false;
     }
   };
 
   //use effect in which we will set required token if hardcap, softcap, listing price, amount liquidity, presale price changes
   useEffect(() => {
-    
     if (
       hardCap > 0 &&
       softCap > 0 &&
@@ -233,7 +240,7 @@ export default function Presale({ setActive, saleType, setSaleObject, token }) {
       // const presaleRateBNB = tokenRate(presaleRateToken, "18")
 
       setRequiredToken(reqHard.add(reqLP).toString());
-      
+
       //consolelog if user has enough balance
       //wait till return true from handleCheckBalance
       //if true then set required token
@@ -249,16 +256,16 @@ export default function Presale({ setActive, saleType, setSaleObject, token }) {
 
   // //for fairlaunch
   // useEffect(() => {
-  //     
+  //
   //     if (presalePrice > 0 && softCap > 0 && amountLiquidity > 0 && saleType === "fairlaunch") {
   //       const totalSupply = ethers.utils.parseUnits(presalePrice.toString(), token.tokenDecimals.toString());
-  //       
+  //
   //       const liquidityAmount = ethers.utils.parseUnits(amountLiquidity.toString(), 18);
-  //         
+  //
   //       const requiredToken = totalSupply.mul(liquidityAmount).div(ethers.utils.parseUnits("1", "18"));
 
   //       setRequiredToken(requiredToken.toString());
-  //       
+  //
   //       // consolelog if user has enough balance
   //       // wait till return true from handleCheckBalance
   //       // if true then set required token
@@ -271,14 +278,14 @@ export default function Presale({ setActive, saleType, setSaleObject, token }) {
 
   // //for private sale
   // useEffect(() => {
-  //     
+  //
   //     if (hardCap > 0 && softCap > 0 && presalePrice > 0) {
   //       const hardCapBNB = ethers.utils.parseUnits(hardCap.toString(), 18);
   //       const totalSupply = ethers.utils.parseUnits(presalePrice.toString(), token.tokenDecimals.toString());
   //       const presaleRateBNB = hardCapBNB.div(totalSupply);
 
   //       setRequiredToken(hardCapBNB.toString());
-  //       
+  //
   //       // consolelog if user has enough balance
   //       // wait till return true from handleCheckBalance
   //       // if true then set required token
@@ -287,7 +294,7 @@ export default function Presale({ setActive, saleType, setSaleObject, token }) {
 
   async function checkBalance() {
     const check = await handleCheckBalance();
-    
+
     if (check) {
       setEnoughBalance(true);
     } else {
@@ -300,7 +307,6 @@ export default function Presale({ setActive, saleType, setSaleObject, token }) {
     setTempFixed(!tempfixed);
   };
 
-  
   return (
     <div className="w-full">
       <HeadingTags name={"Choose Currency"} required />
@@ -371,6 +377,7 @@ export default function Presale({ setActive, saleType, setSaleObject, token }) {
             currencies={currencies}
             currencySelected={currencySelected}
             changeState={setMaxAllocation}
+            tooltip={"a"}
           />
         </div>
       </div>
@@ -409,6 +416,29 @@ export default function Presale({ setActive, saleType, setSaleObject, token }) {
           </div>
         </div>
       )}
+      {/* here if whitelisting is enabled, show an input field where addresses can be entered, seperated by comma */}
+      {whiteisting && (
+        <>
+          <div className="mt-5">
+            <Input
+              heading={"Whitelisted Addresses"}
+              changeState={setWhiteListedAddresses}
+              currencies={currencies}
+              currencySelected={currencySelected}
+              tooltip={
+                "Enter addresses seperated by comma, to whitelist them for the presale"
+              }
+              placeholder={"0xaEa574007c8ad33c7f4f7CF4a0d0B6F704ACD59e, ..."}
+            />
+          </div>
+          <div className="mt-5">
+            <CalendarField
+            heading = {"Whitelist end date (UTC)"}
+            changeState = {setWhiteListEndDate}
+            />
+          </div>
+        </>
+      )}
 
       {saleType !== "private" && (
         <div>
@@ -440,7 +470,10 @@ export default function Presale({ setActive, saleType, setSaleObject, token }) {
                 <Input
                   heading={"Amount for Liquidity"}
                   changeState={setAmountLiquidity}
-                  tooltip={"Ready availability of assets for seamless and hassle-free decentralized financial transactions and activities."}
+                  tooltip={
+                    "Ready availability of assets for seamless and hassle-free decentralized financial transactions and activities."
+                  }
+                  
                 />
               </div>
               <div className="md:hidden">
@@ -478,7 +511,7 @@ export default function Presale({ setActive, saleType, setSaleObject, token }) {
         <div>
           <PreviewHeader heading={"More Details"} />
           <PresaleStandard
-          unsoldToken={unsoldToken}
+            unsoldToken={unsoldToken}
             setUnsoldTokens={setUnsoldTokens}
             setLockup={setLockup}
           />
@@ -528,7 +561,7 @@ export default function Presale({ setActive, saleType, setSaleObject, token }) {
             Next
           </button>
         </div>
-      <ToastContainer />
+        <ToastContainer />
       </div>
     </div>
   );

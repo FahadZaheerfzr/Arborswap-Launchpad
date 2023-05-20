@@ -39,6 +39,7 @@ export default function SaleBox({
   // console.log("filled_percent", filled_percent);
 
   // console.log(ends_on);
+  console.log(saleInfo)
   useEffect(() => {
     const getFilledPercent = async () => {
       const percents = await saleInfo.totalBNBRaised

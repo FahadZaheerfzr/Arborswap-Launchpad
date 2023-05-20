@@ -22,6 +22,7 @@ export default function PreviewSale({ token, setActive, saleObject, saleType, sa
   const deployFee = useDeploymentFeePublic()
   const [startTime, setStartTime] = useState(null)
   const [endTime, setEndTime] = useState(null)
+  console.log(saleObject, "saleObject")
 
   const { open: openLoadingModal, close: closeLoadingModal } =
     useModal("LoadingModal");
@@ -130,7 +131,7 @@ export default function PreviewSale({ token, setActive, saleObject, saleType, sa
       <PreviewHeader heading={"Presale Details"} />
 
       {saleType === "fairlaunch" &&
-        <PreviewDetails name={"Amount to be sold"} value={"100,000,000 SXP"} />
+        <PreviewDetails name={"Amount to be sold"} value={"100,000,000"} tokenSymbol={token.tokenSymbol} />
       }
 
       {saleType === "standard" &&
@@ -142,7 +143,7 @@ export default function PreviewSale({ token, setActive, saleObject, saleType, sa
           <PreviewDetails name={"Hard Cap"} value={saleObject.hardCap} />
           <PreviewDetails name={"Minimum Allocation"} value={saleObject.minAllocation + " " + saleObject.currency.symbol} />
           <PreviewDetails name={"Maximum Allocation"} value={saleObject.maxAllocation + " " + saleObject.currency.symbol} />
-          <PreviewDetails name={"Amount to be sold"} value={"100,000,000 SXP"} />
+          <PreviewDetails name={"Amount to be sold"} value={"100,000,000"} tokenSymbol={token.tokenSymbol} />
         </div>
       }
       {saleType === "fairlaunch" &&

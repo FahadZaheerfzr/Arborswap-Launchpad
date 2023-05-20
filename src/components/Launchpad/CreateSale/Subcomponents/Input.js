@@ -2,7 +2,7 @@ import Tooltip from 'components/Common/Tooltip'
 import React, { useState } from 'react'
 import HeadingTags from '../../../TokenLocker/Subcomponents/HeadingTags'
 
-export default function Input({ heading, tooltip, icon, value, disabled, currencies, currencySelected, nothing, text, changeState }) {
+export default function Input({ heading, tooltip, icon, value, disabled, currencies, currencySelected, nothing, text, changeState,placeholder }) {
     const [dropdown, setDropdown] = useState(false)
     return (
         <div className='w-full'>
@@ -20,7 +20,7 @@ export default function Input({ heading, tooltip, icon, value, disabled, currenc
                     value={value}
                     disabled={disabled}
                     onChange={(e) => changeState(e.target.value)}
-                    placeholder="70"
+                    placeholder={placeholder||'70'}
                 />
                 {currencySelected ?
                     <img className='w-5 h-5' src={currencies[currencySelected - 1].icon} alt='currency-icon' />

@@ -7,6 +7,9 @@ import Labels from './Subcomponents/Labels';
 import TwitterSVG from 'svgs/Socials/twitter';
 import DribbleSVG from 'svgs/Socials/dribble';
 import PreviewDetails from 'components/Common/PreviewDetails';
+import useSaleInfo from 'utils/getSaleInfo';
+import { getTokenInfo } from 'utils/tokenInfo';
+import { formatBigToNum } from 'utils/numberFormat';
 
 const TokkenDetails = {
     TokenName: "Swipe Coin",
@@ -39,7 +42,8 @@ export default function Preview({
 }) {
     const [slide, setSlide] = useState('Presale')
     
-    console.log("unsold_tokens", unsold_tokens)
+    const supply= parseFloat(token.tokenSupply) / 10 ** token.tokenDecimals 
+    console.log(pool)
     return (
         <div className="px-9 py-9 my-4">
             <Info name={name} icon={icon} is_private={is_private} tags={tags} pool={pool} />
@@ -65,6 +69,11 @@ export default function Preview({
                     {
                         unsold_tokens &&
                         <PreviewDetails name={'Unsold Tokens'} value={unsold_tokens} />
+                    }
+                    <PreviewDetails name={'To be listed on'} value={pool.dex.name} icon={pool.dex.icon} />
+                    {
+                        liquidity &&
+                        <PreviewDetails name={'Tokens for Liquidity'} value={supply*(liquidity/100)} />
                     }
                     {
                         liquidity &&
