@@ -73,7 +73,7 @@ export default function Preview({
                     <PreviewDetails name={'To be listed on'} value={pool.dex.name} icon={pool.dex.icon} />
                     {
                         liquidity &&
-                        <PreviewDetails name={'Tokens for Liquidity'} value={supply*(liquidity/100)} />
+                        <PreviewDetails name={'Tokens for Liquidity'} value={(Math.floor(supply*(liquidity/100))).toString()} />
                     }
                     {
                         liquidity &&
