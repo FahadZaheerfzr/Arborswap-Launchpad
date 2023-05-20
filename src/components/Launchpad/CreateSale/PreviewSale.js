@@ -14,6 +14,7 @@ import axios from 'axios';
 import { BACKEND_URL } from 'config/constants/LaunchpadAddress'
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import useCalcMax from 'utils/calcMax';
 
 
 export default function PreviewSale({ token, setActive, saleObject, saleType, saleData }) {
@@ -22,7 +23,11 @@ export default function PreviewSale({ token, setActive, saleObject, saleType, sa
   const deployFee = useDeploymentFeePublic()
   const [startTime, setStartTime] = useState(null)
   const [endTime, setEndTime] = useState(null)
-  console.log(saleObject, "saleObject")
+  //calc max takes, hardcap, tokenPrice, listingPrice, tokenDecimals
+  const max = useCalcMax(saleObject.hardCap, saleObject.presalePrice, saleObject.listing, token.tokenDecimals)
+  // console.log("max", max?.[0])
+
+  // console.log(saleObject, "saleObject")
 
   const { open: openLoadingModal, close: closeLoadingModal } =
     useModal("LoadingModal");
@@ -143,7 +148,7 @@ export default function PreviewSale({ token, setActive, saleObject, saleType, sa
           <PreviewDetails name={"Hard Cap"} value={saleObject.hardCap} />
           <PreviewDetails name={"Minimum Allocation"} value={saleObject.minAllocation + " " + saleObject.currency.symbol} />
           <PreviewDetails name={"Maximum Allocation"} value={saleObject.maxAllocation + " " + saleObject.currency.symbol} />
-          <PreviewDetails name={"Amount to be sold"} value={"100,000,000"} tokenSymbol={token.tokenSymbol} />
+          <PreviewDetails name={"Amount to be sold"} value={max?formatBigToNum(max[0]):""} tokenSymbol={token.tokenSymbol} />
         </div>
       }
       {saleType === "fairlaunch" &&

@@ -228,8 +228,11 @@ export default function Presale({ setActive, saleType, setSaleObject, token }) {
       saleType === "standard"
     ) {
       const hardCapBNB = ethers.utils.parseUnits(hardCap.toString(), 18);
-      const presaleRateToken = ethers.BigNumber.from(presalePrice.toString());
-      const listingRateToken = ethers.BigNumber.from(listing);
+      //ciel the presale price
+      const presaleCeil = Math.ceil(presalePrice);
+      const listingRateCiel = Math.ceil(listing);
+      const presaleRateToken = ethers.BigNumber.from(presaleCeil.toString());
+      const listingRateToken = ethers.BigNumber.from(listingRateCiel);
 
       const reqHard = hardCapBNB
         .mul(presaleRateToken)
