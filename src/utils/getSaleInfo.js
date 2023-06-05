@@ -1,45 +1,17 @@
-import { Contract } from "ethers";
 import PublicSaleAbi from "config/abi/PublicSale.json";
+import Web3 from "web3";
 
-import { useCall, useEthers } from "@usedapp/core";
-
-function useSaleInfo(saleAddress) {
-  const { value, error } =
-    useCall(
-      {
-        contract: new Contract(saleAddress, PublicSaleAbi),
-        method: "sale",
-        args: [],
-      },
-      {
-        refresh: "never",
-      }
-    ) ?? {};
-  if (error) {
-    // console.log(error)
-    return error;
+async function getSaleInfo(saleAddress) {
+  try {
+    const web3 = new Web3(window.ethereum);
+    await window.ethereum.enable();
+    const contract = new web3.eth.Contract(PublicSaleAbi, saleAddress);
+    const sale = await contract.methods.sale().call();
+    console.log(sale, "sale")
+    return sale;
+  } catch (err) {
+    console.log(err);
   }
-  // console.log("sale info", value)
-  return value;
 }
 
-// function LogFinishSale(saleAddress) {
-//   const { value, error } =
-//     useCall(
-//       {
-//         contract: new Contract(saleAddress, PublicSaleAbi),
-//         method: "LogFinishSale",
-//         args: [],
-//       },
-//       {
-//         refresh: "never",
-//       }
-//     ) ?? {};
-//   if (error) {
-//     // console.log(error)
-//     return error;
-//   }
-//   return value;
-// }
-
-export default useSaleInfo;
+export default getSaleInfo;

@@ -7,9 +7,7 @@ import Labels from './Subcomponents/Labels';
 import TwitterSVG from 'svgs/Socials/twitter';
 import DribbleSVG from 'svgs/Socials/dribble';
 import PreviewDetails from 'components/Common/PreviewDetails';
-import useSaleInfo from 'utils/getSaleInfo';
-import { getTokenInfo } from 'utils/tokenInfo';
-import { formatBigToNum } from 'utils/numberFormat';
+
 
 const TokkenDetails = {
     TokenName: "Swipe Coin",

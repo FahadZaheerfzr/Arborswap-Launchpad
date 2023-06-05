@@ -12,7 +12,7 @@ import FairLaunchErcAbi from "../../../config/abi/FairlaunchErcAbi.json";
 import { formatEther, parseEther } from "ethers/lib/utils";
 import { API_URL, API_KEY } from "config/constants/api";
 import axios from "axios";
-import useSaleInfo from "utils/getSaleInfo";
+import getSaleInfo from "utils/getSaleInfo";
 import usePublicErcSaleInfo from "utils/getPublicErcSaleInfo";
 import usePrivateSaleInfo from "utils/getPrivateSaleInfo";
 import usePrivateErcSaleInfo from "utils/getPrivateErcSaleInfo";
@@ -33,13 +33,14 @@ export default function Modal({
   sale,
   account,
 }) {
+  const [saleInfoPublic, setSaleInfoPublic] = useState(null);
   const { library } = useEthers();
   const [amount, setAmount] = useState(sale.minAllocation);
   const [bnbUSD, setBnbUSD] = useState(317);
   const [usdAmount, setUsdAmount] = useState(sale.minAllocation * bnbUSD);
+  const [priceInBNB, setPriceInBNB] = useState(null);
   const sale_info_public_erc = usePublicErcSaleInfo(sale.saleAddress);
 
-  const sale_info_public = useSaleInfo(sale.saleAddress);
   const sale_info_private = usePrivateSaleInfo(sale.saleAddress);
   const sale_info_private_erc = usePrivateErcSaleInfo(sale.saleAddress);
   const sale_info_fairlaunch = useFairlaunchSaleInfo(sale.saleAddress);
@@ -50,16 +51,16 @@ export default function Modal({
 
   const [tokenPrice, setTokenPrice] = useState(0);
   const [tokenAmount, setTokenAmount] = useState(0);
-  // console.log("sale_info_public", sale_info_public)
-  // console.log("sale_info_public_erc", sale_info_public_erc)
-  // console.log("sale_info_public", sale_info_public)
-  // console.log("sale_info_private", sale_info_private)
-  // console.log("sale_info_private_erc", sale_info_private_erc)
-  // console.log("sale_info_fairlaunch", sale_info_fairlaunch)
-  // console.log("sale_info_fairlaunch_erc", sale_info_fairlaunch_erc)
+  
+  useEffect(() => {
+    const result = getSaleInfo(sale.saleAddress).then((res) => {
+      setSaleInfoPublic(res);
+    });
+  }, []);
 
   useEffect(() => {
     // console.log("sale", sale);
+
     if (sale.currency.symbol !== "BNB") {
       const contract = new Contract(
         sale.currency.address,
@@ -76,9 +77,21 @@ export default function Modal({
       setBalance(formatEther(balanceBNB).substring(0, 6));
     }
   }, [balanceBNB]);
+
+   async function getPrice() {
+    const res = await saleInfoPublic.totalBNBRaised
+    console.log(res, "res")
+    setPriceInBNB(res)
+  }
   useEffect(() => {
+    getPrice()
+  }, [saleInfoPublic])
+
+  useEffect(() => {
+    console.log("saleInfoPublic", saleInfoPublic)
+    if(priceInBNB===null) return    
     if (
-      sale_info_public &&
+      saleInfoPublic &&
       sale_info_public_erc &&
       sale_info_private &&
       sale_info_private_erc &&
@@ -87,9 +100,9 @@ export default function Modal({
     ) {
       if (sale.currency.symbol === "BNB") {
         if (sale.saleType === "standard") {
-          // console.log("sale_info_public", sale_info_public.tokenPriceInBNB);
+          console.log("priceInBNB", priceInBNB);
           const price = formatBigToNum(
-            sale_info_public.tokenPriceInBNB.toString(),
+            priceInBNB?.toString(),
             18,
             4
           );
@@ -143,7 +156,7 @@ export default function Modal({
         // }
       }
     }
-  }, [sale_info_public, sale_info_public_erc]);
+  }, [priceInBNB, sale_info_public_erc]);
 
   const convertBNBtoUSD = async () => {
     try {

@@ -1,6 +1,6 @@
 import Timer from "components/LockedAsset/Amount/Timer/Timer";
 import React, { useEffect, useState } from "react";
-import useSaleInfo from "utils/getSaleInfo";
+import getSaleInfo from "utils/getSaleInfo";
 import { formatBigToNum } from "utils/numberFormat";
 import { Contract, ethers } from "ethers";
 import { useEtherBalance, useEthers } from "@usedapp/core";
@@ -32,19 +32,34 @@ export default function SaleBox({
 }) {
   const [filled_percent, setFilledPercent] = useState(0);
   const [showModal2, setShowModal2] = useState(false);
+  const [priceInBNB, setPriceInBNB] = useState(null);
   const { account, library } = useEthers();
-  const saleInfo = useSaleInfo(presale_address);
+  const [saleInfo, setSaleInfo] = useState(null);
   const saleSuccess = useSuccessPublic(presale_address);
   const participated = useParticipated(presale_address, account);
   // console.log("filled_percent", filled_percent);
 
-  // console.log(ends_on);
-  console.log(saleInfo)
   useEffect(() => {
+    const result = getSaleInfo(presale_address).then((res) => {
+      setSaleInfo(res);
+    });
+  }, []);
+
+  useEffect(() => {
+    getPrice();
+  }, [saleInfo]);
+
+  async function getPrice() {
+    if (!saleInfo) return;
+    const res = await saleInfo.totalBNBRaised;
+    console.log(res, "res");
+    setPriceInBNB(res);
+  }
+  // console.log(ends_on);
+  useEffect(() => {
+    if (priceInBNB === null) return;
     const getFilledPercent = async () => {
-      const percents = await saleInfo.totalBNBRaised
-        .mul(100)
-        .div(saleInfo.hardCap);
+      const percents = priceInBNB.mul(100).div(saleInfo.hardCap);
       //const newRaised = formatBigToNum(saleInfo.totalBNBRaised.toString(), 18, 4)
       // console.log("PERCENTS", percents.toString());
       const newPercent = formatBigToNum(percents.toString(), 0, 1);
@@ -53,7 +68,7 @@ export default function SaleBox({
     if (saleInfo) {
       getFilledPercent();
     }
-  }, [saleInfo]);
+  }, [priceInBNB]);
 
   const withdrawFunds = async () => {
     if (participated[0] === false) {
@@ -201,7 +216,14 @@ export default function SaleBox({
         ) : (
           <div className="flex mt-10">
             <button
-              disabled={status === "Ended" || (saleInfo && saleInfo.totalBNBRaised.toString() - saleInfo.hardCap.toString()) === 0 ? true : false}
+              disabled={
+                status === "Ended" ||
+                (saleInfo &&
+                  saleInfo.totalBNBRaised.toString() -
+                    saleInfo.hardCap.toString()) === 0
+                  ? true
+                  : false
+              }
               className={`w-full ${
                 status !== "Ended"
                   ? "bg-primary-green"
