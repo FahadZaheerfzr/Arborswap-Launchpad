@@ -287,6 +287,7 @@ export default function Modal({
       return;
     }
     //if balance is less than max allocation show error
+    console.log(balance)
     if (parseFloat(balance) < parseFloat(sale.maxAllocation)) {
       toast.error("Insufficient balance");
       return;

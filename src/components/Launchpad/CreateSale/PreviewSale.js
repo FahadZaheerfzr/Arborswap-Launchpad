@@ -12,8 +12,6 @@ import { useModal } from "react-simple-modal-provider";
 import { deployPrivateSale, deployPublicSale, deployFairLaunchSale, deployPublicSaleERC, deployFairLaunchSaleERC20, deployPrivateErSale } from 'utils/deploySale';
 import axios from 'axios';
 import { BACKEND_URL } from 'config/constants/LaunchpadAddress'
-import { ToastContainer, toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
 import useCalcMax from 'utils/calcMax';
 
 

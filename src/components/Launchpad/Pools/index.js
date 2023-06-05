@@ -75,7 +75,7 @@ export default function PoolsBase({ activeStatus,pools,loading }) {
                         {/* <img src={pool.soft_cap_icon} alt="soft-icon" className='w-[18px] h-[18px]' /> */}
 
                         <span className="ml-2 font-bold text-dark-text dark:text-light-text">
-                          {pool.sale.softCap}
+                          {pool.sale.softCap} BNB
                         </span>
                       </div>
                     </div>
@@ -89,14 +89,14 @@ export default function PoolsBase({ activeStatus,pools,loading }) {
                         {/* <img src={pool.hard_cap_icon} alt="hard-icon" className='w-[18px] h-[18px]' /> */}
 
                         <span className="ml-2 font-bold text-dark-text dark:text-light-text">
-                          {pool.sale.hardCap}
+                          {pool.sale.hardCap} BNB
                         </span>
                       </div>
                     </div>
 
                     <div className="flex items-center justify-between mt-5">
                       <span className="text-xs  text-gray dark:text-gray-dark">
-                        {(pool.sale.hardCap * (25 / 100)).toLocaleString()}{" "}
+                        {(pool.sale.softCap).toLocaleString()}{" "}
                         {pool.sale.token.tokenSymbol}
                         {/* idk where to get filled perccentage */}
                       </span>
@@ -112,14 +112,14 @@ export default function PoolsBase({ activeStatus,pools,loading }) {
 
                         <div className="flex flex-col justify-between">
                           <span className="text-xs font-medium text-gray dark:text-gray-dark">
-                            Liquidity %
+                            Liquidity
                           </span>
 
                           <span className="font-medium text-dim-text dark:text-dim-text-dark">
                             <span className="text-dark-text dark:text-light-text font-semibold">
                               {pool.sale.amountLiquidity?pool.sale.amountLiquidity:"---"}
                             </span>{" "}
-                            of 100
+                            %
                           </span>
                         </div>
                       <div className="flex flex-col justify-between items-center">

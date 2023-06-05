@@ -29,15 +29,15 @@ export default function SwitchNetworkButton() {
   ];
 
   return (
-    <div className="relative mr-5">
+    <div className="relative mr-1 sm:mr-5">
       <button
-        className="py-3 px-5 bg-primary-green hover:opacity-40 rounded-md flex items-center focus:outline-none"
+        className="md:py-3 md:px-5 md:bg-primary-green hover:opacity-40 rounded-md flex items-center focus:outline-none px-2 py-1 bg-transparent"
         onClick={handleButtonClick}
       >
-        <span className="font-gilroy font-semibold text-[#FAF8F5] flex">
-            <img src={selectedNetwork.icon} alt={selectedNetwork.name} className="w-[20px] h-[20px] mr-2" />
+        <span className="font-gilroy font-semibold text-[#FAF8F5] flex text-xs md:text-base">
+            <img src={selectedNetwork.icon} alt={selectedNetwork.name} className="w-[20px] h-[20px] mr-1 md:mr-2" />
           {selectedNetwork.name}
-          <IoMdArrowDropdown className="ml-2 my-auto" />
+          <IoMdArrowDropdown className="ml-1 md:ml-2 my-auto" />
         </span>
       </button>
 

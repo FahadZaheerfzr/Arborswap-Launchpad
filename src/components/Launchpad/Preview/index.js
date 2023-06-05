@@ -7,6 +7,7 @@ import Labels from './Subcomponents/Labels';
 import TwitterSVG from 'svgs/Socials/twitter';
 import DribbleSVG from 'svgs/Socials/dribble';
 import PreviewDetails from 'components/Common/PreviewDetails';
+import { formatBigToNum } from 'utils/numberFormat';
 
 
 const TokkenDetails = {
@@ -39,9 +40,7 @@ export default function Preview({
     lockup
 }) {
     const [slide, setSlide] = useState('Presale')
-    
     const supply= parseFloat(token.tokenSupply) / 10 ** token.tokenDecimals 
-    console.log(pool)
     return (
         <div className="px-9 py-9 my-4">
             <Info name={name} icon={icon} is_private={is_private} tags={tags} pool={pool} />
@@ -95,21 +94,21 @@ export default function Preview({
                     <PreviewDetails name={'Token Name'} value={token.tokenName} />
                     <PreviewDetails name={'Token Symbol'} value={token.tokenSymbol} />
                     <PreviewDetails name={'Token Decimals'} value={token.tokenDecimals} />
-                    <PreviewDetails name={'Total Supply'} value={token.tokenSupply && token.tokenSupply.toLocaleString()} />
-                    <PreviewDetails name={'Token Address'} value={token.tokenAddress} enable_copy />
+                    <PreviewDetails name={'Total Supply'} value={token.tokenSupply && formatBigToNum(token.tokenSupply, token.tokenDecimals)} />
+                    <PreviewDetails name={'Token Address'} value={token.tokenAddress} enable_copy={true} />
 
                     <div className='mt-10'>
                         <span className="font-semibold text-dark-text dark:text-light-text">Token Metrics</span>
                         <div className='flex items-center mt-7'>
                             <div className='w-full '>
-                                <DonutChart />
+                                <DonutChart presale={pool.presalePrice*hard_cap} liquidity={pool.amountLiquidity} burned={pool.burned} locked={pool.locked} unlocked={pool.unlocked} />
                             </div>
                             <div className='w-full pl-16'>
                                 <Labels color={"#307856"} text={"Presale"} />
                                 <Labels color={"#585B79"} text={"Liquidity"} />
-                                <Labels color={"#C89211"} text={"Locked"} />
+                                {/* <Labels color={"#C89211"} text={"Locked"} />
                                 <Labels color={"#E56060"} text={"Burned"} />                                
-                                <Labels color={"#239C63"} text={"Unlocked"} />
+                                <Labels color={"#239C63"} text={"Unlocked"} /> */}
                             </div>
                         </div>
                     </div>

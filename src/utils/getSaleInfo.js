@@ -7,7 +7,6 @@ async function getSaleInfo(saleAddress) {
     await window.ethereum.enable();
     const contract = new web3.eth.Contract(PublicSaleAbi, saleAddress);
     const sale = await contract.methods.sale().call();
-    console.log(sale, "sale")
     return sale;
   } catch (err) {
     console.log(err);

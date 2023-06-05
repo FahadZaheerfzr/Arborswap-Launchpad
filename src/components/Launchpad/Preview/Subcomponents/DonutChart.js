@@ -1,9 +1,9 @@
 import React from 'react'
 import Chart from "react-apexcharts";
 
-const series = [
-    30, 8, 8, 15, 39
-];
+// const series = [
+//     55, 3.5
+// ];
 
 const labels = [
     "Presale",
@@ -13,9 +13,14 @@ const labels = [
     "Burned"
 ]
 
-export default function DonutChart() {
+export default function DonutChart({presale, liquidity, burned, locked, unlocked}) {
+    //liquidity to integer
+    const liquidityInt = parseInt(liquidity)
+    const series = [presale, liquidityInt, 
+        // locked, unlocked, burned
+    ]
     const options = {
-        colors: ["#307856", "#E56060", "#239C63", "#C89211", "#585B79"],
+        colors: ["#307856","#585B79","#E56060","#239C63","#C89211"],
         labels: labels,
         plotOptions: {
             pie: {
@@ -48,7 +53,7 @@ export default function DonutChart() {
             width: 0
         },
         fill: {
-            colors: ["#307856", "#E56060", "#239C63", "#C89211", "#585B79"]
+            colors: ["#307856","#585B79","#E56060","#239C63","#C89211"]
         },
         dataLabels: {
             enabled: false

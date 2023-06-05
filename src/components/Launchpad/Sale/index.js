@@ -180,13 +180,15 @@ export default function SaleBox({
         </div>
 
         <div className="flex items-center justify-between mt-5">
-          {hard_cap && filled_percent && (
-            <span className="text-xs  text-gray dark:text-gray-dark">
-              {(hard_cap * (filled_percent / 100)).toLocaleString()}{" "}
-              {currency.symbol}
-            </span>
-          )}
-
+          {
+            hard_cap && filled_percent!=null?(
+              <span className="text-xs font-medium text-gray dark:text-gray-dark">
+                {hard_cap * (filled_percent / 100)} {currency.symbol} Raised
+              </span>
+            ):(
+              <></>
+            )
+          }
           <span className="text-xs  text-dim-text dark:text-dim-text-dark">
             {hard_cap} {currency.symbol}
           </span>
@@ -195,7 +197,10 @@ export default function SaleBox({
         <div className="w-full bg-[#F5F1EB] dark:bg-dark-3 rounded-[5px] h-[18px] mt-[6px]">
           <div
             className={`h-18px filled rounded-[5px] pr-2 flex justify-end items-center text-xs text-white`}
-            style={{ width: `${filled_percent}%` }}
+            style={{
+              width: `${filled_percent}%`,
+              display: `${filled_percent === 0 ? "none" : ""}`,
+            }}
           >
             {filled_percent}%
           </div>
