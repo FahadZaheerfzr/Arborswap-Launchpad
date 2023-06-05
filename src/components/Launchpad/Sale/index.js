@@ -60,8 +60,6 @@ export default function SaleBox({
     if (priceInBNB === null) return;
     const getFilledPercent = async () => {
       const percents = priceInBNB.mul(100).div(saleInfo.hardCap);
-      //const newRaised = formatBigToNum(saleInfo.totalBNBRaised.toString(), 18, 4)
-      // console.log("PERCENTS", percents.toString());
       const newPercent = formatBigToNum(percents.toString(), 0, 1);
       setFilledPercent(newPercent);
     };
