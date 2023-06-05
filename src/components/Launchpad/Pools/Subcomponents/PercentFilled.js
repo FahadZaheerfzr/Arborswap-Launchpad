@@ -14,6 +14,7 @@ export default function PercentFilled(address) {
   }, []);
   // console.log(sale)
   async function getPrice() {
+    if (!saleInfo) return;
     const res = await saleInfo.totalBNBRaised;
     console.log(res, "res");
     setPriceInBNB(res);
