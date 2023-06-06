@@ -30,27 +30,30 @@ export default function PreviewSale({
 }) {
   const [deploymentFee, setDeploymentFee] = useState(0.0);
   const { account, library } = useEthers();
+  const [max, setMax] = useState(null); // console.log("max", max?.[0]
   let deployFee;
   const [startTime, setStartTime] = useState(null);
   const [endTime, setEndTime] = useState(null);
   //calc max takes, hardcap, tokenPrice, listingPrice, tokenDecimals
-  let max=null; // console.log("max", max?.[0])
   let amt = 0;
   async function calcMax() {
-    max = await getCalcMax(saleObject, token);
+    const result = await getCalcMax(saleObject, token)
+      .then((res) => {
+        setMax(res);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
   }
   async function getFee() {
     deployFee = await getDeploymentFeePublic()
       .then((res) => {
         setDeploymentFee(ethers.utils.formatEther(res));
-      }
-      )
+      })
       .catch((err) => {
         console.log(err);
-      }
-      );
+      });
   }
-
 
   useEffect(() => {
     calcMax();
@@ -59,7 +62,7 @@ export default function PreviewSale({
   useEffect(() => {
     try {
       console.log(max, "max");
-      amt = parseFloat(saleObject.hardCap) + parseFloat(formatBigToNum(max?.[0]));
+      amt = parseFloat(saleObject.hardCap) + parseFloat(formatBigToNum(max));
     } catch (err) {
       console.log(err);
     }
@@ -73,8 +76,6 @@ export default function PreviewSale({
   useEffect(() => {}, [startTime]);
 
   useEffect(() => {
-    
-
     setStartTime(new Date(saleObject.startDate * 1000));
     setEndTime(new Date(saleObject.endDate * 1000));
     getFee();

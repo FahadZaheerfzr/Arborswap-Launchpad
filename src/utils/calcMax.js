@@ -14,6 +14,7 @@ async function getCalcMax(saleObject,token) {
           (saleObject.amountLiquidity * 100).toString(),
           parseUnits(saleObject.listing.toString(), token.tokenDecimals).toString(),
         ).call();
+        console.log(calcMax, "calcMax")
           return calcMax;
     }
     catch(err){

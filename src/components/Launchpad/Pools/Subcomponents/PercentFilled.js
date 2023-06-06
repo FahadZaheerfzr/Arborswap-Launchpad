@@ -4,13 +4,14 @@ import { useEffect, useState } from "react";
 import getSaleInfo from "utils/getSaleInfo";
 import { formatBigToNum } from "utils/numberFormat";
 
-export default function PercentFilled({address, setFilled}) {
+export default function PercentFilled({address, setFilled = () => {}}) {
+  // console.log(address, "address")
   const [filled_percent, setFilledPercent] = useState(0);
   const [saleInfo, setSaleInfo] = useState(null);
   const [priceInBNB, setPriceInBNB] = useState(null);
   useEffect(() => {
-    const result = getSaleInfo(address.address).then((res) => {
-      console.log(res, "res")
+    const result = getSaleInfo(address).then((res) => {
+      // console.log(res, "res")
       setSaleInfo(res);
     });
   }, []);
