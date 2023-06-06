@@ -9,7 +9,7 @@ import PrivateSaleAbi from "../../../config/abi/PrivateSale.json";
 import PrivateSaleErcAbi from "../../../config/abi/PrivateSaleErcAbi.json";
 import FairLaunchAbi from "../../../config/abi/FairlaunchSale.json";
 import FairLaunchErcAbi from "../../../config/abi/FairlaunchErcAbi.json";
-import useSuccessPublic from "utils/successfulPublic";
+import getSuccessPublic from "utils/successfulPublic";
 import useParticipated from "utils/getParticipated";
 import ConfirmModal from "../Admin/subComponents/ConfirmModal";
 import { ToastContainer, toast } from "react-toastify";
@@ -34,9 +34,9 @@ export default function SaleBox({
   const [showModal2, setShowModal2] = useState(false);
   const { account, library } = useEthers();
   const [saleInfo, setSaleInfo] = useState(null);
-  const saleSuccess = useSuccessPublic(presale_address);
+  const saleSuccess = getSuccessPublic(presale_address);
   const participated = useParticipated(presale_address, account);
-  console.log("filled_percent", filled_percent);
+  // console.log("filled_percent", filled_percent);
 
   useEffect(() => {
     const result = getSaleInfo(presale_address).then((res) => {

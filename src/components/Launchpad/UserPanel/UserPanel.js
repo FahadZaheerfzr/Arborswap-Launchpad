@@ -119,7 +119,7 @@ export default function SaleBox({ icon, sale, status }) {
       await tx.wait();
       toast.success("Participation Withdrawn");
     } catch (err) {
-      toast.error("Transaction Failed");
+      toast.error("You Have Already Withdrawn Your Participation");
       // console.log(err);
       closeLoadingModal()
     }

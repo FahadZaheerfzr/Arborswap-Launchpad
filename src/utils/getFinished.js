@@ -1,26 +1,21 @@
 import { Contract } from "ethers";
 import PublicSaleAbi from "config/abi/PublicSale.json";
 
-import { useCall, useEthers } from "@usedapp/core";
-
+import Web3 from "web3";
 //public
-function useIsFinished(saleAddress) {
-  const { value, error } =
-    useCall(
-      {
-        contract: new Contract(saleAddress, PublicSaleAbi),
-        method: "saleFinished",
-        args: [],
-      },
-      {
-        refresh: "never",
-      }
-    ) ?? {};
-  if (error) {
-    // console.log(error)
-    return error;
+async function getIsFinished(saleAddress) {
+  try {
+    const web3 = new Web3(window.ethereum);
+    await window.ethereum.enable();
+    const contract = new web3.eth.Contract(PublicSaleAbi, saleAddress);
+    const isFinished = await contract.methods.saleFinished().call();
+    console.log(isFinished, "isFinished")
+    return isFinished;
+  } catch (err) {
+    console.log(err);
   }
-  return value;
 }
 
-export default useIsFinished;
+
+ 
+export default getIsFinished;

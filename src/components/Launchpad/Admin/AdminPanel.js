@@ -9,13 +9,11 @@ import PrivateSaleAbi from "../../../config/abi/PrivateSale.json";
 import PrivateSaleErcAbi from "../../../config/abi/PrivateSaleErcAbi.json";
 import FairLaunchAbi from "../../../config/abi/FairlaunchSale.json";
 import FairLaunchErcAbi from "../../../config/abi/FairlaunchErcAbi.json";
-import { formatEther, parseEther } from "ethers/lib/utils";
 import { BACKEND_URL } from "config/constants/LaunchpadAddress";
 import axios from "axios";
-import useSuccessPublic from "utils/successfulPublic";
-import useParticipated from "utils/getParticipated";
+import getSuccessPublic from "utils/successfulPublic";
 import ConfirmModal from "./subComponents/ConfirmModal";
-import useIsFinished from "utils/getFinished";
+import getIsFinished from "utils/getFinished";
 import { useModal } from "react-simple-modal-provider";
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
@@ -30,15 +28,36 @@ export default function AdminPanel({
   soft_cap,
   sale,
 }) {
-  const { account, library } = useEthers();
+  const {  library } = useEthers();
   const [showModal, setShowModal] = useState(false);
-  const saleInfo = useSuccessPublic(sale.saleAddress);
-  const isFinished = useIsFinished(sale.saleAddress);
+  const [isFinished, setIsFinished] = useState(null);
+  const [saleInfo, setSaleInfo] = useState(null);
+
   //LoadingModal
   const { open: openLoadingModal, close: closeLoadingModal } =
     useModal("LoadingModal");
 
-  console.log("THE SALE WAS FINISHED", isFinished);
+  // console.log("THE SALE WAS FINISHED", isFinished);
+
+  async function getFinished(){
+    const res = await getIsFinished(sale.saleAddress).then((res) => {
+      setIsFinished(res);
+    });
+
+  }
+  async function getSaleInfo(){
+    const res = await getSuccessPublic(sale.saleAddress).then((res) => {
+      setSaleInfo(res);
+    });
+  }
+
+  useEffect(() => {
+    getFinished();
+    getSaleInfo();
+
+  }, []);
+  console.log("THE SALE WAS FINISHED", isFinished)
+  console.log("THE SALE WAS saleing", saleInfo)
 
   const withdrawEarnings = async () => {
     setShowModal(false);
@@ -99,7 +118,7 @@ export default function AdminPanel({
       closeLoadingModal();
       
     } catch (err) {
-      toast.error("Error withdrawing earnings");
+      toast.error("You Have Already Withdrawn Your Earnings");
       closeLoadingModal();
     }
   };
@@ -237,13 +256,13 @@ export default function AdminPanel({
             <PreviewDetails name={"Contributors"} value={"1,041"} />
           </div>
         )}
-        {saleInfo &&
-          (saleInfo[0] === false ? (
+        {saleInfo !=null && 
+          (saleInfo === false ? (
             <div className="mt-7">
               <button
                 disabled={status === "Upcoming" && status === "Live"}
                 onClick={() => {
-                  if (status === "Live") {
+                  if (status === "Ended") {
                     setShowModal(true);
                   }
                 }}
@@ -253,12 +272,13 @@ export default function AdminPanel({
                     : "bg-primary-green text-white opacity-50"
                 } rounded-md font-bold py-4`}
               >
-                {status === "Upcoming" ? "Manage Address" : "Finalize Sale"}
+                {/* if sale is not finished then show manage adress too */}
+                {status ==="Upcoming" ? "Manage Address" : "Finalize Sale"}
               </button>
             </div>
           ) : null)}
-        {saleInfo &&
-          (saleInfo[0] === true ? (
+        {saleInfo!=null &&
+          (saleInfo === true ? (
             <div className="mt-7">
               <button
                 onClick={() => setShowModal(true)}
@@ -279,22 +299,22 @@ export default function AdminPanel({
 
         <ConfirmModal
           runFunction={
-            saleInfo
-              ? saleInfo[0] === true
+            saleInfo!=null
+              ? saleInfo === true
                 ? withdrawEarnings
                 : finalizeSale
               : finalizeSale
           }
           title={
-            saleInfo
-              ? saleInfo[0] === true
+            saleInfo!=null
+              ? saleInfo === true
                 ? "Withdraw Earnings"
                 : "Finalize Sale"
               : "Finalize Sale"
           }
           description={
-            saleInfo
-              ? saleInfo[0] === true
+            saleInfo!=null
+              ? saleInfo === true
                 ? "Are you sure you want to withdraw your earnings?"
                 : "Are you sure you want to finalize the sale?"
               : "Are you sure you want to finalize the sale?"
