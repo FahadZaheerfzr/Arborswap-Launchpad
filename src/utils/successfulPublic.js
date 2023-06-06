@@ -1,26 +1,20 @@
 import { Contract } from "ethers";
 import PublicSaleAbi from "config/abi/PublicSale.json";
 
-import { useCall, useEthers } from "@usedapp/core";
-
+import Web3 from "web3";
 //public
-function useSuccessPublic(saleAddress) {
-  const { value, error } =
-    useCall(
-      {
-        contract: new Contract(saleAddress, PublicSaleAbi),
-        method: "isSaleSuccessful",
-        args: [],
-      },
-      {
-        refresh: "never",
-      }
-    ) ?? {};
-  if (error) {
-    // console.log(error)
-    return error;
+async function getSuccessPublic(saleAddress) {
+  try {
+    const web3 = new Web3(window.ethereum);
+    await window.ethereum.enable();
+    const contract = new web3.eth.Contract(PublicSaleAbi, saleAddress);
+    const success = await contract.methods.isSaleSuccessful().call();
+    console.log(success, "success")
+    return success;
+  } catch (err) {
+    console.log(err);
   }
-  return value;
 }
+  
 
-export default useSuccessPublic;
+export default getSuccessPublic;

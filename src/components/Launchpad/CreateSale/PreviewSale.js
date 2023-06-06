@@ -30,12 +30,15 @@ export default function PreviewSale({
 }) {
   const [deploymentFee, setDeploymentFee] = useState(0.0);
   const { account, library } = useEthers();
-  const [max, setMax] = useState(null); // console.log("max", max?.[0]
+  const [max, setMax] = useState(null); 
   let deployFee;
   const [startTime, setStartTime] = useState(null);
   const [endTime, setEndTime] = useState(null);
   //calc max takes, hardcap, tokenPrice, listingPrice, tokenDecimals
+  const { open: openLoadingModal, close: closeLoadingModal } =
+    useModal("LoadingModal");
   let amt = 0;
+
   async function calcMax() {
     const result = await getCalcMax(saleObject, token)
       .then((res) => {
@@ -45,6 +48,7 @@ export default function PreviewSale({
         console.log(err);
       });
   }
+
   async function getFee() {
     deployFee = await getDeploymentFeePublic()
       .then((res) => {
@@ -70,8 +74,6 @@ export default function PreviewSale({
 
   // console.log(saleObject, "saleObject")
 
-  const { open: openLoadingModal, close: closeLoadingModal } =
-    useModal("LoadingModal");
 
   useEffect(() => {}, [startTime]);
 
