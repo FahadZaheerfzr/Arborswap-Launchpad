@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useContext, useState } from 'react'
 import Info from './Subcomponents/Info'
 
 import TabSwitch from './Subcomponents/TabSwitch';
@@ -8,6 +8,9 @@ import TwitterSVG from 'svgs/Socials/twitter';
 import DribbleSVG from 'svgs/Socials/dribble';
 import PreviewDetails from 'components/Common/PreviewDetails';
 import { formatBigToNum } from 'utils/numberFormat';
+import { Link } from 'react-router-dom';
+import GithubSVG from 'svgs/Socials/github';
+import { ThemeContext } from 'context/ThemeContext/ThemeProvider';
 
 
 const TokkenDetails = {
@@ -40,16 +43,32 @@ export default function Preview({
     liquidity,
     lockup
 }) {
+    const { theme } = useContext(ThemeContext);
     const [slide, setSlide] = useState('Presale')
-    const supply= parseFloat(token.tokenSupply) / 10 ** token.tokenDecimals 
+    const supply = parseFloat(token.tokenSupply) / 10 ** token.tokenDecimals
     return (
         <div className="px-9 py-9 my-4">
             <Info name={name} icon={icon} is_private={is_private} tags={tags} pool={pool} />
 
             <div className='mt-6 flex md:hidden gap-5 ml-[70px]'>
-                
-                <TwitterSVG className="fill-dark-text dark:fill-light-text " />
-                <DribbleSVG className="fill-dark-text dark:fill-light-text " />
+                {pool.github !== "" &&
+                    <Link to={pool.github} target="_blank" rel="noopener noreferrer" >
+                        <GithubSVG
+                            className="w-5 h-5"
+                            outer={`${theme === "dark" ? "#fff" : "#464754"}`}
+                            inner={`${theme === "dark" ? "#464754" : "#fff"}`}
+                        />
+                    </Link>
+                }
+                {pool.twitter !== "" &&
+                    <Link to={pool.twitter} target="_blank" rel="noopener noreferrer" >
+                        <TwitterSVG className="fill-dark-text dark:fill-light-text" />
+                    </Link>
+                }                {pool.website !== "" &&
+                    <Link to={pool.website} target="_blank" rel="noopener noreferrer" >
+                        <DribbleSVG className="fill-dark-text dark:fill-light-text " />
+                    </Link>
+                }
             </div>
             <div className="mt-10">
                 <span className="font-medium text-sm text-gray dark:text-gray-dark">{description}</span>
@@ -60,8 +79,8 @@ export default function Preview({
             {slide === 'Presale' &&
                 <div className="mt-5">
                     <PreviewDetails name={'Presale Address'} value={address} enable_copy />
-                    <PreviewDetails name={'Presale Starts on'} value={new Date(starts_on*1000).toUTCString()} />
-                    <PreviewDetails name={'Presale Ends on'} value={new Date(ends_on*1000).toUTCString()} />
+                    <PreviewDetails name={'Presale Starts on'} value={new Date(starts_on * 1000).toUTCString()} />
+                    <PreviewDetails name={'Presale Ends on'} value={new Date(ends_on * 1000).toUTCString()} />
                     <PreviewDetails name={'Soft Cap'} value={soft_cap && soft_cap.toLocaleString()} icon={currency} />
                     <PreviewDetails name={'Hard Cap'} value={hard_cap && hard_cap.toLocaleString()} icon={currency} />
                     {
@@ -71,7 +90,7 @@ export default function Preview({
                     <PreviewDetails name={'To be listed on'} value={pool.dex.name} icon={pool.dex.icon} />
                     {
                         liquidity &&
-                        <PreviewDetails name={'Tokens for Liquidity'} value={(Math.floor(supply*(liquidity/100))).toString()} icon={symbol} />
+                        <PreviewDetails name={'Tokens for Liquidity'} value={(Math.floor(supply * (liquidity / 100))).toString()} icon={symbol} />
                     }
                     {
                         hard_cap && presalePrice &&
@@ -79,19 +98,19 @@ export default function Preview({
                     }
                     {
                         liquidity &&
-                        <PreviewDetails name={'Tokens for Liquidity (%)'} value={liquidity+"%"} />
+                        <PreviewDetails name={'Tokens for Liquidity (%)'} value={liquidity + "%"} />
                     }
                     {
                         lockup &&
                         <PreviewDetails name={'Liquidity Lockup Time (Days)'} value={lockup} />
                     }
                     {first_release &&
-                    <PreviewDetails name={'First Release'} value={first_release} />
+                        <PreviewDetails name={'First Release'} value={first_release} />
                     }
-                    {vesting_release && 
-                    <PreviewDetails name={'Vesting Release'} value={vesting_release} />
+                    {vesting_release &&
+                        <PreviewDetails name={'Vesting Release'} value={vesting_release} />
                     }
-                    
+
                 </div>
             }
             {slide === 'Token' &&
@@ -106,7 +125,7 @@ export default function Preview({
                         <span className="font-semibold text-dark-text dark:text-light-text">Token Metrics</span>
                         <div className='flex items-center mt-7'>
                             <div className='w-full '>
-                                <DonutChart presale={pool.presalePrice*hard_cap} liquidity={pool.amountLiquidity} burned={pool.burned} locked={pool.locked} unlocked={pool.unlocked} />
+                                <DonutChart presale={pool.presalePrice * hard_cap} liquidity={pool.amountLiquidity} burned={pool.burned} locked={pool.locked} unlocked={pool.unlocked} />
                             </div>
                             <div className='w-full pl-16'>
                                 <Labels color={"#307856"} text={"Presale"} />
