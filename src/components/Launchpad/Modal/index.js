@@ -22,7 +22,8 @@ import { formatBigToNum } from "utils/numberFormat";
 import ERC20 from "config/abi/ERC20.json";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import useAmountParticipated from "utils/getAmountParticipated";
+import getAmountParticipated from "utils/getAmountParticipated";
+import Web3 from "web3";
 
 export default function Modal({
   showModal,
@@ -31,7 +32,7 @@ export default function Modal({
   to_icon,
   to_symbol,
   sale,
-  account,
+  // account,
 }) {
   const [saleInfoPublic, setSaleInfoPublic] = useState(null);
   const { library } = useEthers();
@@ -45,13 +46,41 @@ export default function Modal({
   const sale_info_private_erc = usePrivateErcSaleInfo(sale.saleAddress);
   const sale_info_fairlaunch = useFairlaunchSaleInfo(sale.saleAddress);
   const sale_info_fairlaunch_erc = useFairlaunchErcSaleInfo(sale.saleAddress);
-  const balanceBNB = useEtherBalance(account);
+  let account = "";
+  const [balanceBNB, setBalanceBNB] = useState(null);
   const [balance, setBalance] = useState(0);
-  const bought = useAmountParticipated(sale.saleAddress, account);
+  let bought = "";
+
+  useEffect(() => {
+    async function connectWallet() {
+      if (typeof window.ethereum !== "undefined") {
+        // Instance web3 with the provided information
+        const web3 = new Web3(window.ethereum);
+        try {
+          // Request account access
+          await window.ethereum.enable();
+          // Wallet connected successfully
+          // You can perform further actions here
+          account = await web3.eth.getAccounts();
+          // console.log(bought[0], "bought")
+          web3.eth.getBalance(account[0]).then((res) => {
+            setBalanceBNB(res);
+          });
+
+
+        } catch (e) {
+          // User denied access or error occurred
+          // Handle the error or show appropriate message
+        }
+      }
+    }
+
+    connectWallet();
+  }, []);
 
   const [tokenPrice, setTokenPrice] = useState(0);
   const [tokenAmount, setTokenAmount] = useState(0);
-  
+
   useEffect(() => {
     const result = getSaleInfo(sale.saleAddress).then((res) => {
       setSaleInfoPublic(res);
@@ -78,18 +107,18 @@ export default function Modal({
     }
   }, [balanceBNB]);
 
-   async function getPrice() {
-    const res = await saleInfoPublic.totalBNBRaised
-    console.log(res, "res")
-    setPriceInBNB(res)
+  async function getPrice() {
+    const res = await saleInfoPublic.totalBNBRaised;
+    console.log(res, "res");
+    setPriceInBNB(res);
   }
   useEffect(() => {
-    getPrice()
-  }, [saleInfoPublic])
+    getPrice();
+  }, [saleInfoPublic]);
 
   useEffect(() => {
-    console.log("saleInfoPublic", saleInfoPublic)
-    if(priceInBNB===null) return    
+    // console.log("saleInfoPublic", saleInfoPublic);
+    if (priceInBNB === null) return;
     if (
       saleInfoPublic &&
       sale_info_public_erc &&
@@ -101,11 +130,7 @@ export default function Modal({
       if (sale.currency.symbol === "BNB") {
         if (sale.saleType === "standard") {
           console.log("priceInBNB", priceInBNB);
-          const price = formatBigToNum(
-            priceInBNB?.toString(),
-            18,
-            4
-          );
+          const price = formatBigToNum(priceInBNB?.toString(), 18, 4);
           setTokenPrice(price);
         }
         // else if (sale.saleType === "private") {
@@ -182,6 +207,8 @@ export default function Modal({
   const handleSubmit = async () => {
     //user balanceBNB
     //check if sale started
+    bought = await getAmountParticipated(sale.saleAddress);
+    console.log("SALEEEESO", bought)
     const userAllocation = formatBigToNum(bought[0].toString(), 18, 4);
     if (userAllocation >= sale.maxAllocation) {
       toast.error("You have reached the maximum allocation");
@@ -268,7 +295,7 @@ export default function Modal({
 
   const handleMax = () => {
     //balanceBNB to number everything after , is not removed
-    if (!account) {
+    if (balanceBNB===null) {
       toast.error("Connect wallet first");
       return;
     }
@@ -278,22 +305,22 @@ export default function Modal({
       return;
     }
     let bal = balance;
-    const amt = parseFloat(sale.maxAllocation)
+    const amt = parseFloat(sale.maxAllocation);
     setAmount(amt);
   };
   const handleHalf = () => {
-    if (!account) {
+    if (balanceBNB===null) {
       toast.error("Connect wallet first");
       return;
     }
     //if balance is less than max allocation show error
-    console.log(balance)
+    console.log(balance);
     if (parseFloat(balance) < parseFloat(sale.maxAllocation)) {
       toast.error("Insufficient balance");
       return;
     }
     let bal = balance;
-    const amt = parseFloat(sale.maxAllocation)
+    const amt = parseFloat(sale.maxAllocation);
     setAmount(amt / 2);
   };
 

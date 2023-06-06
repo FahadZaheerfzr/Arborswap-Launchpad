@@ -1,3 +1,4 @@
+import { BigNumber } from "ethers";
 import React from "react";
 import { useEffect, useState } from "react";
 import getSaleInfo from "utils/getSaleInfo";
@@ -9,6 +10,7 @@ export default function PercentFilled(address) {
   const [priceInBNB, setPriceInBNB] = useState(null);
   useEffect(() => {
     const result = getSaleInfo(address.address).then((res) => {
+      console.log(res, "res")
       setSaleInfo(res);
     });
   }, []);
@@ -16,7 +18,8 @@ export default function PercentFilled(address) {
   async function getPrice() {
     if (!saleInfo) return;
     const res = await saleInfo.totalBNBRaised;
-    setPriceInBNB(res);
+    const temp = BigNumber.from((res));
+    setPriceInBNB(temp);
   }
   useEffect(() => {
     getPrice();
@@ -27,14 +30,16 @@ export default function PercentFilled(address) {
     const getFilledPercent = async () => {
       console.log(priceInBNB, "priceInBNB")
       try {
+      
       const percents = priceInBNB
         .mul(100)
         .div(saleInfo.hardCap);
       const newPercent = formatBigToNum(percents.toString(), 0, 1);
+      console.log(newPercent, "newPercent")
       setFilledPercent(newPercent);
       }
       catch(err){
-        console.log("Loading")
+        console.log(err)
       }
     };
     if (saleInfo) {
@@ -48,7 +53,7 @@ export default function PercentFilled(address) {
         className={`h-18px filled rounded-[5px] pr-2 flex justify-end items-center text-xs text-white`}
         
         style={{ width: `${filled_percent}%`,
-        display : `${filled_percent === 0 ? 'none' : ''}`
+        display : `${filled_percent === "0" ? 'none' : ''}`
       }}
       >
         {/* here too where filled percentage */}

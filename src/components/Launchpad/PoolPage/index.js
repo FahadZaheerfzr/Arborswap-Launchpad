@@ -19,7 +19,7 @@ export default function PoolPageBase({ pool, showModal, admin }) {
       setStatus('Upcoming')
     }
   }, [])
-  console.log(pool)
+  // console.log(pool)
   return (
     pool && (
       <div className="w-full flex justify-center">

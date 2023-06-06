@@ -15,6 +15,7 @@ import useParticipated from "utils/getParticipated";
 import ConfirmModal from "../Admin/subComponents/ConfirmModal";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import PercentFilled from "../Pools/Subcomponents/PercentFilled";
 
 export default function SaleBox({
   hard_cap,
@@ -45,28 +46,8 @@ export default function SaleBox({
     });
   }, []);
 
-  useEffect(() => {
-    getPrice();
-  }, [saleInfo]);
-
-  async function getPrice() {
-    if (!saleInfo) return;
-    const res = await saleInfo.totalBNBRaised;
-    console.log(res, "res");
-    setPriceInBNB(res);
-  }
   // console.log(ends_on);
-  useEffect(() => {
-    if (priceInBNB === null) return;
-    const getFilledPercent = async () => {
-      const percents = priceInBNB.mul(100).div(saleInfo.hardCap);
-      const newPercent = formatBigToNum(percents.toString(), 0, 1);
-      setFilledPercent(newPercent);
-    };
-    if (saleInfo) {
-      getFilledPercent();
-    }
-  }, [priceInBNB]);
+
 
   const withdrawFunds = async () => {
     if (participated[0] === false) {
@@ -194,17 +175,7 @@ export default function SaleBox({
           </span>
         </div>
 
-        <div className="w-full bg-[#F5F1EB] dark:bg-dark-3 rounded-[5px] h-[18px] mt-[6px]">
-          <div
-            className={`h-18px filled rounded-[5px] pr-2 flex justify-end items-center text-xs text-white`}
-            style={{
-              width: `${filled_percent}%`,
-              display: `${filled_percent === 0 ? "none" : ""}`,
-            }}
-          >
-            {filled_percent}%
-          </div>
-        </div>
+        <PercentFilled address={presale_address} />
         {/* if sale is upcoming then show countdown */}
 
         {status === "Upcoming" ? (

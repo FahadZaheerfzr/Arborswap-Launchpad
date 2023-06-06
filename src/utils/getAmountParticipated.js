@@ -1,25 +1,17 @@
-import { Contract } from "ethers";
 import PublicSaleAbi from "config/abi/PublicSale.json";
-
-import { useCall, useEthers } from "@usedapp/core";
-
+import Web3 from "web3";
 //public
-function useAmountParticipated(saleAddress,account) {
-  const { value, error } =
-    useCall(
-      {
-        contract: new Contract(saleAddress, PublicSaleAbi),
-        method: "userToParticipation",
-        args: [account],
-      },
-      {
-        refresh: "never",
-      }
-    ) ?? {};
-  if (error) {
-    return error;
+async function getAmountParticipated(saleAddress) {
+  const web3 = new Web3(window.ethereum);
+  const account = await web3.eth.getAccounts();
+  const contract = new web3.eth.Contract(PublicSaleAbi, saleAddress);
+  try { 
+    console.log(saleAddress,"saleAddress", account,"account")
+    const amount = await contract.methods.userToParticipation(account[0]).call();
+    return amount;
+  } catch (err) {
+    console.log(err);
   }
-  return value;
 }
 
-export default useAmountParticipated;
+export default getAmountParticipated;
