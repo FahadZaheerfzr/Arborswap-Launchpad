@@ -4,7 +4,7 @@ import BackArrowSVG from "../../../svgs/back_arrow";
 import PreviewDetails from "../../Common/PreviewDetails";
 import { formatBigToNum } from "../../../utils/numberFormat";
 import { useState } from "react";
-import useDeploymentFeePublic from "hooks/useDeploymentFeePublic";
+import getDeploymentFeePublic from "hooks/useDeploymentFeePublic";
 import { ethers } from "ethers";
 import { useEthers } from "@usedapp/core";
 import { useEffect } from "react";
@@ -30,7 +30,7 @@ export default function PreviewSale({
 }) {
   const [deploymentFee, setDeploymentFee] = useState(0.0);
   const { account, library } = useEthers();
-  const deployFee = useDeploymentFeePublic();
+  let deployFee;
   const [startTime, setStartTime] = useState(null);
   const [endTime, setEndTime] = useState(null);
   //calc max takes, hardcap, tokenPrice, listingPrice, tokenDecimals
@@ -39,6 +39,18 @@ export default function PreviewSale({
   async function calcMax() {
     max = await getCalcMax(saleObject, token);
   }
+  async function getFee() {
+    deployFee = await getDeploymentFeePublic()
+      .then((res) => {
+        setDeploymentFee(ethers.utils.formatEther(res));
+      }
+      )
+      .catch((err) => {
+        console.log(err);
+      }
+      );
+  }
+
 
   useEffect(() => {
     calcMax();
@@ -60,12 +72,8 @@ export default function PreviewSale({
 
   useEffect(() => {}, [startTime]);
 
-  console.log(saleObject.unsoldToken, "saleObject.unsoldTokens");
   useEffect(() => {
-    async function getFee() {
-      const fee = deployFee;
-      setDeploymentFee(ethers.utils.formatEther(fee));
-    }
+    
 
     setStartTime(new Date(saleObject.startDate * 1000));
     setEndTime(new Date(saleObject.endDate * 1000));
