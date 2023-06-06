@@ -1,7 +1,6 @@
 import Timer from "components/LockedAsset/Amount/Timer/Timer";
 import React, { useEffect, useState } from "react";
 import getSaleInfo from "utils/getSaleInfo";
-import { formatBigToNum } from "utils/numberFormat";
 import { Contract, ethers } from "ethers";
 import { useEtherBalance, useEthers } from "@usedapp/core";
 import PublicSaleAbi from "../../../config/abi/PublicSale.json";
@@ -33,12 +32,11 @@ export default function SaleBox({
 }) {
   const [filled_percent, setFilledPercent] = useState(0);
   const [showModal2, setShowModal2] = useState(false);
-  const [priceInBNB, setPriceInBNB] = useState(null);
   const { account, library } = useEthers();
   const [saleInfo, setSaleInfo] = useState(null);
   const saleSuccess = useSuccessPublic(presale_address);
   const participated = useParticipated(presale_address, account);
-  // console.log("filled_percent", filled_percent);
+  console.log("filled_percent", filled_percent);
 
   useEffect(() => {
     const result = getSaleInfo(presale_address).then((res) => {
@@ -164,7 +162,7 @@ export default function SaleBox({
           {
             hard_cap && filled_percent!=null?(
               <span className="text-xs font-medium text-gray dark:text-gray-dark">
-                {hard_cap * (filled_percent / 100)} {currency.symbol} Raised
+                {hard_cap*(filled_percent/100)} {currency.symbol} Raised
               </span>
             ):(
               <></>
@@ -175,7 +173,7 @@ export default function SaleBox({
           </span>
         </div>
 
-        <PercentFilled address={presale_address} />
+        <PercentFilled address={presale_address}  setFilled={setFilledPercent} />
         {/* if sale is upcoming then show countdown */}
 
         {status === "Upcoming" ? (
