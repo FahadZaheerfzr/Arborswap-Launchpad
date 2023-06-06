@@ -222,27 +222,13 @@ export default function Presale({ setActive, saleType, setSaleObject, token }) {
   useEffect(() => {
     if (
       hardCap > 0 &&
-      softCap > 0 &&
-      listing > 0 &&
       presalePrice > 0 &&
       saleType === "standard"
     ) {
-      const hardCapBNB = ethers.utils.parseUnits(hardCap.toString(), 18);
-      //ciel the presale price
-      const presaleCeil = Math.ceil(presalePrice);
-      const listingRateCiel = Math.ceil(listing);
-      const presaleRateToken = ethers.BigNumber.from(presaleCeil.toString());
-      const listingRateToken = ethers.BigNumber.from(listingRateCiel);
+      console.log(hardCap, presalePrice)
+      const reqTokens = hardCap * presalePrice
 
-      const reqHard = hardCapBNB
-        .mul(presaleRateToken)
-        .div(ethers.utils.parseUnits("1", token.tokenDecimals.toString()));
-      const reqLP = hardCapBNB
-        .mul(listingRateToken)
-        .div(ethers.utils.parseUnits("1", token.tokenDecimals.toString()));
-      // const presaleRateBNB = tokenRate(presaleRateToken, "18")
-
-      setRequiredToken(reqHard.add(reqLP).toString());
+      setRequiredToken(reqTokens);
 
       //consolelog if user has enough balance
       //wait till return true from handleCheckBalance

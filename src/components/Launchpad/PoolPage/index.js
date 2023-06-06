@@ -6,10 +6,14 @@ import AdminPanel from '../Admin/AdminPanel';
 import FundRaised from '../Admin/FundRaised';
 import { useState } from 'react';
 import { useEffect } from 'react';
+import Web3 from 'web3';
+import SaleAbi from '../../../config/abi/PublicSale.json';
 
 export default function PoolPageBase({ pool, showModal, admin }) {
   const [status, setStatus] = useState('Live')
-  // console.log(status)
+  const [liquidityTokens, setLiquidityTokens] = useState(0);
+
+
   useEffect(() => {
 
     //if endDate is less than current date, set status to ended
@@ -19,6 +23,26 @@ export default function PoolPageBase({ pool, showModal, admin }) {
       setStatus('Upcoming')
     }
   }, [])
+
+  
+  const getLiquidTokens = async (saleAddress) => {
+    const web3 = new Web3(window.ethereum);
+      try{
+        const sale = new web3.eth.Contract(SaleAbi, saleAddress);
+        const liquidityTokens = await sale.methods.tokensAmountForLiquidity().call();
+        console.log("liquidity Tokens",liquidityTokens)
+        setLiquidityTokens(liquidityTokens)
+      } catch(err){
+        console.log(err)
+      }
+    }
+
+  useEffect(() => {
+    if(pool){
+      getLiquidTokens(pool.saleAddress)
+    } 
+  }, [pool])
+
   // console.log(pool)
   return (
     pool && (
@@ -26,6 +50,9 @@ export default function PoolPageBase({ pool, showModal, admin }) {
         <div className="w-full px-4 md:px-0 md:flex md:w-10/12 md:gap-7">
           <div className="w-full md:w-[65%] bg-white dark:bg-dark-1 rounded-[10px]">
             <Preview
+            presalePrice={pool.presalePrice}
+            symbol={pool.image}
+            currency={pool.currency.icon}
               pool={pool}
               name={pool.name}
               icon={pool.image}
@@ -38,8 +65,6 @@ export default function PoolPageBase({ pool, showModal, admin }) {
               ends_on={pool.endDate}
               soft_cap={pool.softCap}
               hard_cap={pool.hardCap}
-              soft_cap_icon={pool.soft_cap_icon}
-              hard_cap_icon={pool.hard_cap_icon}
               first_release={pool.first_release}
               vesting_release={pool.vesting_release}
               unsold_tokens={pool.unsoldToken}

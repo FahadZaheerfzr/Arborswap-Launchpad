@@ -1,8 +1,8 @@
 import Timer from "components/LockedAsset/Amount/Timer/Timer";
 import React, { useEffect, useState } from "react";
 import getSaleInfo from "utils/getSaleInfo";
-import { Contract, ethers } from "ethers";
-import { useEtherBalance, useEthers } from "@usedapp/core";
+import { Contract } from "ethers";
+import { useEthers } from "@usedapp/core";
 import PublicSaleAbi from "../../../config/abi/PublicSale.json";
 import PublicSaleErcAbi from "../../../config/abi/PublicSaleErcAbi.json";
 import PrivateSaleAbi from "../../../config/abi/PrivateSale.json";
@@ -36,7 +36,6 @@ export default function SaleBox({
   const [saleInfo, setSaleInfo] = useState(null);
   const saleSuccess = useSuccessPublic(presale_address);
   const participated = useParticipated(presale_address, account);
-  console.log("filled_percent", filled_percent);
 
   useEffect(() => {
     const result = getSaleInfo(presale_address).then((res) => {

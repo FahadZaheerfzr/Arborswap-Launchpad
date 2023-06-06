@@ -22,6 +22,8 @@ export default function Preview({
     pool,
     icon,
     name,
+    currency,
+    symbol,
     is_private,
     token,
     tags,
@@ -31,11 +33,10 @@ export default function Preview({
     ends_on,
     soft_cap,
     hard_cap,
-    soft_cap_icon,
-    hard_cap_icon,
     first_release,
     vesting_release,
     unsold_tokens,
+    presalePrice,
     liquidity,
     lockup
 }) {
@@ -61,8 +62,8 @@ export default function Preview({
                     <PreviewDetails name={'Presale Address'} value={address} enable_copy />
                     <PreviewDetails name={'Presale Starts on'} value={new Date(starts_on*1000).toUTCString()} />
                     <PreviewDetails name={'Presale Ends on'} value={new Date(ends_on*1000).toUTCString()} />
-                    <PreviewDetails name={'Soft Cap'} value={soft_cap && soft_cap.toLocaleString()} icon={soft_cap_icon} />
-                    <PreviewDetails name={'Hard Cap'} value={hard_cap && hard_cap.toLocaleString()} icon={hard_cap_icon} />
+                    <PreviewDetails name={'Soft Cap'} value={soft_cap && soft_cap.toLocaleString()} icon={currency} />
+                    <PreviewDetails name={'Hard Cap'} value={hard_cap && hard_cap.toLocaleString()} icon={currency} />
                     {
                         unsold_tokens &&
                         <PreviewDetails name={'Unsold Tokens'} value={unsold_tokens} />
@@ -70,7 +71,11 @@ export default function Preview({
                     <PreviewDetails name={'To be listed on'} value={pool.dex.name} icon={pool.dex.icon} />
                     {
                         liquidity &&
-                        <PreviewDetails name={'Tokens for Liquidity'} value={(Math.floor(supply*(liquidity/100))).toString()} />
+                        <PreviewDetails name={'Tokens for Liquidity'} value={(Math.floor(supply*(liquidity/100))).toString()} icon={symbol} />
+                    }
+                    {
+                        hard_cap && presalePrice &&
+                        <PreviewDetails name={'Tokens for Presale'} value={(hard_cap * presalePrice)} icon={symbol} />
                     }
                     {
                         liquidity &&
