@@ -6,8 +6,10 @@ import BackArrowSVG from "../../../svgs/back_arrow";
 import LinkedinSVG from "../../../svgs/Socials/linkedin";
 import { ThemeContext } from "../../../context/ThemeContext/ThemeProvider";
 import GithubSVG from "../../../svgs/Socials/github";
+import TelegramSVG from "svgs/Socials/telegram";
 import { isValidUrl } from "utils/numberFormat";
 import PreviewHeader from "components/Common/PreviewHeader";
+import DiscordSVG from "svgs/Socials/discord";
 
 export default function ProjectDetails({
   setActive,
@@ -19,6 +21,8 @@ export default function ProjectDetails({
   const [validTwitter, setValidTwitter] = useState(true);
   const [validLinkedin, setValidLinkedin] = useState(true);
   const [validGithub, setValidGithub] = useState(true);
+  const [validTelegram, setValidTelegram] = useState(true);
+  const [validDiscord, setValidDiscord] = useState(true);
   const [valid, setValid] = useState(true);
   const [show, setShow] = useState([]);
 
@@ -71,6 +75,24 @@ export default function ProjectDetails({
         return;
       } else {
         setValidGithub(true);
+      }
+    }
+
+    if (saleData.telegram !== "") {
+      if (!isValidUrl(saleData.telegram)) {
+        setValidTelegram(false);
+        return;
+      } else {
+        setValidTelegram(true);
+      }
+    }
+
+    if (saleData.discord !== "") {
+      if (!isValidUrl(saleData.discord)) {
+        setValidDiscord(false);
+        return;
+      } else {
+        setValidDiscord(true);
       }
     }
 
@@ -268,6 +290,32 @@ export default function ProjectDetails({
         </div>
       </div>
       <div className="mt-7">
+        <HeadingTags name={"Telegram"} />
+        <div
+          className={`flex items-center rounded-lg border-[1.5px] pr-5 border-opacity-50 justify-between mt-5 ${
+            validTelegram ? "border-dim-text" : "border-red-500"
+          }`}
+        >
+          <input
+            className="bg-transparent w-full px-5 py-4 font-gilroy placeholder:font-medium placeholder:text-dim-text font-semibold text-dark-text dark:text-light-text focus:outline-none"
+            type={"text"}
+            value={saleData.telegram}
+            onChange={(e) =>
+              setSaleData((prevState) => ({
+                ...prevState,
+                telegram: e.target.value,
+              }))
+            }
+            placeholder="Ex: https://t.me/.."
+          />
+          <TelegramSVG
+            className="w-5 h-5"
+            outer={`${theme === "dark" ? "#fff" : "#464754"}`}
+            inner={`${theme === "dark" ? "#464754" : "#fff"}`}
+          />
+        </div>
+      </div>
+      <div className="mt-7">
         <HeadingTags name={"Github"} />
         <div
           className={`flex items-center rounded-lg border-[1.5px] pr-5 border-opacity-50 justify-between mt-5 ${
@@ -293,6 +341,33 @@ export default function ProjectDetails({
           />
         </div>
       </div>
+      <div className="mt-7">
+        <HeadingTags name={"Discord"} />
+        <div
+          className={`flex items-center rounded-lg border-[1.5px] pr-5 border-opacity-50 justify-between mt-5 ${
+            validDiscord ? "border-dim-text" : "border-red-500"
+          }`}
+        >
+          <input
+            className="bg-transparent w-full px-5 py-4 font-gilroy placeholder:font-medium placeholder:text-dim-text font-semibold text-dark-text dark:text-light-text focus:outline-none"
+            type={"text"}
+            value={saleData.discord}
+            onChange={(e) =>
+              setSaleData((prevState) => ({
+                ...prevState,
+                discord: e.target.value,
+              }))
+            }
+            placeholder="Ex: https://discord.com/.."
+          />
+          <DiscordSVG 
+            className="w-5 h-5"
+            outer={`${theme === "dark" ? "#fff" : "#464754"}`}
+            inner={`${theme === "dark" ? "#464754" : "#fff"}`}
+          />
+        </div>
+      </div>
+      
 
       <div className="mt-10">
         <div className="flex justify-end items-center mb-10">

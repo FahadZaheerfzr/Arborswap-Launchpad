@@ -2,28 +2,30 @@ import React from "react";
 import { Link } from "react-router-dom";
 import Timer from "./Subcomponents/Timer";
 import { useEffect, useState } from "react";
-import axios from "axios";
-import { BACKEND_URL } from "config/constants/LaunchpadAddress";
+
 import PercentFilled from "./Subcomponents/PercentFilled";
+import getSaleInfo from "utils/getSaleInfo";
+import { BigNumber } from "ethers";
+import { formatBigToNum } from "utils/numberFormat";
 
-export default function PoolsBase({ activeStatus,pools,loading }) {
-
+export default function PoolsBase({ activeStatus, pools, loading }) {
+  //an array of filled percentages
+  const [filled_percent, setFilledPercent] = useState([]);
 
 
   const checkStatus = (item) => {
-    //from item.sale.start_date and item.sale.end_date we will check the status of the pool
+    console.log(item, "item")
     const currentDate = new Date();
     const startDate = new Date(item.sale.startDate * 1000);
     const endDate = new Date(item.sale.endDate * 1000);
     if (currentDate < startDate) {
       return "Upcoming";
-    } else if (currentDate > startDate && currentDate < endDate) {
+    } else if (currentDate > startDate && currentDate < endDate && item.visible) {
       return "Live";
     } else {
       return "Ended";
     }
   };
-
   return (
     <div className="grid grid-cols-1 md:grid-cols-3 gap-5 mt-8">
       {!loading &&
@@ -96,7 +98,7 @@ export default function PoolsBase({ activeStatus,pools,loading }) {
 
                     <div className="flex items-center justify-between mt-5">
                       <span className="text-xs  text-gray dark:text-gray-dark">
-                        {(pool.sale.softCap).toLocaleString()}{" "}
+                        {pool.sale.softCap.toLocaleString()}{" "}
                         {pool.sale.token.tokenSymbol}
                         {/* idk where to get filled perccentage */}
                       </span>
@@ -106,29 +108,30 @@ export default function PoolsBase({ activeStatus,pools,loading }) {
                       </span>
                     </div>
 
-                    <PercentFilled address={pool.sale.saleAddress} />
+                    <PercentFilled address={pool.sale.saleAddress} item = {pool} />
 
                     <div className="flex items-center justify-between mt-6">
+                      <div className="flex flex-col justify-between">
+                        <span className="text-xs font-medium text-gray dark:text-gray-dark">
+                          Liquidity
+                        </span>
 
-                        <div className="flex flex-col justify-between">
-                          <span className="text-xs font-medium text-gray dark:text-gray-dark">
-                            Liquidity
-                          </span>
-
-                          <span className="font-medium text-dim-text dark:text-dim-text-dark">
-                            <span className="text-dark-text dark:text-light-text font-semibold">
-                              {pool.sale.amountLiquidity?pool.sale.amountLiquidity:"---"}
-                            </span>{" "}
-                            %
-                          </span>
-                        </div>
+                        <span className="font-medium text-dim-text dark:text-dim-text-dark">
+                          <span className="text-dark-text dark:text-light-text font-semibold">
+                            {pool.sale.amountLiquidity
+                              ? pool.sale.amountLiquidity
+                              : "---"}
+                          </span>{" "}
+                          %
+                        </span>
+                      </div>
                       <div className="flex flex-col justify-between items-center">
                         <span className="text-xs font-medium text-gray dark:text-gray-dark">
                           Lockup Period
                         </span>
 
                         <span className="text-dark-text dark:text-light-text font-semibold">
-                          {pool.sale.lockup?pool.sale.lockup:"---"} days
+                          {pool.sale.lockup ? pool.sale.lockup : "---"} days
                         </span>
                       </div>
                     </div>

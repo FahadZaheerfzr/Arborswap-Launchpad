@@ -4,7 +4,9 @@ import React, { useContext } from 'react'
 import { Link } from 'react-router-dom'
 import DribbleSVG from 'svgs/Socials/dribble'
 import GithubSVG from 'svgs/Socials/github'
+import TelegramSVG from 'svgs/Socials/telegram'
 import TwitterSVG from 'svgs/Socials/twitter'
+import DiscordSVG from 'svgs/Socials/discord'
 
 export default function Info({ icon, name, is_private, tags, pool }) {
   const { theme } = useContext(ThemeContext);
@@ -54,6 +56,16 @@ export default function Info({ icon, name, is_private, tags, pool }) {
         <Link to={pool.website} target="_blank" rel="noopener noreferrer" >
         <DribbleSVG className="fill-dark-text dark:fill-light-text hidden md:block" />
         </Link>
+        }
+        {pool.telegram !== "" &&
+        <Link to={pool.telegram} target="_blank" rel="noopener noreferrer" >
+          <TelegramSVG className="fill-dark-text dark:fill-light-text hidden md:block" />
+          </Link>
+        }
+        {pool.discord !== "" &&
+        <Link to={pool.discord} target="_blank" rel="noopener noreferrer" >
+          <DiscordSVG className="fill-dark-text dark:fill-light-text hidden md:block" />
+          </Link>
         }
         <Options width={'w-7'} height={'h-7'} color={'[#FAF8F5]'} dark_color={'dark-2'} />
       </div>

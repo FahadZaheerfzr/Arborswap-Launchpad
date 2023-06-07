@@ -125,14 +125,10 @@ export default function SaleBox({
         </div>
 
         <div className="mt-3 flex">
-          <img
-            src={currency.icon}
-            alt="hard-cap-currency"
-            className="w-7 h-7"
-          />
+
           <div className="ml-3">
             <span className="text-dark-text dark:text-light-text text-2xl font-bold">
-              {hard_cap && hard_cap.toLocaleString()}
+              {hard_cap && hard_cap.toLocaleString() + " " + currency.symbol}
             </span>
           </div>
         </div>
@@ -172,7 +168,7 @@ export default function SaleBox({
           </span>
         </div>
 
-        <PercentFilled address={presale_address}  setFilled={setFilledPercent} />
+        <PercentFilled address={presale_address}  setFilled={setFilledPercent} showModal={showModal}/>
         {/* if sale is upcoming then show countdown */}
 
         {status === "Upcoming" ? (

@@ -10,10 +10,16 @@ export default function PreviewDetails({
   tokenSymbol,
   enable_copy,
 }) {
-  function copyText() {
-    navigator.clipboard.writeText(value);
+  function copyText(value) {
+    const textarea = document.createElement('textarea');
+    textarea.value = value;
+    document.body.appendChild(textarea);
+    textarea.select();
+    document.execCommand('copy');
+    document.body.removeChild(textarea);
     toast.success("Copied to clipboard");
   }
+  
   return (
     <>
       <ToastContainer />
@@ -23,10 +29,10 @@ export default function PreviewDetails({
         </span>
 
         <div className="flex items-center break-all">
-          {icon && <img className="w-5 h-5 mr-1" src={icon} alt="chain-icon" />}
           <span className="font-gilroy  text-sm font-bold text-dark-text dark:text-light-text">
             {value} {tokenSymbol && tokenSymbol}
           </span>
+          {icon && <img className="w-5 h-5 ml-1" src={icon} alt="chain-icon" />}
 
           {verified && (
             <img
@@ -36,8 +42,18 @@ export default function PreviewDetails({
             />
           )}
           {enable_copy && (
-            <button onClick={copyText} className="ml-2">
-              <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"> <path d="M8 2C7.44772 2 7 2.44772 7 3C7 3.55228 7.44772 4 8 4H10C10.5523 4 11 3.55228 11 3C11 2.44772 10.5523 2 10 2H8Z" fill="#4A5568"/> <path d="M3 5C3 3.89543 3.89543 3 5 3C5 4.65685 6.34315 6 8 6H10C11.6569 6 13 4.65685 13 3C14.1046 3 15 3.89543 15 5V11H10.4142L11.7071 9.70711C12.0976 9.31658 12.0976 8.68342 11.7071 8.29289C11.3166 7.90237 10.6834 7.90237 10.2929 8.29289L7.29289 11.2929C6.90237 11.6834 6.90237 12.3166 7.29289 12.7071L10.2929 15.7071C10.6834 16.0976 11.3166 16.0976 11.7071 15.7071C12.0976 15.3166 12.0976 14.6834 11.7071 14.2929L10.4142 13H15V16C15 17.1046 14.1046 18 13 18H5C3.89543 18 3 17.1046 3 16V5Z" fill="#4A5568"/> <path d="M15 11H17C17.5523 11 18 11.4477 18 12C18 12.5523 17.5523 13 17 13H15V11Z" fill="#4A5568"/> </svg>
+            <button onClick={() => copyText(value)} className="ml-2">
+              <svg
+                viewBox="64 64 896 896"
+                focusable="false"
+                data-icon="copy"
+                width="1em"
+                height="1em"
+                fill="white"
+                aria-hidden="true"
+              >
+                <path d="M832 64H296c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8h496v688c0 4.4 3.6 8 8 8h56c4.4 0 8-3.6 8-8V96c0-17.7-14.3-32-32-32zM704 192H192c-17.7 0-32 14.3-32 32v530.7c0 8.5 3.4 16.6 9.4 22.6l173.3 173.3c2.2 2.2 4.7 4 7.4 5.5v1.9h4.2c3.5 1.3 7.2 2 11 2H704c17.7 0 32-14.3 32-32V224c0-17.7-14.3-32-32-32zM350 856.2L263.9 770H350v86.2zM664 888H414V746c0-22.1-17.9-40-40-40H232V264h432v624z"></path>
+              </svg>
             </button>
           )}
         </div>

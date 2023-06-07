@@ -22,6 +22,8 @@ export default function CreateSale() {
         twitter: '',
         linkedin: '',
         github: '',
+        telegram: '',
+        discord : '',
         userBalance: '',
         userAllowance: '0',
     }

@@ -52,7 +52,7 @@ export default function PoolPageBase({ pool, showModal, admin }) {
             <Preview
             presalePrice={pool.presalePrice}
             symbol={pool.image}
-            currency={pool.currency.icon}
+            currency={pool.currency}
               pool={pool}
               name={pool.name}
               icon={pool.image}

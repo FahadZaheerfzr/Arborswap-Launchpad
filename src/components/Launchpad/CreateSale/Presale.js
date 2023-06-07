@@ -107,24 +107,35 @@ export default function Presale({ setActive, saleType, setSaleObject, token }) {
     const now = moment();
 
     if (startDate < now.unix()) {
-      toast.error("Start date should be greater than current date and time");
+      toast.error("Start date should be greater than current date and time",{
+        position: toast.POSITION.BOTTOM_RIGHT
+      }
+      );
       return;
     }
     if (endDate < startDate) {
-      toast.error("End date should be greater than start date");
+      toast.error("End date should be greater than start date",{
+        position: toast.POSITION.BOTTOM_RIGHT
+      } );
       return;
     }
     if (!enoughBalance) {
-      toast.error("Insufficient Balance");
+      toast.error("Insufficient Balance!", {
+        position: toast.POSITION.BOTTOM_RIGHT
+      });
       return;
     }
     if (amountLiquidity < 51 || amountLiquidity === undefined) {
-      toast.error("Liquidity should be greater than 50%");
+      toast.error("Liquidity should be greater than 50%",{
+        position: toast.POSITION.BOTTOM_RIGHT
+      } );
       return;
     }
     //listing cant be less than presale rate
     if (listing > presalePrice) {
-      toast.error("Listing rate can't be lower than presale rate");
+      toast.error("Listing rate can't be lower than presale rate",{
+        position: toast.POSITION.BOTTOM_RIGHT
+      } );
       return;
     }
     if (
@@ -139,7 +150,9 @@ export default function Presale({ setActive, saleType, setSaleObject, token }) {
       amountLiquidity === undefined ||
       listing === undefined
     ) {
-      toast.error("Please fill all the fields");
+      toast.error("Please fill all the fields",{
+        position: toast.POSITION.BOTTOM_RIGHT
+      } );
       return;
     }
     let res = false;
@@ -220,13 +233,9 @@ export default function Presale({ setActive, saleType, setSaleObject, token }) {
 
   //use effect in which we will set required token if hardcap, softcap, listing price, amount liquidity, presale price changes
   useEffect(() => {
-    if (
-      hardCap > 0 &&
-      presalePrice > 0 &&
-      saleType === "standard"
-    ) {
-      console.log(hardCap, presalePrice)
-      const reqTokens = hardCap * presalePrice
+    if (hardCap > 0 && presalePrice > 0 && saleType === "standard") {
+      console.log(hardCap, presalePrice);
+      const reqTokens = hardCap * presalePrice;
 
       setRequiredToken(reqTokens);
 
@@ -297,260 +306,267 @@ export default function Presale({ setActive, saleType, setSaleObject, token }) {
   };
 
   return (
-    <div className="w-full">
-      <HeadingTags name={"Choose Currency"} required />
+    <>
+      <div className="w-full">
+        <HeadingTags name={"Choose Currency"} required />
 
-      {/* Currency Options */}
-      <div className="grid grid-cols-2 md:grid-cols-2 gap-4 mt-4 md:mr-[20%]">
-        {currencies.map((currency) => (
-          <CurrencyOptions
-            key={currency.id}
-            selected={currency.id === currencySelected}
-            setCurrency={setCurrencySelected}
-            {...currency}
-          />
-        ))}
-      </div>
-
-      <PreviewHeader heading={"Presale Details"} />
-
-      {saleType === "standard" && (
-        <>
-          <Input
-            heading={"Presale Price"}
-            currencies={currencies}
-            currencySelected={currencySelected}
-            changeState={setPresalePrice}
-          />
-        </>
-      )}
-      {saleType === "fairlaunch" && (
-        <Input
-          heading={"Amount to be sold"}
-          text={token.symbol}
-          changeState={setPresalePrice}
-        />
-      )}
-      <div className="flex items-center gap-5 mt-10">
-        <div className="w-full">
-          <Input
-            heading={"Soft Cap"}
-            currencies={currencies}
-            currencySelected={currencySelected}
-            changeState={setSoftCap}
-          />
-        </div>
-        <div className="w-full">
-          <Input
-            heading={"Hard Cap"}
-            currencies={currencies}
-            currencySelected={currencySelected}
-            changeState={setHardCap}
-          />
-        </div>
-      </div>
-
-      <div className="flex items-center gap-5 mt-10">
-        <div className="w-full">
-          <Input
-            heading={"Min Allocation"}
-            currencies={currencies}
-            currencySelected={currencySelected}
-            changeState={setMinAllocation}
-          />
+        {/* Currency Options */}
+        <div className="grid grid-cols-2 md:grid-cols-2 gap-4 mt-4 md:mr-[20%]">
+          {currencies.map((currency) => (
+            <CurrencyOptions
+              key={currency.id}
+              selected={currency.id === currencySelected}
+              setCurrency={setCurrencySelected}
+              {...currency}
+            />
+          ))}
         </div>
 
-        <div className="w-full">
-          <Input
-            heading={"Max Allocation"}
-            currencies={currencies}
-            currencySelected={currencySelected}
-            changeState={setMaxAllocation}
-            tooltip={"a"}
-          />
-        </div>
-      </div>
+        <PreviewHeader heading={"Presale Details"} />
 
-      {saleType !== "fairlaunch" && (
-        <div>
-          <div className="flex items-center justify-between mt-10">
-            <span className="text-gray dark:text-gray-dark font-semibold">
-              Enable Whitelisting
-            </span>
-
-            <label
-              htmlFor="whitelist-toggle"
-              className="inline-flex relative items-center cursor-pointer"
-            >
-              <input
-                type="checkbox"
-                value=""
-                checked={tempfixed ? false : true}
-                id="whitelist-toggle"
-                className="sr-only peer"
-                onChange={handleTempFixed}
-              />
-              <div className="w-10 h-5 md:w-10 md:h-5 bg-primary-green bg-opacity-[0.08] peer-focus:outline-none peer-focus:ring-0 peer-focus:ring-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[3px] after:md:top-[2px] after:left-[0] after:md:left-[4px] after:bg-white after:rounded-full after:h-4 after:md:h-4 after:w-4 after:md:w-4 after:transition-all  peer-checked:after:bg-primary-green" />
-            </label>
-          </div>
-
-          <div className="mt-5">
-            <span className="text-gray dark:text-gray-dark font-semibold text-sm">
-              Note
-              <span className="font-medium">
-                &nbsp;: When turned on only users that are whitelisted will be able to participate in the presale.
-              </span>
-            </span>
-          </div>
-        </div>
-      )}
-      {/* here if whitelisting is enabled, show an input field where addresses can be entered, seperated by comma */}
-      {whiteisting && (
-        <>
-          <div className="mt-5">
+        {saleType === "standard" && (
+          <>
             <Input
-              heading={"Whitelisted Addresses"}
-              changeState={setWhiteListedAddresses}
+              heading={"Presale Price"}
               currencies={currencies}
               currencySelected={currencySelected}
+              changeState={setPresalePrice}
+            />
+          </>
+        )}
+        {saleType === "fairlaunch" && (
+          <Input
+            heading={"Amount to be sold"}
+            text={token.symbol}
+            changeState={setPresalePrice}
+          />
+        )}
+        <div className="flex items-center gap-5 mt-10">
+          <div className="w-full">
+            <Input
+              heading={"Soft Cap"}
+              currencies={currencies}
+              currencySelected={currencySelected}
+              changeState={setSoftCap}
+            />
+          </div>
+          <div className="w-full">
+            <Input
+              heading={"Hard Cap"}
+              currencies={currencies}
+              currencySelected={currencySelected}
+              changeState={setHardCap}
+            />
+          </div>
+        </div>
+
+        <div className="flex items-center gap-5 mt-10">
+          <div className="w-full">
+            <Input
+              heading={"Min Allocation"}
+              currencies={currencies}
+              currencySelected={currencySelected}
+              changeState={setMinAllocation}
+            />
+          </div>
+
+          <div className="w-full">
+            <Input
+              heading={"Max Allocation"}
+              currencies={currencies}
+              currencySelected={currencySelected}
+              changeState={setMaxAllocation}
               tooltip={
-                "Enter addresses seperated by comma, to whitelist them for the presale"
+                "The maximum allocation for a token refers to the maximum amount of that token that can be assigned or allocated."
               }
-              placeholder={"0xaEa574007c8ad33c7f4f7CF4a0d0B6F704ACD59e, ..."}
             />
           </div>
-          <div className="mt-5">
-            <CalendarField
-            heading = {"Whitelist end date (UTC)"}
-            changeState = {setWhiteListEndDate}
-            />
-          </div>
-        </>
-      )}
+        </div>
 
-      {saleType !== "private" && (
-        <div>
-          <PreviewHeader heading={"Listing Details"} />
-          <div className="mt-10">
-            <HeadingTags name={"Choose DEX to be listed on"} required />
-          </div>
+        {saleType !== "fairlaunch" && (
+          <div>
+            <div className="flex items-center justify-between mt-10">
+              <span className="text-gray dark:text-gray-dark font-semibold">
+                Enable Whitelisting
+              </span>
 
-          <div className="flex items-center gap-5 mt-10 md:mr-[10%]">
-            <DexOptions
-              selected={dex === 1}
-              id={1}
-              setDex={setDex}
-              name={"Arborswap"}
-              icon={"/images/cards/arb.svg"}
-            />
-            <DexOptions
-              selected={dex === 2}
-              id={2}
-              setDex={setDex}
-              name={"Pancake"}
-              icon={"/images/cards/pancake.svg"}
-            />
-          </div>
-
-          <div className="flex items-center gap-5 mt-10">
-            <div className="w-full">
-              <div className="hidden md:block">
-                <Input
-                  heading={"Amount for Liquidity"}
-                  changeState={setAmountLiquidity}
-                  tooltip={
-                    "Ready availability of assets for seamless and hassle-free decentralized financial transactions and activities."
-                  }
-                  
+              <label
+                htmlFor="whitelist-toggle"
+                className="inline-flex relative items-center cursor-pointer"
+              >
+                <input
+                  type="checkbox"
+                  value=""
+                  checked={tempfixed ? false : true}
+                  id="whitelist-toggle"
+                  className="sr-only peer"
+                  onChange={handleTempFixed}
                 />
-              </div>
-              <div className="md:hidden">
-                <Input heading={"Liquidity"} changeState={setAmountLiquidity} />
-              </div>
+                <div className="w-10 h-5 md:w-10 md:h-5 bg-primary-green bg-opacity-[0.08] peer-focus:outline-none peer-focus:ring-0 peer-focus:ring-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[3px] after:md:top-[2px] after:left-[0] after:md:left-[4px] after:bg-white after:rounded-full after:h-4 after:md:h-4 after:w-4 after:md:w-4 after:transition-all  peer-checked:after:bg-primary-green" />
+              </label>
             </div>
-            {saleType !== "fairlaunch" && (
+
+            <div className="mt-5">
+              <span className="text-gray dark:text-gray-dark font-semibold text-sm">
+                Note
+                <span className="font-medium">
+                  &nbsp;: When turned on only users that are whitelisted will be
+                  able to participate in the presale.
+                </span>
+              </span>
+            </div>
+          </div>
+        )}
+        {/* here if whitelisting is enabled, show an input field where addresses can be entered, seperated by comma */}
+        {whiteisting && (
+          <>
+            <div className="mt-5">
+              <Input
+                heading={"Whitelisted Addresses"}
+                changeState={setWhiteListedAddresses}
+                currencies={currencies}
+                currencySelected={currencySelected}
+                tooltip={
+                  "Enter addresses seperated by comma, to whitelist them for the presale"
+                }
+                placeholder={"0xaEa574007c8ad33c7f4f7CF4a0d0B6F704ACD59e, ..."}
+              />
+            </div>
+            <div className="mt-5">
+              <CalendarField
+                heading={"Whitelist end date (UTC)"}
+                changeState={setWhiteListEndDate}
+              />
+            </div>
+          </>
+        )}
+
+        {saleType !== "private" && (
+          <div>
+            <PreviewHeader heading={"Listing Details"} />
+            <div className="mt-10">
+              <HeadingTags name={"Choose DEX to be listed on"} required />
+            </div>
+
+            <div className="flex items-center gap-5 mt-10 md:mr-[10%]">
+              <DexOptions
+                selected={dex === 1}
+                id={1}
+                setDex={setDex}
+                name={"Arborswap"}
+                icon={"/images/cards/arb.svg"}
+              />
+              <DexOptions
+                selected={dex === 2}
+                id={2}
+                setDex={setDex}
+                name={"Pancake"}
+                icon={"/images/cards/pancake.svg"}
+              />
+            </div>
+
+            <div className="flex items-center gap-5 mt-10">
               <div className="w-full">
-                <Input
-                  heading={"Listing Price"}
-                  currencies={currencies}
-                  currencySelected={currencySelected}
-                  changeState={setListing}
-                />
+                <div className="hidden md:block">
+                  <Input
+                    heading={"Amount for Liquidity"}
+                    changeState={setAmountLiquidity}
+                    tooltip={
+                      "Ready availability of assets for seamless and hassle-free decentralized financial transactions and activities."
+                    }
+                  />
+                </div>
+                <div className="md:hidden">
+                  <Input
+                    heading={"Liquidity"}
+                    changeState={setAmountLiquidity}
+                  />
+                </div>
               </div>
-            )}
+              {saleType !== "fairlaunch" && (
+                <div className="w-full">
+                  <Input
+                    heading={"Listing Price"}
+                    currencies={currencies}
+                    currencySelected={currencySelected}
+                    changeState={setListing}
+                  />
+                </div>
+              )}
+            </div>
+          </div>
+        )}
+
+        <PreviewHeader heading={"Time Details"} />
+
+        <div className="flex flex-col md:flex-row items-center gap-5 mt-10">
+          <div className="w-full md:w-1/2">
+            <CalendarField
+              heading={"Starts On (UTC)"}
+              setFunction={setStartDate}
+            />
+          </div>
+          <div className="w-full md:w-1/2">
+            <CalendarField heading={"Ends On (UTC)"} setFunction={setEndDate} />
           </div>
         </div>
-      )}
+        {saleType !== "private" && (
+          <div>
+            <PreviewHeader heading={"More Details"} />
+            <PresaleStandard
+              unsoldToken={unsoldToken}
+              setUnsoldTokens={setUnsoldTokens}
+              setLockup={setLockup}
+            />
+          </div>
+        )}
 
-      <PreviewHeader heading={"Time Details"} />
-
-      <div className="flex flex-col md:flex-row items-center gap-5 mt-10">
-        <div className="w-full md:w-1/2">
-          <CalendarField
-            heading={"Starts On (UTC)"}
-            setFunction={setStartDate}
-          />
-        </div>
-        <div className="w-full md:w-1/2">
-          <CalendarField heading={"Ends On (UTC)"} setFunction={setEndDate} />
-        </div>
-      </div>
-      {saleType !== "private" && (
-        <div>
-          <PreviewHeader heading={"More Details"} />
-          <PresaleStandard
-            unsoldToken={unsoldToken}
-            setUnsoldTokens={setUnsoldTokens}
-            setLockup={setLockup}
-          />
-        </div>
-      )}
-
-      {saleType === "private" && (
-        <div>
-          <PreviewHeader heading={"Token Vesting Details"} />
-          <PresalePrivate
-            setFirstRelease={setFirstRelease}
-            setVestingPeriod={setVestingPeriod}
-            setVestingRelease={setVestingRelease}
-          />
-        </div>
-      )}
-      {saleType === "standard" && (
-        <div className="flex justify-center mt-7 bg-[#E56060] bg-opacity-[0.08] py-3 rounded-[10px]">
-          <img src="/images/create-sale/warning.svg" alt="warning" />
-          <span className="text-[#E56060] font-medium text-sm">
-            To Create this Sale{" "}
-            <span className="font-bold">
-              {requiredToken} {token.name}
-            </span>{" "}
-            is required.
-          </span>
-        </div>
-      )}
-
-      <div className="mt-10">
-        <div className="flex justify-end items-center mb-10">
-          <button
-            className="bg-white dark:bg-transparent mr-5 flex items-center gap-2 py-[10px] px-5"
-            onClick={() => setActive("Token Info")}
-          >
-            <BackArrowSVG className="fill-dark-text dark:fill-light-text" />
-            <span className="font-gilroy font-medium text-sm text-dark-text dark:text-light-text">
-              Go Back
+        {saleType === "private" && (
+          <div>
+            <PreviewHeader heading={"Token Vesting Details"} />
+            <PresalePrivate
+              setFirstRelease={setFirstRelease}
+              setVestingPeriod={setVestingPeriod}
+              setVestingRelease={setVestingRelease}
+            />
+          </div>
+        )}
+        {saleType === "standard" && (
+          <div className="flex justify-center mt-7 bg-[#E56060] bg-opacity-[0.08] py-3 rounded-[10px]">
+            <img src="/images/create-sale/warning.svg" alt="warning" />
+            <span className="text-[#E56060] font-medium text-sm">
+              To Create this Sale{" "}
+              <span className="font-bold">
+                {requiredToken} {token.name}
+              </span>{" "}
+              is required.
             </span>
-          </button>
+          </div>
+        )}
 
-          <button
-            className="bg-primary-green hover:opacity-40 disabled:bg-light-text text-white font-gilroy font-bold px-8 py-3 rounded-md"
-            // disabled={address.length < 5}
-            onClick={handleSubmit}
-          >
-            Next
-          </button>
+        <div className="mt-10">
+          <div className="flex justify-end items-center mb-10">
+            <button
+              className="bg-white dark:bg-transparent mr-5 flex items-center gap-2 py-[10px] px-5"
+              onClick={() => setActive("Token Info")}
+            >
+              <BackArrowSVG className="fill-dark-text dark:fill-light-text" />
+              <span className="font-gilroy font-medium text-sm text-dark-text dark:text-light-text">
+                Go Back
+              </span>
+            </button>
+
+            <button
+              className="bg-primary-green hover:opacity-40 disabled:bg-light-text text-white font-gilroy font-bold px-8 py-3 rounded-md"
+              // disabled={address.length < 5}
+              onClick={handleSubmit}
+            >
+              Next
+            </button>
+          </div>
         </div>
-        <ToastContainer />
       </div>
-    </div>
+      <ToastContainer />
+    </>
   );
 }

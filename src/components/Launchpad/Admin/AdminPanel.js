@@ -221,9 +221,8 @@ export default function AdminPanel({
         </div>
 
         <div className="w-full flex mt-3">
-          <img src={icon} alt="pool-icon" className="w-7 h-7 mr-2" />
           <span className="font-bold text-dark-text dark:text-light-text text-2xl">
-            {soft_cap} - {hard_cap}
+            {soft_cap} - {hard_cap} {sale.currency.symbol}
           </span>
         </div>
 
@@ -245,7 +244,7 @@ export default function AdminPanel({
           </div>
         )}
 
-        {status === "Upcoming" && (
+        {status === "Upcoming" && sale.whitelisted != null && (
           <div className="mt-7">
             <PreviewDetails name={"Address Whitelisted"} value={"1,874"} />
           </div>

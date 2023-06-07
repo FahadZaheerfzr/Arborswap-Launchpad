@@ -245,10 +245,10 @@ export default function PreviewSale({
           }
         />
       )}
-      <PreviewDetails name={"Soft Cap"} value={saleObject.softCap} />
+      <PreviewDetails name={"Soft Cap"} value={saleObject.softCap + " " + saleObject.currency.symbol} />
       {saleType !== "fairlaunch" && (
         <div>
-          <PreviewDetails name={"Hard Cap"} value={saleObject.hardCap} />
+          <PreviewDetails name={"Hard Cap"} value={saleObject.hardCap+ " " + saleObject.currency.symbol} />
           <PreviewDetails
             name={"Minimum Allocation"}
             value={saleObject.minAllocation + " " + saleObject.currency.symbol}
