@@ -94,11 +94,40 @@ export default function Presale({ setActive, saleType, setSaleObject, token }) {
   const [lockup, setLockup] = useState();
   const { account, library } = useEthers();
   const [enoughBalance, setEnoughBalance] = useState(false);
-  const [whiteListedAddresses, setWhiteListedAddresses] = useState([]);
-  const [whiteListEndDate, setWhiteListEndDate] = useState();
+  const [whiteListedAddresses, setWhiteListedAddresses] = useState([""]);
+  const [whiteListedDates, setWhiteListedDates] = useState([]);
+  const [whiteListingCount, setWhiteListingCount] = useState(3);
 
   const { open: openLoadingModal, close: closeLoadingModal } =
     useModal("LoadingModal");
+
+  const handleAddWhitelistField = () => {
+    if (whiteListedAddresses.length < 3) {
+      setWhiteListingCount(whiteListingCount + 1);
+      setWhiteListedAddresses([...whiteListedAddresses, ""]);
+    }
+  };
+  const handleRemoveWhitelistField = (index) => {
+    if (whiteListedAddresses.length > 1) {
+      setWhiteListingCount(whiteListingCount - 1);
+      const updatedAddresses = [...whiteListedAddresses];
+      updatedAddresses.splice(index, 1);
+      setWhiteListedAddresses(updatedAddresses);
+    }
+  }
+
+  const handleAddressChange = (newValue, index) => {
+    const updatedAddresses = [...whiteListedAddresses];
+    updatedAddresses[index] = newValue;
+    setWhiteListedAddresses(updatedAddresses);
+  };
+
+  const handleDateChange = (newDate, index) => {
+    const updatedDates = [...whiteListedDates];
+    updatedDates[index] = newDate;
+    setWhiteListedDates(updatedDates);
+  };
+  console.log(whiteListedAddresses, whiteListedDates);
 
   const handleSubmit = async () => {
     console.log(listing, presalePrice);
@@ -107,35 +136,116 @@ export default function Presale({ setActive, saleType, setSaleObject, token }) {
     const now = moment();
 
     if (startDate < now.unix()) {
-      toast.error("Start date should be greater than current date and time",{
-        position: toast.POSITION.BOTTOM_RIGHT
-      }
-      );
+      toast.error("Start date should be greater than current date and time", {
+        position: toast.POSITION.BOTTOM_RIGHT,
+      });
       return;
     }
     if (endDate < startDate) {
-      toast.error("End date should be greater than start date",{
-        position: toast.POSITION.BOTTOM_RIGHT
-      } );
+      toast.error("End date should be greater than start date", {
+        position: toast.POSITION.BOTTOM_RIGHT,
+      });
       return;
     }
+    //white list first index should be after start date and before end date
+    if (whiteisting) {
+      if (whiteListedDates[0] < startDate) {
+        toast.error(
+          "Whitelist date should be greater than start date and time",
+          {
+            position: toast.POSITION.BOTTOM_RIGHT,
+          }
+        );
+        return;
+      }
+      if (whiteListedDates[0] > endDate) {
+        toast.error("Whitelist date should be less than end date and time", {
+          position: toast.POSITION.BOTTOM_RIGHT,
+        });
+        return;
+      }
+    }
+    //second round should be after first round and before end date
+    if (whiteisting && whiteListedDates.length > 1) {
+      if (whiteListedDates[1] < whiteListedDates[0]) {
+        toast.error(
+          "Whitelist date should be greater than first whitelist date and time",
+          {
+            position: toast.POSITION.BOTTOM_RIGHT,
+          }
+        );
+        return;
+      }
+      if (whiteListedDates[1] > endDate) {
+        toast.error("Whitelist date should be less than end date and time", {
+          position: toast.POSITION.BOTTOM_RIGHT,
+        });
+        return;
+      }
+    }
+    //third round should be after second round and before end date
+    if (whiteisting && whiteListedDates.length > 2) {
+      if (whiteListedDates[2] < whiteListedDates[1]) {
+        toast.error(
+          "Whitelist date should be greater than second whitelist date and time",
+          {
+            position: toast.POSITION.BOTTOM_RIGHT,
+          }
+        );
+        return;
+      }
+      if (whiteListedDates[2] > endDate) {
+        toast.error("Whitelist date should be less than end date and time", {
+          position: toast.POSITION.BOTTOM_RIGHT,
+        });
+        return;
+      }
+    }
+    //white listing addresses shouldnt be empty
+    if (whiteisting) {
+      if (whiteListedAddresses[0] === "") {
+        toast.error("Whitelist address can't be empty", {
+          position: toast.POSITION.BOTTOM_RIGHT,
+        });
+        return;
+      }
+    }
+    //second round shouldnt be empty if it exists
+    if (whiteisting && whiteListedDates.length > 1) {
+      if (whiteListedAddresses[1] === ""||whiteListedAddresses[0] === "") {
+        toast.error("Whitelist address can't be empty", {
+          position: toast.POSITION.BOTTOM_RIGHT,
+        });
+        return;
+      }
+    }
+    //third round shouldnt be empty if it exists
+    if (whiteisting && whiteListedDates.length > 2) {
+      if (whiteListedAddresses[2] === ""||whiteListedAddresses[1] === ""||whiteListedAddresses[0] === "") {
+        toast.error("Whitelist address can't be empty", {
+          position: toast.POSITION.BOTTOM_RIGHT,
+        });
+        return;
+      }
+    }
+    
     if (!enoughBalance) {
       toast.error("Insufficient Balance!", {
-        position: toast.POSITION.BOTTOM_RIGHT
+        position: toast.POSITION.BOTTOM_RIGHT,
       });
       return;
     }
     if (amountLiquidity < 51 || amountLiquidity === undefined) {
-      toast.error("Liquidity should be greater than 50%",{
-        position: toast.POSITION.BOTTOM_RIGHT
-      } );
+      toast.error("Liquidity should be greater than 50%", {
+        position: toast.POSITION.BOTTOM_RIGHT,
+      });
       return;
     }
     //listing cant be less than presale rate
     if (listing > presalePrice) {
-      toast.error("Listing rate can't be lower than presale rate",{
-        position: toast.POSITION.BOTTOM_RIGHT
-      } );
+      toast.error("Listing rate can't be lower than presale rate", {
+        position: toast.POSITION.BOTTOM_RIGHT,
+      });
       return;
     }
     if (
@@ -150,9 +260,9 @@ export default function Presale({ setActive, saleType, setSaleObject, token }) {
       amountLiquidity === undefined ||
       listing === undefined
     ) {
-      toast.error("Please fill all the fields",{
-        position: toast.POSITION.BOTTOM_RIGHT
-      } );
+      toast.error("Please fill all the fields", {
+        position: toast.POSITION.BOTTOM_RIGHT,
+      });
       return;
     }
     let res = false;
@@ -420,24 +530,40 @@ export default function Presale({ setActive, saleType, setSaleObject, token }) {
         {/* here if whitelisting is enabled, show an input field where addresses can be entered, seperated by comma */}
         {whiteisting && (
           <>
-            <div className="mt-5">
-              <Input
-                heading={"Whitelisted Addresses"}
-                changeState={setWhiteListedAddresses}
-                currencies={currencies}
-                currencySelected={currencySelected}
-                tooltip={
-                  "Enter addresses seperated by comma, to whitelist them for the presale"
-                }
-                placeholder={"0xaEa574007c8ad33c7f4f7CF4a0d0B6F704ACD59e, ..."}
-              />
-            </div>
-            <div className="mt-5">
-              <CalendarField
-                heading={"Whitelist end date (UTC)"}
-                changeState={setWhiteListEndDate}
-              />
-            </div>
+            {whiteListedAddresses.map((address, index) => (
+              <div className="mt-5" key={index}>
+                <Input
+                  heading={`Whitelisted Address ${index + 1}`}
+                  changeState={(newValue) =>
+                    handleAddressChange(newValue, index)
+                  }
+                  currencies={currencies}
+                  currencySelected={currencySelected}
+                  tooltip="Enter addresses separated by comma, to whitelist them for the presale"
+                  placeholder="0xaEa574007c8ad33c7f4f7CF4a0d0B6F704ACD59e, ..."
+                />
+                <div className="mt-2">
+                  <CalendarField
+                    heading={`Whitelist end date (UTC) for Address ${
+                      index + 1
+                    }`}
+                    setFunction={handleDateChange}
+                    index={index}
+                  />
+                </div>
+              </div>
+            ))}
+              <button
+              className="bg-primary-green hover:opacity-40  text-white font-gilroy font-bold px-8 py-3 rounded-md mt-5"
+              onClick={handleAddWhitelistField}>
+                Add Whitelist Field
+              </button>         
+              <button 
+              className="bg-primary-green hover:opacity-40  text-white font-gilroy font-bold px-8 py-3 rounded-md mt-5 float-right"
+              onClick={handleRemoveWhitelistField}>
+                Remove Whitelist Field
+              </button>
+
           </>
         )}
 
