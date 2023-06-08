@@ -7,14 +7,11 @@ import axios from "axios";
 import { BACKEND_URL } from "config/constants/LaunchpadAddress";
 
 export default function PercentFilled({ address, setFilled = () => {}, item, showModal }) {
-  // console.log(address, "address")
-  // console.log(item.sale.saleId, "item")
   const [filled_percent, setFilledPercent] = useState(0);
   const [saleInfo, setSaleInfo] = useState(null);
   const [priceInBNB, setPriceInBNB] = useState(null);
   useEffect(() => {
     const result = getSaleInfo(address).then((res) => {
-      // console.log(res, "res")
       setSaleInfo(res);
     });
   }, [showModal]);
@@ -48,17 +45,13 @@ export default function PercentFilled({ address, setFilled = () => {}, item, sho
   useEffect(() => {
     if (priceInBNB === null) return;
     const getFilledPercent = async () => {
-      console.log(priceInBNB, "priceInBNB");
       try {
         const percents = priceInBNB.mul(100).div(saleInfo.hardCap);
         const newPercent = formatBigToNum(percents.toString(), 0, 1);
-        console.log(newPercent, "newPercent");
         setFilledPercent(newPercent);
         setFilled(newPercent);
         //make request to server if newPercent is 100
-        console.log(newPercent, "newPercent");
         if (parseFloat(newPercent) === 100) {
-          console.log("store");
           store();
         }
       } catch (err) {

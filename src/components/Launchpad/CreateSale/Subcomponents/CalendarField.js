@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React from "react";
 import CalendarSVG from "../../../../svgs/TokenLocker/calendar";
 import Datetime from "react-datetime";
 import { ThemeContext } from "../../../../context/ThemeContext/ThemeProvider";
@@ -6,7 +6,6 @@ import HeadingTags from "../../../TokenLocker/Subcomponents/HeadingTags";
 import moment from "moment";
 
 export default function CalendarField({ heading, setFunction, index }) {
-    console.log(index, "indexxxxxxxxxxxx")
   const { theme } = React.useContext(ThemeContext);
   const [date, setDate] = React.useState(new Date());
   const valid = (current) => {
@@ -24,7 +23,6 @@ export default function CalendarField({ heading, setFunction, index }) {
       if (index===undefined) {
         setFunction(selected.unix());
       } else {
-        console.log(selected.unix(), index, "selected.unix(), index" )
         setFunction(selected.unix(), index);
       }
       setDate(selected.toDate());

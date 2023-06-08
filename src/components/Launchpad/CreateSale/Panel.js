@@ -24,23 +24,6 @@ const panel_items = [
   }
 ]
 
-const token = {
-  name: "Swipe Token",
-  symbol: "SXP",
-  tags: [
-    {
-      id: 1,
-      name: "Payment",
-    },
-    {
-      id: 2,
-      name: "Web3",
-    },
-  ],
-  icon: "/images/cards/rip.svg",
-  decimals: 18,
-  total_supply: 2000000000,
-}
 
 
 export default function Panel({saleData, setSaleData, initSaleState}) {

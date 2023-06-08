@@ -3,7 +3,6 @@ import Web3 from "web3";
 
 async function getSaleInfo(saleAddress) {
   try {
-    console.log(saleAddress, "saleAddress")
     const web3 = new Web3(window.ethereum);
     await window.ethereum.enable();
     const contract = new web3.eth.Contract(PublicSaleAbi, saleAddress);

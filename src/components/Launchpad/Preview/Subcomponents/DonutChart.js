@@ -1,9 +1,6 @@
 import React from 'react'
 import Chart from "react-apexcharts";
 
-// const series = [
-//     55, 3.5
-// ];
 
 const labels = [
     "Presale",

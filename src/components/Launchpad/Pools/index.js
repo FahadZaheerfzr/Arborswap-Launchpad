@@ -4,17 +4,13 @@ import Timer from "./Subcomponents/Timer";
 import { useEffect, useState } from "react";
 
 import PercentFilled from "./Subcomponents/PercentFilled";
-import getSaleInfo from "utils/getSaleInfo";
-import { BigNumber } from "ethers";
-import { formatBigToNum } from "utils/numberFormat";
+
 
 export default function PoolsBase({ activeStatus, pools, loading }) {
   //an array of filled percentages
-  const [filled_percent, setFilledPercent] = useState([]);
 
 
   const checkStatus = (item) => {
-    console.log(item, "item")
     const currentDate = new Date();
     const startDate = new Date(item.sale.startDate * 1000);
     const endDate = new Date(item.sale.endDate * 1000);

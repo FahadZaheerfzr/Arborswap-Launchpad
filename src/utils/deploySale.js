@@ -59,7 +59,6 @@ export const deployPublicSale = async (
 
   const saleId = await contract.getNumberOfSalesDeployed();
 
-  // console.log(contract)
   const routerAddress = ROUTER_ADDRESS;
   const adminAddress = ADMIN_ADDRESS;
   // 2nd - with uints [minParticipation, maxParticipation, lp%, dex listing rate,lpLockPeriod, saleEnd, saleStart, hardCap(tokens), softCap(bnb)]
@@ -137,7 +136,6 @@ export const deployPublicSale = async (
           PublicSaleAbi,
           library.getSigner()
         );
-        console.log(contract, "contract");
 
         const ts = await contract.setWLEnabled(true);
         await ts.wait();

@@ -1,9 +1,7 @@
 import React from 'react'
 import DisconnectSVG from 'svgs/Topbar/Disconnect'
-import { wallets } from '../../data/wallets'
 import { useEthers } from '@usedapp/core'
-import WalletConnectProvider from '@walletconnect/web3-provider/dist/umd/index.min.js'
-import {networkConfig } from '../../config/networks'
+
 
 export default function Dropdown() {
 

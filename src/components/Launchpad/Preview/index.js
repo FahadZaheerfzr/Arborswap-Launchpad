@@ -14,19 +14,13 @@ import { Link } from "react-router-dom";
 import GithubSVG from "svgs/Socials/github";
 import { ThemeContext } from "context/ThemeContext/ThemeProvider";
 
-const TokkenDetails = {
-  TokenName: "Swipe Coin",
-  TokenSymbol: "SXP",
-  TokenDecimals: 18,
-  TotalSupply: 1000000000,
-};
+
 
 export default function Preview({
   pool,
   icon,
   name,
   currency,
-  symbol,
   is_private,
   token,
   tags,
@@ -45,7 +39,6 @@ export default function Preview({
 }) {
   const { theme } = useContext(ThemeContext);
   const [slide, setSlide] = useState("Presale");
-  console.log(pool, "pool");
   const supply = parseFloat(token.tokenSupply) / 10 ** token.tokenDecimals;
   return (
     <div className="px-9 py-9 my-4">

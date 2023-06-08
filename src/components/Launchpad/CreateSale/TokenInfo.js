@@ -1,5 +1,4 @@
 import React from "react";
-import { Token_details } from "../../../data/sale";
 import BackArrowSVG from "../../../svgs/back_arrow";
 import PreviewDetails from "../../Common/PreviewDetails";
 import PreviewHeader from "../../Common/PreviewHeader";
@@ -17,14 +16,12 @@ export default function TokenInfo({
   setSaleData,
   saleData,
 }) {
-  const [address, setAddress] = React.useState(saleData.tokenAddress);
   const [enable, setEnable] = React.useState(saleData.isValid);
   const [visible, setVisible] = React.useState(saleData.showDetails);
   const [formStatus, setFormStatus] = React.useState({
     isError: false,
     message: "",
   });
-  const { account } = useEthers();
   const { open: openLoadingModal, close: closeLoadingModal } =
     useModal("LoadingModal");
 
@@ -36,7 +33,6 @@ export default function TokenInfo({
     }));
     setEnable(false);
     setVisible(false);
-    setAddress(e.target.value);
 
     if (isAddress(e.target.value)) {
       openLoadingModal();

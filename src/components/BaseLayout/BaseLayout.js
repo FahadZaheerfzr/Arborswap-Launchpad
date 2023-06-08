@@ -25,7 +25,6 @@ export default function BaseLayout({
   const [sideBarMobile, setSideBarMobile] = useState(false);
   const [tempfixed, setTempFixed] = useState(true);
   const [activeItem] = useActiveItem();
-  const [modal, showModal] = useState(false);
 
   const handleTempFixed = () => {
     setTheme(!tempfixed ? "light" : "dark");
@@ -113,7 +112,6 @@ export default function BaseLayout({
                 title_img={title_img}
                 subpage={subpage}
                 page_name={page_name}
-                showModal={showModal}
                 admin={admin}
                 setAdminMode={setAdminMode}
               />

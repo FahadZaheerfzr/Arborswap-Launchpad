@@ -4,7 +4,7 @@ import BackArrowSVG from "../../../svgs/back_arrow";
 import PreviewDetails from "../../Common/PreviewDetails";
 import { formatBigToNum } from "../../../utils/numberFormat";
 import { useState } from "react";
-import getDeploymentFeePublic from "hooks/useDeploymentFeePublic";
+import getDeploymentFeePublic from "utils/getDeploymentFeePublic";
 import { ethers } from "ethers";
 import { useEthers } from "@usedapp/core";
 import { useEffect } from "react";
@@ -67,14 +67,12 @@ export default function PreviewSale({
   useEffect(() => {
     if(!max) return;
     try {
-      console.log(max, "max");
       amt = parseFloat(saleObject.hardCap) + parseFloat(formatBigToNum(max));
     } catch (err) {
       console.log(err);
     }
   }, [max]);
 
-  // console.log(saleObject, "saleObject")
 
 
   useEffect(() => {}, [startTime]);
@@ -200,14 +198,6 @@ export default function PreviewSale({
         <div className=" ml-4">
           <div className="flex items-center">
             <h3 className=" font-bold dark:text-light-text">{token.name}</h3>
-          </div>
-
-          <div className="flex items-center mt-2">
-            {/* {token.tags?.map((tag) => (
-              <div key={tag.id} className='bg-[#F5F1EB] dark:bg-dark-3 mr-[6px] py-[2px] px-[10px] rounded text-xs text-gray dark:text-gray-dark font-medium'>
-                {tag.name}
-              </div>
-            ))} */}
           </div>
         </div>
       </div>
@@ -377,7 +367,6 @@ export default function PreviewSale({
 
           <button
             className="bg-primary-green hover:opacity-40 disabled:bg-light-text text-white font-gilroy font-bold px-8 py-3 rounded-md"
-            // disabled={address.length < 5}
             onClick={handleSubmit}
           >
             Create Sale

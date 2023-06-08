@@ -5,10 +5,9 @@ import HeadingTags from "../../TokenLocker/Subcomponents/HeadingTags";
 import CalendarField from "./Subcomponents/CalendarField";
 import CurrencyOptions from "./Subcomponents/CurrencyOption";
 import DexOptions from "./Subcomponents/DexOption";
-import { ToastContainer, toast } from "react-toastify";
+import {toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import moment from "moment";
-import ConnectionModal from "components/Modal/ConnectionModal";
 
 import Input from "./Subcomponents/Input";
 import PresaleStandard from "./Subcomponents/PresaleStandard";
@@ -103,6 +102,7 @@ export default function Presale({ setActive, saleType, setSaleObject, token }) {
   const { open: openLoadingModal, close: closeLoadingModal } =
     useModal("LoadingModal");
   const { open: openModal } = useModal("ConnectionModal");
+  console.log(connected)
 
   const handleAddWhitelistField = () => {
     if (whiteListedAddresses.length < 3) {
@@ -131,20 +131,20 @@ export default function Presale({ setActive, saleType, setSaleObject, token }) {
   };
 
   const handleDateChange = (newDate, index) => {
-    console.log(index, "handledate");
     const updatedDates = [...whiteListedDates];
     updatedDates[index] = newDate;
     setWhiteListedDates(updatedDates);
   };
-  console.log(whiteListedAddresses, whiteListedDates);
-  console.log(whiteListedAddresses?.map((address) => address));
+ 
 
   const handleSubmit = async () => {
-    console.log(listing, presalePrice);
-    console.log(amountLiquidity);
+
     //if start date is less than current date and time, and also if end date is less than start date
     const now = moment();
-
+    console.log(account)
+    if (account===undefined){
+      toast.error("Please connect your wallet")
+    }
     if (startDate < now.unix()) {
       toast.error("Start date should be greater than current date and time", {
         position: toast.POSITION.BOTTOM_RIGHT,
@@ -354,14 +354,10 @@ export default function Presale({ setActive, saleType, setSaleObject, token }) {
   //use effect in which we will set required token if hardcap, softcap, listing price, amount liquidity, presale price changes
   useEffect(() => {
     if (hardCap > 0 && presalePrice > 0 && saleType === "standard") {
-      console.log(hardCap, presalePrice);
       const reqTokens = hardCap * presalePrice;
 
       setRequiredToken(reqTokens);
 
-      //consolelog if user has enough balance
-      //wait till return true from handleCheckBalance
-      //if true then set required token
     }
     if (saleType === "private") {
       setRequiredToken(0);
@@ -391,8 +387,10 @@ export default function Presale({ setActive, saleType, setSaleObject, token }) {
   //   }, [presalePrice, softCap, amountLiquidity]);
 
   useEffect(() => {
+    console.log("use effect");
     checkBalance();
-  }, [requiredToken]);
+  }, [requiredToken, account, connected]);
+  
 
   // //for private sale
   // useEffect(() => {
@@ -411,6 +409,7 @@ export default function Presale({ setActive, saleType, setSaleObject, token }) {
   //   }, [hardCap, softCap, presalePrice]);
 
   async function checkBalance() {
+    console.log("check balance")
     const check = await handleCheckBalance();
 
     if (check) {

@@ -9,7 +9,6 @@ async function getSuccessPublic(saleAddress) {
     await window.ethereum.enable();
     const contract = new web3.eth.Contract(PublicSaleAbi, saleAddress);
     const success = await contract.methods.isSaleSuccessful().call();
-    console.log(success, "success")
     return success;
   } catch (err) {
     console.log(err);

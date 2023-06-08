@@ -62,7 +62,6 @@ export default function Modal({
           // Wallet connected successfully
           // You can perform further actions here
           account = await web3.eth.getAccounts();
-          // console.log(bought[0], "bought")
           web3.eth.getBalance(account[0]).then((res) => {
             setBalanceBNB(res);
           });
@@ -86,7 +85,6 @@ export default function Modal({
   }, []);
 
   useEffect(() => {
-    // console.log("sale", sale);
 
     if (sale.currency.symbol !== "BNB") {
       const contract = new Contract(
@@ -107,7 +105,6 @@ export default function Modal({
 
   async function getPrice() {
     const res = await saleInfoPublic.totalBNBRaised;
-    console.log(res, "res");
     setPriceInBNB(res);
   }
   useEffect(() => {
@@ -115,7 +112,6 @@ export default function Modal({
   }, [saleInfoPublic]);
 
   useEffect(() => {
-    // console.log("saleInfoPublic", saleInfoPublic);
     if (priceInBNB === null) return;
     if (
       saleInfoPublic &&
@@ -127,7 +123,6 @@ export default function Modal({
     ) {
       if (sale.currency.symbol === "BNB") {
         if (sale.saleType === "standard") {
-          console.log("priceInBNB", priceInBNB);
           const price = formatBigToNum(priceInBNB?.toString(), 18, 4);
           setTokenPrice(price);
         }
@@ -313,7 +308,6 @@ export default function Modal({
       return;
     }
     //if balance is less than max allocation show error
-    console.log(balance);
     if (parseFloat(balance) < parseFloat(sale.maxAllocation)) {
       toast.error("Insufficient balance");
       return;

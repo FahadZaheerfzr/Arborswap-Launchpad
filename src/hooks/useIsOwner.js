@@ -1,7 +1,7 @@
 import { Contract } from "ethers"
 import PublicAirdropAbi from '../config/abi/PublicAirdropAbi.json'
 
-import { useCall, useEthers } from "@usedapp/core"
+import { useCall } from "@usedapp/core"
 
 
 function useIsOwner(airdropAddress, account) {

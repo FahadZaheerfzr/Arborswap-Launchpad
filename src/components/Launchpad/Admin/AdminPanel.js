@@ -1,8 +1,8 @@
 import PreviewDetails from "components/Common/PreviewDetails";
 import React from "react";
 import { useEffect, useState } from "react";
-import { Contract, ethers } from "ethers";
-import { useEtherBalance, useEthers } from "@usedapp/core";
+import { Contract} from "ethers";
+import { useEthers } from "@usedapp/core";
 import PublicSaleAbi from "../../../config/abi/PublicSale.json";
 import PublicSaleErcAbi from "../../../config/abi/PublicSaleErcAbi.json";
 import PrivateSaleAbi from "../../../config/abi/PrivateSale.json";
@@ -15,12 +15,11 @@ import getSuccessPublic from "utils/successfulPublic";
 import ConfirmModal from "./subComponents/ConfirmModal";
 import getIsFinished from "utils/getFinished";
 import { useModal } from "react-simple-modal-provider";
-import { ToastContainer, toast } from "react-toastify";
+import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import PercentFilled from "../Pools/Subcomponents/PercentFilled";
 
 export default function AdminPanel({
-  icon,
   status,
   hard_cap,
   filled_percent,
@@ -31,12 +30,10 @@ export default function AdminPanel({
   const [showModal, setShowModal] = useState(false);
   const [isFinished, setIsFinished] = useState(null);
   const [saleInfo, setSaleInfo] = useState(null);
-  console.log(sale, "sale")
   //LoadingModal
   const { open: openLoadingModal, close: closeLoadingModal } =
     useModal("LoadingModal");
 
-  // console.log("THE SALE WAS FINISHED", isFinished);
 
   async function getFinished() {
     const res = await getIsFinished(sale.saleAddress).then((res) => {
@@ -53,8 +50,7 @@ export default function AdminPanel({
     getFinished();
     getSaleInfo();
   }, []);
-  console.log("THE SALE WAS FINISHED", isFinished);
-  console.log("THE SALE WAS saleing", saleInfo);
+
 
   const withdrawEarnings = async () => {
     setShowModal(false);
@@ -167,7 +163,6 @@ export default function AdminPanel({
     try {
       const tx = await contract.finishSale();
       await tx.wait();
-      console.log(tx);
     } catch (err) {
       //      alert("Something went wrong");
       closeLoadingModal();
@@ -179,7 +174,6 @@ export default function AdminPanel({
       const res = await axios.put(`${BACKEND_URL}/api/sale/${sale.saleId}`, {
         isFinished: true,
       });
-      console.log(res);
     } catch (err) {
       console.log(err);
       closeLoadingModal();

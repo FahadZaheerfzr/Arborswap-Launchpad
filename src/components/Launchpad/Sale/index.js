@@ -43,7 +43,6 @@ export default function SaleBox({
     });
   }, []);
 
-  // console.log(ends_on);
 
 
   const withdrawFunds = async () => {
@@ -54,14 +53,12 @@ export default function SaleBox({
     let contract;
     if (sale.currency.symbol === "BNB") {
       if (sale.saleType === "standard") {
-        // console.log("STANDARD NON erc20");
         contract = new Contract(
           sale.saleAddress,
           PublicSaleAbi,
           library.getSigner()
         );
       } else if (sale.saleType === "private") {
-        // console.log("Private NON erc20");
 
         contract = new Contract(
           sale.saleAddress,
@@ -69,7 +66,6 @@ export default function SaleBox({
           library.getSigner()
         );
       } else if (sale.saleType === "fairlaunch") {
-        // console.log("Fairlaunch NON erc20");
         contract = new Contract(
           sale.saleAddress,
           FairLaunchAbi,
@@ -85,14 +81,12 @@ export default function SaleBox({
           library.getSigner()
         );
       } else if (sale.saleType === "private") {
-        // console.log("Private erc20");
         contract = new Contract(
           sale.saleAddress,
           PrivateSaleErcAbi,
           library.getSigner()
         );
       } else if (sale.saleType === "fairlaunch") {
-        // console.log("Fairlaunch erc20");
         contract = new Contract(
           sale.saleAddress,
           FairLaunchErcAbi,
@@ -100,13 +94,11 @@ export default function SaleBox({
         );
       }
     }
-    // console.log("contract", contract);
     try {
       const tx = await contract.withdrawUserFundsIfSaleCancelled();
       await tx.wait();
       toast.success("Funds withdrawn successfully");
     } catch (err) {
-      // console.log(err);
       toast.error("Error withdrawing funds");
     }
   };

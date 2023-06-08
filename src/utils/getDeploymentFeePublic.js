@@ -1,7 +1,5 @@
-import { Contract } from "ethers";
 import Web3 from "web3";
 import PublicAbi from '../config/abi/PublicLaunchpadAbi.json';
-import { useCall, useContractFunction } from "@usedapp/core";
 import {Public_FACTORYADRESS } from "config/constants/LaunchpadAddress";
 
 async function getDeploymentFeePublic() {
