@@ -8,6 +8,7 @@ import DexOptions from "./Subcomponents/DexOption";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import moment from "moment";
+import ConnectionModal from "components/Modal/ConnectionModal";
 
 import Input from "./Subcomponents/Input";
 import PresaleStandard from "./Subcomponents/PresaleStandard";
@@ -28,9 +29,7 @@ import {
   USDT_ADDRESS,
   RBA_ADDRESS,
   GUSD_ADDRESS,
-  ROUTER_ADDRESS,
 } from "config/constants/LaunchpadAddress";
-import { ADMIN_ADDRESS } from "config/constants/address";
 
 const currencies = [
   {
@@ -93,15 +92,17 @@ export default function Presale({ setActive, saleType, setSaleObject, token }) {
   const [vestingRelease, setVestingRelease] = useState();
   const [unsoldToken, setUnsoldTokens] = useState("Burn");
   const [requiredToken, setRequiredToken] = useState("0");
+  const [connected, setConnected] = useState(false);
   const [lockup, setLockup] = useState();
   const { account, library } = useEthers();
   const [enoughBalance, setEnoughBalance] = useState(false);
   const [whiteListedAddresses, setWhiteListedAddresses] = useState([""]);
   const [whiteListedDates, setWhiteListedDates] = useState([]);
   const [whiteListingCount, setWhiteListingCount] = useState(3);
-  console.log(whiteListedAddresses.length, whiteListedDates.length);
+
   const { open: openLoadingModal, close: closeLoadingModal } =
     useModal("LoadingModal");
+  const { open: openModal } = useModal("ConnectionModal");
 
   const handleAddWhitelistField = () => {
     if (whiteListedAddresses.length < 3) {
@@ -341,6 +342,15 @@ export default function Presale({ setActive, saleType, setSaleObject, token }) {
     }
   };
 
+  useEffect(() => {
+    if (!account) {
+      setConnected(false);
+      openModal();
+    } else {
+      setConnected(true);
+    }
+  }, [account]);
+
   //use effect in which we will set required token if hardcap, softcap, listing price, amount liquidity, presale price changes
   useEffect(() => {
     if (hardCap > 0 && presalePrice > 0 && saleType === "standard") {
@@ -419,9 +429,6 @@ export default function Presale({ setActive, saleType, setSaleObject, token }) {
     <>
       <div className="w-full">
         {/* sticky navbar */}
-        <div className="sticky top-0 z-10 w-full bg-white dark:bg-dark-2 border-b border-gray-200 dark:border-dark-3">
-          <ToastContainer className="!absolute"/>
-        </div>
         <HeadingTags name={"Choose Currency"} required />
 
         {/* Currency Options */}
@@ -541,7 +548,7 @@ export default function Presale({ setActive, saleType, setSaleObject, token }) {
                   changeState={(newValue) =>
                     handleAddressChange(newValue, index)
                   }
-                  whitelist = {true}
+                  whitelist={true}
                   tooltip="Enter addresses separated by comma, to whitelist them for the presale"
                   placeholder="0xaEa574007c8ad33c7f4f7CF4a0d0B6F704ACD59e, ..."
                   nothing={true}
@@ -697,9 +704,6 @@ export default function Presale({ setActive, saleType, setSaleObject, token }) {
           </div>
         </div>
       </div>
-      {/* <div className="fixed ">
-        <ToastContainer />
-      </div> */}
     </>
   );
 }

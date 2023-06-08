@@ -1,7 +1,23 @@
 import React from 'react'
 import DisconnectSVG from 'svgs/Topbar/Disconnect'
+import { wallets } from '../../data/wallets'
+import { useEthers } from '@usedapp/core'
+import WalletConnectProvider from '@walletconnect/web3-provider/dist/umd/index.min.js'
+import {networkConfig } from '../../config/networks'
 
 export default function Dropdown() {
+
+  const { deactivate, account } = useEthers()
+
+  const onDisconnect = async () => {
+    try {
+      deactivate()
+    } catch (error) {
+      console.error(error)
+    }
+  }
+
+
   return (
     <div className="absolute w-[250px] rounded-md border border-[#e7e3ff] dark:border-dim-text-dark bg-white dark:bg-dark-1">
       <div className="flex items-center text-gray dark:text-gray-dark cursor-pointer justify-between border border-gray hover:bg-primary-green hover:text-light dark:border-gray-dark border-opacity-20 px-4 py-4">
@@ -18,7 +34,9 @@ export default function Dropdown() {
 
         <div className="rounded-full w-2 h-2 bg-[#e56060]" />
       </div>
-      <div className="flex items-center text-gray dark:text-gray-dark cursor-pointer justify-between border border-gray hover:bg-primary-green hover:text-light dark:border-gray-dark border-opacity-20 px-4 py-4">
+      <div 
+      onClick={() => onDisconnect()}
+      className="flex items-center text-gray dark:text-gray-dark cursor-pointer justify-between border border-gray hover:bg-primary-green hover:text-light dark:border-gray-dark border-opacity-20 px-4 py-4">
         <span className="font-medium">Disconnect</span>
 
         <DisconnectSVG className="fill-dark-text dark:fill-light-text" />

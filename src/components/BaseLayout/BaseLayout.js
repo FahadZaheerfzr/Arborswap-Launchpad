@@ -1,11 +1,12 @@
-import React, { useContext, useEffect, useState } from 'react'
-import Sidebar from '../Sidebar/Sidebar'
-import Styles from './BaseLayout.module.css'
+import React, { useContext, useEffect, useState } from "react";
+import Sidebar from "../Sidebar/Sidebar";
+import Styles from "./BaseLayout.module.css";
 
-import { SidebarContext } from '../../context/SidebarContext/GlobalProvider'
-import { useActiveItem } from '../../hooks/setActiveItem'
-import { ThemeContext } from '../../context/ThemeContext/ThemeProvider'
-import Topbar from '../Topbar/Topbar'
+import { SidebarContext } from "../../context/SidebarContext/GlobalProvider";
+import { useActiveItem } from "../../hooks/setActiveItem";
+import { ThemeContext } from "../../context/ThemeContext/ThemeProvider";
+import Topbar from "../Topbar/Topbar";
+import { ToastContainer } from "react-toastify";
 
 export default function BaseLayout({
   children,
@@ -19,39 +20,42 @@ export default function BaseLayout({
   admin,
   setAdminMode,
 }) {
-  const { showSidebar, setShowSidebar } = useContext(SidebarContext)
-  const { theme, setTheme } = useContext(ThemeContext)
-  const [sideBarMobile, setSideBarMobile] = useState(false)
-  const [tempfixed, setTempFixed] = useState(true)
-  const [activeItem] = useActiveItem()
-  const [modal, showModal] = useState(false)
+  const { showSidebar, setShowSidebar } = useContext(SidebarContext);
+  const { theme, setTheme } = useContext(ThemeContext);
+  const [sideBarMobile, setSideBarMobile] = useState(false);
+  const [tempfixed, setTempFixed] = useState(true);
+  const [activeItem] = useActiveItem();
+  const [modal, showModal] = useState(false);
 
   const handleTempFixed = () => {
-    setTheme(!tempfixed ? 'light' : 'dark')
-    setTempFixed(!tempfixed)
-  }
+    setTheme(!tempfixed ? "light" : "dark");
+    setTempFixed(!tempfixed);
+  };
 
   const hideSidebar = () => {
     if (sideBarMobile) {
-      setSideBarMobile(false)
+      setSideBarMobile(false);
     }
-  }
+  };
 
   useEffect(() => {
-    if (theme === 'dark') {
-      setTempFixed(false)
+    if (theme === "dark") {
+      setTempFixed(false);
     }
-  }, [theme])
+  }, [theme]);
 
   return (
     <div className="w-full dark:bg-dark">
+      <div className="sticky top-0 z-10 w-full bg-white dark:bg-dark-2 border-b border-gray-200 dark:border-dark-3">
+        <ToastContainer className="!absolute" />
+      </div>
 
-      <div className={`flex w-full ${noTopbar ? '' : ''}`}>
+      <div className={`flex w-full ${noTopbar ? "" : ""}`}>
         {noSidebar ? null : (
           <div className="fixed top-0 z-20">
             <div
               className={`${
-                sideBarMobile ? 'block' : 'hidden'
+                sideBarMobile ? "block" : "hidden"
               } md:hidden w-[270px] h-screen bg-white absolute dark:bg-dark-1 `}
             >
               <Sidebar
@@ -65,8 +69,10 @@ export default function BaseLayout({
         )}
         {noSidebar ? null : (
           <div
-            className={`hidden md:flex w-[270px] bg-white dark:bg-dark-1 ${Styles.sideBar} ease-in-out duration-300 ${
-              showSidebar ? 'translate-x-0' : '-translate-x-[130px]'
+            className={`hidden md:flex w-[270px] bg-white dark:bg-dark-1 ${
+              Styles.sideBar
+            } ease-in-out duration-300 ${
+              showSidebar ? "translate-x-0" : "-translate-x-[130px]"
             }`}
           >
             <Sidebar
@@ -82,7 +88,7 @@ export default function BaseLayout({
                 onClick={() => setShowSidebar(!showSidebar)}
               >
                 <img
-                  className={`${showSidebar ? '' : 'rotate-180'}`}
+                  className={`${showSidebar ? "" : "rotate-180"}`}
                   src="/images/sidebar/arrow-left.svg"
                   alt="arrow-left"
                 />
@@ -93,7 +99,7 @@ export default function BaseLayout({
 
         <div
           className={`w-full dark:bg-dark md:w-[calc(100%-270px)] md:ml-[270px] ease-in-out duration-300 ${
-            showSidebar ? ' translate-x-0' : '-translate-x-[100px]'
+            showSidebar ? " translate-x-0" : "-translate-x-[100px]"
           }`}
         >
           {noTopbar ? null : (
@@ -122,5 +128,5 @@ export default function BaseLayout({
         </div>
       </div>
     </div>
-  )
+  );
 }

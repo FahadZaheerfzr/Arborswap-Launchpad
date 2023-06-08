@@ -22,7 +22,6 @@ export default function PreviewDetails({
   
   return (
     <>
-      <ToastContainer />
       <div className="py-5 flex gap-x-5 justify-between border-b border-dashed border-dim-text border-opacity-30">
         <span className="font-gilroy text-sm font-medium text-gray dark:text-gray-dark">
           {name}

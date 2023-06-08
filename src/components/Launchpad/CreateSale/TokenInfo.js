@@ -102,6 +102,11 @@ export default function TokenInfo({
           </>
         </div>
       )}
+      {formStatus.isError && (
+        <div className="mt-5">
+          <span className="text-red-500 text-sm">{formStatus.message}</span>
+        </div>
+      )}
 
       <div className="mt-10">
         <div className="flex justify-end items-center mb-10">

@@ -318,7 +318,6 @@ export default function AdminPanel({
           setShowModal={setShowModal}
         />
       )}
-      <ToastContainer />
     </>
   );
 }

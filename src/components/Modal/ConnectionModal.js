@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react'
 import Modal, { useModalState } from 'react-simple-modal-provider'
-import { BSC } from '@usedapp/core'
+import { BSCTestnet } from '@usedapp/core'
 
 import { wallets } from '../../data/wallets'
 import { useEthers } from '@usedapp/core'
@@ -8,12 +8,11 @@ import WalletConnectProvider from '@walletconnect/web3-provider/dist/umd/index.m
 import {networkConfig } from '../../config/networks'
 
 export default function ConnectionModal({ children }) {
-  
   const {chainId, switchNetwork, account, activate, activateBrowserWallet } = useEthers()
   const [isOpen, setOpen] = useModalState()
   const onConnect = async () => {
-    if(chainId !== BSC.chainId) {
-      await switchNetwork(BSC.chainId)
+    if(chainId !== BSCTestnet.chainId) {
+      await switchNetwork(BSCTestnet.chainId)
     }
     try {
       const provider = new WalletConnectProvider({
@@ -29,8 +28,8 @@ export default function ConnectionModal({ children }) {
   const onMetamask = async () => {
     try {
       activateBrowserWallet()
-      if(chainId !== BSC.chainId){
-        switchNetwork(BSC.chainId)
+      if(chainId !== BSCTestnet.chainId){
+        switchNetwork(BSCTestnet.chainId)
       }
     } catch (error) {
       console.error(error)
