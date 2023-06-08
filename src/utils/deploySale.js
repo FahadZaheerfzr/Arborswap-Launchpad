@@ -1,79 +1,102 @@
-import { Contract } from "@ethersproject/contracts"
-import PublicAbi from '../config/abi/PublicLaunchpadAbi.json';
-import PrivateAbi from '../config/abi/PrivateLaunchpadAbi.json';
-import FairAbi from '../config/abi/FairLaunchpadAbi.json';
-import PublicErcAbi from '../config/abi/PublicLaunchErcAbi.json';
-import PrivateErcAbi from '../config/abi/PrivateLaunchErcAbi.json';
-import FairErcAbi from '../config/abi/FairErcAbi.json';
-import { Public_FACTORYADRESS, ROUTER_ADDRESS, ADMIN_ADDRESS, Private_FACTORYADRESS, FairLaunch_FACTORYADRESS, USDT_ADDRESS, GUSD_ADDRESS, RBA_ADDRESS, PublicErc_FACTORYADRESS, PrivateErc_FACTORYADRESS, FairLaunchErc_FACTORYADRESS } from 'config/constants/LaunchpadAddress';
-import { parseEther, parseUnits } from 'ethers/lib/utils';
-import { ethers, utils } from "ethers"
-import ERCAbi from '../config/abi/ERC20.json';
+import { Contract } from "@ethersproject/contracts";
+import PublicAbi from "../config/abi/PublicLaunchpadAbi.json";
+import PrivateAbi from "../config/abi/PrivateLaunchpadAbi.json";
+import FairAbi from "../config/abi/FairLaunchpadAbi.json";
+import PublicErcAbi from "../config/abi/PublicLaunchErcAbi.json";
+import PrivateErcAbi from "../config/abi/PrivateLaunchErcAbi.json";
+import FairErcAbi from "../config/abi/FairErcAbi.json";
+import PublicSaleAbi from "../config/abi/PublicSale.json";
+import {
+  Public_FACTORYADRESS,
+  ROUTER_ADDRESS,
+  ADMIN_ADDRESS,
+  Private_FACTORYADRESS,
+  FairLaunch_FACTORYADRESS,
+  USDT_ADDRESS,
+  GUSD_ADDRESS,
+  RBA_ADDRESS,
+  PublicErc_FACTORYADRESS,
+  PrivateErc_FACTORYADRESS,
+  FairLaunchErc_FACTORYADRESS,
+} from "config/constants/LaunchpadAddress";
+import { parseEther, parseUnits } from "ethers/lib/utils";
+import { ethers, utils } from "ethers";
+import ERCAbi from "../config/abi/ERC20.json";
 
 export const approveTokens = async (library, token, factoryContractAddress) => {
   const contract = new Contract(
     token.tokenAddress,
     ERCAbi,
     library.getSigner()
-  )
+  );
 
-  const amount = ethers.constants.MaxUint256
-
+  const amount = ethers.constants.MaxUint256;
 
   try {
+    const approval = await contract.approve(factoryContractAddress, amount);
 
-    const approval = await contract.approve(factoryContractAddress, amount)
-
-    await approval.wait()
+    await approval.wait();
   } catch (error) {
-
-    return false
+    return false;
   }
-  return true
-}
+  return true;
+};
 
-
-export const deployPublicSale = async (token, saleObject, library, account, deploymentFee, saleData, closeLoadingModal) => {
+export const deployPublicSale = async (
+  token,
+  saleObject,
+  library,
+  account,
+  deploymentFee,
+  saleData,
+  closeLoadingModal
+) => {
   const contract = new Contract(
     Public_FACTORYADRESS,
     PublicAbi,
     library.getSigner()
-  )
+  );
 
-  const saleId = await contract.getNumberOfSalesDeployed()
+  const saleId = await contract.getNumberOfSalesDeployed();
 
   // console.log(contract)
-  const routerAddress = ROUTER_ADDRESS
-  const adminAddress = ADMIN_ADDRESS
+  const routerAddress = ROUTER_ADDRESS;
+  const adminAddress = ADMIN_ADDRESS;
   // 2nd - with uints [minParticipation, maxParticipation, lp%, dex listing rate,lpLockPeriod, saleEnd, saleStart, hardCap(tokens), softCap(bnb)]
-
-    try {
+  let deployedAddress;
+  let finalSaleObject;
+  try {
     const tx = await contract.deployNormalSale(
       [routerAddress, adminAddress, token.tokenAddress, account],
       [
         parseEther(saleObject.minAllocation.toString()).toString(),
         parseEther(saleObject.maxAllocation.toString()).toString(),
         (saleObject.amountLiquidity * 100).toString(),
-        parseUnits(saleObject.listing.toString(), token.tokenDecimals).toString(),
+        parseUnits(
+          saleObject.listing.toString(),
+          token.tokenDecimals
+        ).toString(),
         (saleObject.lockup * 86400).toString(),
-        parseUnits(saleObject.presalePrice.toString(), token.tokenDecimals).toString(),
+        parseUnits(
+          saleObject.presalePrice.toString(),
+          token.tokenDecimals
+        ).toString(),
         saleObject.endDate,
         saleObject.startDate,
         parseEther(saleObject.hardCap.toString()).toString(),
-        parseEther(saleObject.softCap.toString()).toString()
+        parseEther(saleObject.softCap.toString()).toString(),
       ],
       saleObject.unsoldToken === "Burn" ? true : false,
       {
         value: utils.parseEther(deploymentFee.toString()),
-        gasLimit: 5000000
+        gasLimit: 5000000,
       }
-    )
-    await tx.wait()
+    );
+    await tx.wait();
 
-    const deployedAddress = await contract.saleIdToAddress(saleId.toNumber())
+    deployedAddress = await contract.saleIdToAddress(saleId.toNumber());
 
-
-    const finalSaleObject = {
+    finalSaleObject = {
       saleId: saleId.toNumber(),
       saleAddress: deployedAddress,
       saleType: saleData.type,
@@ -81,8 +104,8 @@ export const deployPublicSale = async (token, saleObject, library, account, depl
       website: saleData.website,
       twitter: saleData.twitter,
       linkedin: saleData.linkedin,
-      discord : saleData.discord,
-      telegram : saleData.telegram,
+      discord: saleData.discord,
+      telegram: saleData.telegram,
       image: saleData.image,
       name: saleData.name,
       description: saleData.description,
@@ -102,37 +125,68 @@ export const deployPublicSale = async (token, saleObject, library, account, depl
       currency: saleObject.currency,
       dex: saleObject.dex,
       whiteisting: saleObject.whiteisting,
+      whiteListedAddresses: saleObject.whiteListedAddresses,
+      whiteListedEndDates: saleObject.whiteListedEndDates,
       owner: account,
       isFinished: false,
+    };
+    if (saleObject.whiteisting) {
+      try {
+        const contract = new Contract(
+          deployedAddress,
+          PublicSaleAbi,
+          library.getSigner()
+        );
+        console.log(contract, "contract");
+
+        const ts = await contract.setWLEnabled(true);
+        await ts.wait();
+
+        const tx = await contract.setMultiplyAddressesWL(
+          saleObject.whiteListedAddresses?.map((address) => address),
+          true
+        )
+        await tx.wait();
+        alert("Whitelisting Done");
+        return finalSaleObject;
+      } catch (error) {
+        console.log(error);
+        alert("Whitelisting Failed");
+        closeLoadingModal();
+      }
     }
-
-
-    return finalSaleObject
   } catch (error) {
     console.log(error);
-    alert("Transaction Failed")
-    closeLoadingModal()
+    alert("Transaction Failed");
+    closeLoadingModal();
   }
-}
+};
 
-export const deployPublicSaleERC = async (token, saleObject, library, account, deploymentFee, saleData, closeLoadingModal) => {
+export const deployPublicSaleERC = async (
+  token,
+  saleObject,
+  library,
+  account,
+  deploymentFee,
+  saleData,
+  closeLoadingModal
+) => {
   const contract = new Contract(
     PublicErc_FACTORYADRESS,
     PublicErcAbi,
     library.getSigner()
-  )
-  const saleId = await contract.getNumberOfSalesDeployed()
+  );
+  const saleId = await contract.getNumberOfSalesDeployed();
 
-
-  const routerAddress = ROUTER_ADDRESS
-  const adminAddress = ADMIN_ADDRESS
-  let PaymentToken = ""
+  const routerAddress = ROUTER_ADDRESS;
+  const adminAddress = ADMIN_ADDRESS;
+  let PaymentToken = "";
   if (saleObject.currency.name === "Tether") {
-    PaymentToken = USDT_ADDRESS
+    PaymentToken = USDT_ADDRESS;
   } else if (saleObject.currency.name === "Gnosis") {
-    PaymentToken = GUSD_ADDRESS
+    PaymentToken = GUSD_ADDRESS;
   } else if (saleObject.currency.name === "Roburna") {
-    PaymentToken = RBA_ADDRESS
+    PaymentToken = RBA_ADDRESS;
   }
 
   // 2nd - with uints [minParticipation, maxParticipation, lp%, dex listing rate,lpLockPeriod, saleEnd, saleStart, hardCap(tokens), softCap(bnb)]
@@ -144,24 +198,29 @@ export const deployPublicSaleERC = async (token, saleObject, library, account, d
         parseEther(saleObject.minAllocation.toString()).toString(),
         parseEther(saleObject.maxAllocation.toString()).toString(),
         (saleObject.amountLiquidity * 100).toString(),
-        parseUnits(saleObject.listing.toString(), token.tokenDecimals).toString(),
+        parseUnits(
+          saleObject.listing.toString(),
+          token.tokenDecimals
+        ).toString(),
         (saleObject.lockup * 86400).toString(),
-        parseUnits(saleObject.presalePrice.toString(), token.tokenDecimals).toString(),
+        parseUnits(
+          saleObject.presalePrice.toString(),
+          token.tokenDecimals
+        ).toString(),
         saleObject.endDate,
         saleObject.startDate,
         parseEther(saleObject.hardCap.toString()).toString(),
-        parseEther(saleObject.softCap.toString()).toString()
+        parseEther(saleObject.softCap.toString()).toString(),
       ],
       saleObject.unsoldToken === "Burn" ? true : false,
       {
         value: utils.parseEther(deploymentFee),
-        gasLimit: 5000000
+        gasLimit: 5000000,
       }
-    )
-    await tx.wait()
+    );
+    await tx.wait();
 
-    const deployedAddress = await contract.saleIdToAddress(saleId.toNumber())
-
+    const deployedAddress = await contract.saleIdToAddress(saleId.toNumber());
 
     const finalSaleObject = {
       saleId: saleId.toNumber(),
@@ -171,8 +230,8 @@ export const deployPublicSaleERC = async (token, saleObject, library, account, d
       website: saleData.website,
       twitter: saleData.twitter,
       linkedin: saleData.linkedin,
-      discord : saleData.discord,
-      telegram : saleData.telegram,
+      discord: saleData.discord,
+      telegram: saleData.telegram,
       image: saleData.image,
       name: saleData.name,
       description: saleData.description,
@@ -194,20 +253,25 @@ export const deployPublicSaleERC = async (token, saleObject, library, account, d
       whiteisting: saleObject.whiteisting,
       owner: account,
       isFinished: false,
-    }
+    };
 
-
-    return finalSaleObject
+    return finalSaleObject;
   } catch (error) {
-    console.log(error)
-    alert("Transaction Failed")
-    closeLoadingModal()
+    console.log(error);
+    alert("Transaction Failed");
+    closeLoadingModal();
   }
-}
+};
 
-
-
-export const deployPrivateSale = async (token, saleObject, library, account, deploymentFee, saleData, closeLoadingModal) => {
+export const deployPrivateSale = async (
+  token,
+  saleObject,
+  library,
+  account,
+  deploymentFee,
+  saleData,
+  closeLoadingModal
+) => {
   const contract = new Contract(
     Private_FACTORYADRESS,
     PrivateAbi,
@@ -215,8 +279,7 @@ export const deployPrivateSale = async (token, saleObject, library, account, dep
   );
   const adminAddress = ADMIN_ADDRESS;
 
-
-  const saleId = await contract.getNumberOfSalesDeployed()
+  const saleId = await contract.getNumberOfSalesDeployed();
 
   try {
     const tx = await contract.deployNormalPrivateSale(
@@ -233,8 +296,7 @@ export const deployPrivateSale = async (token, saleObject, library, account, dep
     );
     await tx.wait();
 
-
-    const deployedAddress = await contract.saleIdToAddress(saleId.toNumber())
+    const deployedAddress = await contract.saleIdToAddress(saleId.toNumber());
 
     const finalSaleObject = {
       saleId: saleId.toNumber(),
@@ -244,8 +306,8 @@ export const deployPrivateSale = async (token, saleObject, library, account, dep
       website: saleData.website,
       twitter: saleData.twitter,
       linkedin: saleData.linkedin,
-      discord : saleData.discord,
-      telegram : saleData.telegram,
+      discord: saleData.discord,
+      telegram: saleData.telegram,
       image: saleData.image,
       name: saleData.name,
       description: saleData.description,
@@ -263,17 +325,24 @@ export const deployPrivateSale = async (token, saleObject, library, account, dep
       whiteisting: saleObject.whiteisting,
       owner: account,
       isFinished: false,
-    }
+    };
 
-    return finalSaleObject
+    return finalSaleObject;
   } catch (error) {
-    alert("Transaction Failed")
-    closeLoadingModal()
-
+    alert("Transaction Failed");
+    closeLoadingModal();
   }
 };
 
-export const deployPrivateErSale = async (token, saleObject, library, account, deploymentFee, saleData, closeLoadingModal) => {
+export const deployPrivateErSale = async (
+  token,
+  saleObject,
+  library,
+  account,
+  deploymentFee,
+  saleData,
+  closeLoadingModal
+) => {
   const contract = new Contract(
     PrivateErc_FACTORYADRESS,
     PrivateErcAbi,
@@ -281,16 +350,16 @@ export const deployPrivateErSale = async (token, saleObject, library, account, d
   );
   const adminAddress = ADMIN_ADDRESS;
   const routerAddress = ROUTER_ADDRESS;
-  let PaymentToken = ""
+  let PaymentToken = "";
   if (saleObject.currency.name === "Tether") {
-    PaymentToken = USDT_ADDRESS
+    PaymentToken = USDT_ADDRESS;
   } else if (saleObject.currency.name === "Gnosis") {
-    PaymentToken = GUSD_ADDRESS
+    PaymentToken = GUSD_ADDRESS;
   } else if (saleObject.currency.name === "Roburna") {
-    PaymentToken = RBA_ADDRESS
+    PaymentToken = RBA_ADDRESS;
   }
 
-  const saleId = await contract.getNumberOfSalesDeployed()
+  const saleId = await contract.getNumberOfSalesDeployed();
 
   try {
     const tx = await contract.deployPrivateSaleERC20(
@@ -304,11 +373,10 @@ export const deployPrivateErSale = async (token, saleObject, library, account, d
         parseEther(saleObject.softCap.toString()).toString(),
       ],
       { value: utils.parseEther(deploymentFee) }
-    )
-    await tx.wait()
+    );
+    await tx.wait();
 
-    const deployedAddress = await contract.saleIdToAddress(saleId.toNumber())
-
+    const deployedAddress = await contract.saleIdToAddress(saleId.toNumber());
 
     const finalSaleObject = {
       saleId: saleId.toNumber(),
@@ -318,8 +386,8 @@ export const deployPrivateErSale = async (token, saleObject, library, account, d
       website: saleData.website,
       twitter: saleData.twitter,
       linkedin: saleData.linkedin,
-      discord : saleData.discord,
-      telegram : saleData.telegram,
+      discord: saleData.discord,
+      telegram: saleData.telegram,
       image: saleData.image,
       name: saleData.name,
       description: saleData.description,
@@ -337,17 +405,24 @@ export const deployPrivateErSale = async (token, saleObject, library, account, d
       whiteisting: saleObject.whiteisting,
       owner: account,
       isFinished: false,
-    }
+    };
 
-    return finalSaleObject
+    return finalSaleObject;
   } catch (error) {
-    alert("Transaction Failed")
-    closeLoadingModal()
+    alert("Transaction Failed");
+    closeLoadingModal();
   }
 };
 
-
-export const deployFairLaunchSale = async (token, saleObject, library, account, deploymentFee, saleData, closeLoadingModal) => {
+export const deployFairLaunchSale = async (
+  token,
+  saleObject,
+  library,
+  account,
+  deploymentFee,
+  saleData,
+  closeLoadingModal
+) => {
   const contract = new Contract(
     FairLaunch_FACTORYADRESS,
     FairAbi,
@@ -356,7 +431,7 @@ export const deployFairLaunchSale = async (token, saleObject, library, account, 
   const adminAddress = ADMIN_ADDRESS;
   const routerAddress = ROUTER_ADDRESS;
 
-  const saleId = await contract.getNumberOfSalesDeployed()
+  const saleId = await contract.getNumberOfSalesDeployed();
 
   try {
     const tx = await contract.deployFairLaunchSale(
@@ -375,8 +450,7 @@ export const deployFairLaunchSale = async (token, saleObject, library, account, 
     );
     await tx.wait();
 
-
-    const deployedAddress = await contract.saleIdToAddress(saleId.toNumber())
+    const deployedAddress = await contract.saleIdToAddress(saleId.toNumber());
 
     const finalSaleObject = {
       saleId: saleId.toNumber(),
@@ -386,8 +460,8 @@ export const deployFairLaunchSale = async (token, saleObject, library, account, 
       website: saleData.website,
       twitter: saleData.twitter,
       linkedin: saleData.linkedin,
-      discord : saleData.discord,
-      telegram : saleData.telegram,
+      discord: saleData.discord,
+      telegram: saleData.telegram,
       image: saleData.image,
       name: saleData.name,
       description: saleData.description,
@@ -404,16 +478,24 @@ export const deployFairLaunchSale = async (token, saleObject, library, account, 
       currency: saleObject.currency,
       owner: account,
       isFinished: false,
-    }
+    };
 
-    return finalSaleObject
+    return finalSaleObject;
   } catch (error) {
-    alert("Transaction Failed")
-    closeLoadingModal()
+    alert("Transaction Failed");
+    closeLoadingModal();
   }
 };
 
-export const deployFairLaunchSaleERC20 = async (token, saleObject, library, account, deploymentFee, saleData, closeLoadingModal) => {
+export const deployFairLaunchSaleERC20 = async (
+  token,
+  saleObject,
+  library,
+  account,
+  deploymentFee,
+  saleData,
+  closeLoadingModal
+) => {
   const contract = new Contract(
     FairLaunchErc_FACTORYADRESS,
     FairErcAbi,
@@ -421,17 +503,16 @@ export const deployFairLaunchSaleERC20 = async (token, saleObject, library, acco
   );
   const adminAddress = ADMIN_ADDRESS;
   const routerAddress = ROUTER_ADDRESS;
-  let PaymentToken = ""
+  let PaymentToken = "";
   if (saleObject.currency.name === "Tether") {
-    PaymentToken = USDT_ADDRESS
+    PaymentToken = USDT_ADDRESS;
   } else if (saleObject.currency.name === "Gnosis") {
-    PaymentToken = GUSD_ADDRESS
-  }
-  else if (saleObject.currency.name === "Roburna") {
-    PaymentToken = RBA_ADDRESS
+    PaymentToken = GUSD_ADDRESS;
+  } else if (saleObject.currency.name === "Roburna") {
+    PaymentToken = RBA_ADDRESS;
   }
 
-  const saleId = await contract.getNumberOfSalesDeployed()
+  const saleId = await contract.getNumberOfSalesDeployed();
 
   try {
     const tx = await contract.deployFairLaunchSaleERC20(
@@ -450,8 +531,7 @@ export const deployFairLaunchSaleERC20 = async (token, saleObject, library, acco
     );
     await tx.wait();
 
-
-    const deployedAddress = await contract.saleIdToAddress(saleId.toNumber())
+    const deployedAddress = await contract.saleIdToAddress(saleId.toNumber());
 
     const finalSaleObject = {
       saleId: saleId.toNumber(),
@@ -461,8 +541,8 @@ export const deployFairLaunchSaleERC20 = async (token, saleObject, library, acco
       website: saleData.website,
       twitter: saleData.twitter,
       linkedin: saleData.linkedin,
-      discord : saleData.discord,
-      telegram : saleData.telegram,
+      discord: saleData.discord,
+      telegram: saleData.telegram,
       image: saleData.image,
       name: saleData.name,
       description: saleData.description,
@@ -479,14 +559,11 @@ export const deployFairLaunchSaleERC20 = async (token, saleObject, library, acco
       currency: saleObject.currency,
       owner: account,
       isFinished: false,
-    }
+    };
 
-    return finalSaleObject
-  }
-  catch (error) {
-    alert("Transaction Failed")
-    closeLoadingModal()
+    return finalSaleObject;
+  } catch (error) {
+    alert("Transaction Failed");
+    closeLoadingModal();
   }
 };
-
-

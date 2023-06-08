@@ -28,7 +28,9 @@ import {
   USDT_ADDRESS,
   RBA_ADDRESS,
   GUSD_ADDRESS,
+  ROUTER_ADDRESS,
 } from "config/constants/LaunchpadAddress";
+import { ADMIN_ADDRESS } from "config/constants/address";
 
 const currencies = [
   {
@@ -97,7 +99,7 @@ export default function Presale({ setActive, saleType, setSaleObject, token }) {
   const [whiteListedAddresses, setWhiteListedAddresses] = useState([""]);
   const [whiteListedDates, setWhiteListedDates] = useState([]);
   const [whiteListingCount, setWhiteListingCount] = useState(3);
-
+  console.log(whiteListedAddresses.length, whiteListedDates.length);
   const { open: openLoadingModal, close: closeLoadingModal } =
     useModal("LoadingModal");
 
@@ -114,7 +116,12 @@ export default function Presale({ setActive, saleType, setSaleObject, token }) {
       updatedAddresses.splice(index, 1);
       setWhiteListedAddresses(updatedAddresses);
     }
-  }
+    if (whiteListedDates.length > 1) {
+      const updatedDates = [...whiteListedDates];
+      updatedDates.splice(index, 1);
+      setWhiteListedDates(updatedDates);
+    }
+  };
 
   const handleAddressChange = (newValue, index) => {
     const updatedAddresses = [...whiteListedAddresses];
@@ -123,11 +130,13 @@ export default function Presale({ setActive, saleType, setSaleObject, token }) {
   };
 
   const handleDateChange = (newDate, index) => {
+    console.log(index, "handledate");
     const updatedDates = [...whiteListedDates];
     updatedDates[index] = newDate;
     setWhiteListedDates(updatedDates);
   };
   console.log(whiteListedAddresses, whiteListedDates);
+  console.log(whiteListedAddresses?.map((address) => address));
 
   const handleSubmit = async () => {
     console.log(listing, presalePrice);
@@ -159,9 +168,7 @@ export default function Presale({ setActive, saleType, setSaleObject, token }) {
         return;
       }
       if (whiteListedDates[0] > endDate) {
-        toast.error("Whitelist date should be less than end date and time", {
-          position: toast.POSITION.BOTTOM_RIGHT,
-        });
+        toast.error("Whitelist date should be less than end date and time");
         return;
       }
     }
@@ -177,9 +184,7 @@ export default function Presale({ setActive, saleType, setSaleObject, token }) {
         return;
       }
       if (whiteListedDates[1] > endDate) {
-        toast.error("Whitelist date should be less than end date and time", {
-          position: toast.POSITION.BOTTOM_RIGHT,
-        });
+        toast.error("Whitelist date should be less than end date and time");
         return;
       }
     }
@@ -195,57 +200,53 @@ export default function Presale({ setActive, saleType, setSaleObject, token }) {
         return;
       }
       if (whiteListedDates[2] > endDate) {
-        toast.error("Whitelist date should be less than end date and time", {
-          position: toast.POSITION.BOTTOM_RIGHT,
-        });
+        toast.error("Whitelist date should be less than end date and time");
         return;
       }
     }
     //white listing addresses shouldnt be empty
     if (whiteisting) {
       if (whiteListedAddresses[0] === "") {
-        toast.error("Whitelist address can't be empty", {
-          position: toast.POSITION.BOTTOM_RIGHT,
-        });
+        toast.error("Whitelist address can't be empty");
         return;
       }
     }
     //second round shouldnt be empty if it exists
     if (whiteisting && whiteListedDates.length > 1) {
-      if (whiteListedAddresses[1] === ""||whiteListedAddresses[0] === "") {
-        toast.error("Whitelist address can't be empty", {
-          position: toast.POSITION.BOTTOM_RIGHT,
-        });
+      if (whiteListedAddresses[1] === "" || whiteListedAddresses[0] === "") {
+        toast.error("Whitelist address can't be empty");
         return;
       }
     }
     //third round shouldnt be empty if it exists
     if (whiteisting && whiteListedDates.length > 2) {
-      if (whiteListedAddresses[2] === ""||whiteListedAddresses[1] === ""||whiteListedAddresses[0] === "") {
-        toast.error("Whitelist address can't be empty", {
-          position: toast.POSITION.BOTTOM_RIGHT,
-        });
+      if (
+        whiteListedAddresses[2] === "" ||
+        whiteListedAddresses[1] === "" ||
+        whiteListedAddresses[0] === ""
+      ) {
+        toast.error("Whitelist address can't be empty");
         return;
       }
     }
-    
+    //if white list then set white list dates and addresses else error
+    if (whiteisting) {
+      if (whiteListedAddresses.length > whiteListedDates.length) {
+        toast.error("Please fill all the fields");
+        return;
+      }
+    }
     if (!enoughBalance) {
-      toast.error("Insufficient Balance!", {
-        position: toast.POSITION.BOTTOM_RIGHT,
-      });
+      toast.error("Insufficient Balance!");
       return;
     }
     if (amountLiquidity < 51 || amountLiquidity === undefined) {
-      toast.error("Liquidity should be greater than 50%", {
-        position: toast.POSITION.BOTTOM_RIGHT,
-      });
+      toast.error("Liquidity should be greater than 50%");
       return;
     }
     //listing cant be less than presale rate
     if (listing > presalePrice) {
-      toast.error("Listing rate can't be lower than presale rate", {
-        position: toast.POSITION.BOTTOM_RIGHT,
-      });
+      toast.error("Listing rate can't be lower than presale rate");
       return;
     }
     if (
@@ -260,9 +261,7 @@ export default function Presale({ setActive, saleType, setSaleObject, token }) {
       amountLiquidity === undefined ||
       listing === undefined
     ) {
-      toast.error("Please fill all the fields", {
-        position: toast.POSITION.BOTTOM_RIGHT,
-      });
+      toast.error("Please fill all the fields");
       return;
     }
     let res = false;
@@ -291,7 +290,6 @@ export default function Presale({ setActive, saleType, setSaleObject, token }) {
       closeLoadingModal();
       return;
     }
-
     const presaleObject = {
       currency: currencies[currencySelected - 1],
       dex: dexes[dex - 1],
@@ -312,6 +310,8 @@ export default function Presale({ setActive, saleType, setSaleObject, token }) {
       lockup: lockup,
       owner: account,
       isFinished: false,
+      whiteListedAddresses: whiteListedAddresses,
+      whiteListedDates: whiteListedDates,
     };
 
     setSaleObject(presaleObject);
@@ -418,6 +418,10 @@ export default function Presale({ setActive, saleType, setSaleObject, token }) {
   return (
     <>
       <div className="w-full">
+        {/* sticky navbar */}
+        <div className="sticky top-0 z-10 w-full bg-white dark:bg-dark-2 border-b border-gray-200 dark:border-dark-3">
+          <ToastContainer className="!absolute"/>
+        </div>
         <HeadingTags name={"Choose Currency"} required />
 
         {/* Currency Options */}
@@ -553,17 +557,18 @@ export default function Presale({ setActive, saleType, setSaleObject, token }) {
                 </div>
               </div>
             ))}
-              <button
+            <button
               className="bg-primary-green hover:opacity-40  text-white font-gilroy font-bold px-8 py-3 rounded-md mt-5"
-              onClick={handleAddWhitelistField}>
-                Add Whitelist Field
-              </button>         
-              <button 
+              onClick={handleAddWhitelistField}
+            >
+              Add Whitelist Field
+            </button>
+            <button
               className="bg-primary-green hover:opacity-40  text-white font-gilroy font-bold px-8 py-3 rounded-md mt-5 float-right"
-              onClick={handleRemoveWhitelistField}>
-                Remove Whitelist Field
-              </button>
-
+              onClick={handleRemoveWhitelistField}
+            >
+              Remove Whitelist Field
+            </button>
           </>
         )}
 
@@ -692,7 +697,9 @@ export default function Presale({ setActive, saleType, setSaleObject, token }) {
           </div>
         </div>
       </div>
-      <ToastContainer />
+      {/* <div className="fixed ">
+        <ToastContainer />
+      </div> */}
     </>
   );
 }

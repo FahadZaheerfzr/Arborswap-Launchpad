@@ -15,10 +15,9 @@ import getSuccessPublic from "utils/successfulPublic";
 import ConfirmModal from "./subComponents/ConfirmModal";
 import getIsFinished from "utils/getFinished";
 import { useModal } from "react-simple-modal-provider";
-import { ToastContainer, toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import PercentFilled from "../Pools/Subcomponents/PercentFilled";
-
 
 export default function AdminPanel({
   icon,
@@ -28,24 +27,23 @@ export default function AdminPanel({
   soft_cap,
   sale,
 }) {
-  const {  library } = useEthers();
+  const { library } = useEthers();
   const [showModal, setShowModal] = useState(false);
   const [isFinished, setIsFinished] = useState(null);
   const [saleInfo, setSaleInfo] = useState(null);
-
+  console.log(sale, "sale")
   //LoadingModal
   const { open: openLoadingModal, close: closeLoadingModal } =
     useModal("LoadingModal");
 
   // console.log("THE SALE WAS FINISHED", isFinished);
 
-  async function getFinished(){
+  async function getFinished() {
     const res = await getIsFinished(sale.saleAddress).then((res) => {
       setIsFinished(res);
     });
-
   }
-  async function getSaleInfo(){
+  async function getSaleInfo() {
     const res = await getSuccessPublic(sale.saleAddress).then((res) => {
       setSaleInfo(res);
     });
@@ -54,16 +52,14 @@ export default function AdminPanel({
   useEffect(() => {
     getFinished();
     getSaleInfo();
-
   }, []);
-  console.log("THE SALE WAS FINISHED", isFinished)
-  console.log("THE SALE WAS saleing", saleInfo)
+  console.log("THE SALE WAS FINISHED", isFinished);
+  console.log("THE SALE WAS saleing", saleInfo);
 
   const withdrawEarnings = async () => {
     setShowModal(false);
     openLoadingModal();
-    if (isFinished[0]===false)
-    {
+    if (isFinished[0] === false) {
       toast.error("The sale is not finished yet");
       setShowModal(false);
       return;
@@ -116,7 +112,6 @@ export default function AdminPanel({
       await tx.wait();
       toast.success("Earnings withdrawn successfully");
       closeLoadingModal();
-      
     } catch (err) {
       toast.error("You Have Already Withdrawn Your Earnings");
       closeLoadingModal();
@@ -187,10 +182,9 @@ export default function AdminPanel({
       console.log(res);
     } catch (err) {
       console.log(err);
-      closeLoadingModal()
+      closeLoadingModal();
     }
     closeLoadingModal();
-
   };
 
   return (
@@ -240,22 +234,25 @@ export default function AdminPanel({
               </span>
             </div>
 
-            <PercentFilled address = {sale.saleAddress} />
+            <PercentFilled address={sale.saleAddress} />
           </div>
         )}
-
-        {status === "Upcoming" && sale.whitelisted != null && (
-          <div className="mt-7">
-            <PreviewDetails name={"Address Whitelisted"} value={"1,874"} />
-          </div>
-        )}
+        {status === "Upcoming" &&
+          (sale.whitelisting != null || sale.whitelisting !== false) &&
+          sale.whiteListedAddresses.map((address) => {
+            return (
+              <div className="mt-7">
+                <PreviewDetails name={"Whitelisted Address"} value={address} />
+              </div>
+            );
+          })}
 
         {status !== "Upcoming" && (
           <div className="mt-7">
             <PreviewDetails name={"Contributors"} value={"1,041"} />
           </div>
         )}
-        {saleInfo !=null && 
+        {saleInfo != null &&
           (saleInfo === false ? (
             <div className="mt-7">
               <button
@@ -272,11 +269,11 @@ export default function AdminPanel({
                 } rounded-md font-bold py-4`}
               >
                 {/* if sale is not finished then show manage adress too */}
-                {status ==="Upcoming" ? "Manage Address" : "Finalize Sale"}
+                {status === "Upcoming" ? "Manage Address" : "Finalize Sale"}
               </button>
             </div>
           ) : null)}
-        {saleInfo!=null &&
+        {saleInfo != null &&
           (saleInfo === true ? (
             <div className="mt-7">
               <button
@@ -298,21 +295,21 @@ export default function AdminPanel({
 
         <ConfirmModal
           runFunction={
-            saleInfo!=null
+            saleInfo != null
               ? saleInfo === true
                 ? withdrawEarnings
                 : finalizeSale
               : finalizeSale
           }
           title={
-            saleInfo!=null
+            saleInfo != null
               ? saleInfo === true
                 ? "Withdraw Earnings"
                 : "Finalize Sale"
               : "Finalize Sale"
           }
           description={
-            saleInfo!=null
+            saleInfo != null
               ? saleInfo === true
                 ? "Are you sure you want to withdraw your earnings?"
                 : "Are you sure you want to finalize the sale?"

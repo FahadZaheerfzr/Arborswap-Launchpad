@@ -39,6 +39,7 @@ export default function PreviewSale({
     useModal("LoadingModal");
   let amt = 0;
 
+
   async function calcMax() {
     const result = await getCalcMax(saleObject, token)
       .then((res) => {
@@ -64,6 +65,7 @@ export default function PreviewSale({
   }, [saleObject]);
 
   useEffect(() => {
+    if(!max) return;
     try {
       console.log(max, "max");
       amt = parseFloat(saleObject.hardCap) + parseFloat(formatBigToNum(max));
