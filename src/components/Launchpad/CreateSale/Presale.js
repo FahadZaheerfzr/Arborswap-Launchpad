@@ -425,7 +425,7 @@ export default function Presale({ setActive, saleType, setSaleObject, token }) {
         <HeadingTags name={"Choose Currency"} required />
 
         {/* Currency Options */}
-        <div className="grid grid-cols-2 md:grid-cols-2 gap-4 mt-4 md:mr-[20%]">
+        <div className="grid grid-cols-2 md:grid-cols-2 gap-4 mt-4">
           {currencies.map((currency) => (
             <CurrencyOptions
               key={currency.id}
@@ -541,14 +541,14 @@ export default function Presale({ setActive, saleType, setSaleObject, token }) {
                   changeState={(newValue) =>
                     handleAddressChange(newValue, index)
                   }
-                  currencies={currencies}
-                  currencySelected={currencySelected}
+                  whitelist = {true}
                   tooltip="Enter addresses separated by comma, to whitelist them for the presale"
                   placeholder="0xaEa574007c8ad33c7f4f7CF4a0d0B6F704ACD59e, ..."
+                  nothing={true}
                 />
                 <div className="mt-2">
                   <CalendarField
-                    heading={`Whitelist end date (UTC) for Address ${
+                    heading={`Whitelist start date (UTC) for Address ${
                       index + 1
                     }`}
                     setFunction={handleDateChange}
@@ -579,7 +579,7 @@ export default function Presale({ setActive, saleType, setSaleObject, token }) {
               <HeadingTags name={"Choose DEX to be listed on"} required />
             </div>
 
-            <div className="flex items-center gap-5 mt-10 md:mr-[10%]">
+            <div className="flex items-center gap-5 mt-10 ">
               <DexOptions
                 selected={dex === 1}
                 id={1}
