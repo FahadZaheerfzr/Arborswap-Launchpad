@@ -125,7 +125,7 @@ export const deployPublicSale = async (
       dex: saleObject.dex,
       whiteisting: saleObject.whiteisting,
       whiteListedAddresses: saleObject.whiteListedAddresses,
-      whiteListedEndDates: saleObject.whiteListedEndDates,
+      // whiteListedEndDates: saleObject.whiteListedEndDates,
       owner: account,
       isFinished: false,
     };
