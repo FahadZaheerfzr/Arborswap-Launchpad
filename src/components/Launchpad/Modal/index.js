@@ -40,12 +40,9 @@ export default function Modal({
   const [bnbUSD, setBnbUSD] = useState(317);
   const [usdAmount, setUsdAmount] = useState(sale.minAllocation * bnbUSD);
   const [priceInBNB, setPriceInBNB] = useState(null);
-  const sale_info_public_erc = usePublicErcSaleInfo(sale.saleAddress);
+  // const sale_info_public_erc = usePublicErcSaleInfo(sale.saleAddress);
 
-  const sale_info_private = usePrivateSaleInfo(sale.saleAddress);
-  const sale_info_private_erc = usePrivateErcSaleInfo(sale.saleAddress);
-  const sale_info_fairlaunch = useFairlaunchSaleInfo(sale.saleAddress);
-  const sale_info_fairlaunch_erc = useFairlaunchErcSaleInfo(sale.saleAddress);
+
   let account = "";
   const [balanceBNB, setBalanceBNB] = useState(null);
   const [balance, setBalance] = useState(0);
@@ -104,6 +101,7 @@ export default function Modal({
   }, [balanceBNB]);
 
   async function getPrice() {
+    if (!saleInfoPublic) return;
     const res = await saleInfoPublic.totalBNBRaised;
     setPriceInBNB(res);
   }
@@ -114,12 +112,12 @@ export default function Modal({
   useEffect(() => {
     if (priceInBNB === null) return;
     if (
-      saleInfoPublic &&
-      sale_info_public_erc &&
-      sale_info_private &&
-      sale_info_private_erc &&
-      sale_info_fairlaunch &&
-      sale_info_fairlaunch_erc
+      saleInfoPublic
+      // sale_info_public_erc &&
+      // sale_info_private &&
+      // sale_info_private_erc &&
+      // sale_info_fairlaunch &&
+      // sale_info_fairlaunch_erc
     ) {
       if (sale.currency.symbol === "BNB") {
         if (sale.saleType === "standard") {
@@ -149,12 +147,13 @@ export default function Modal({
           //   "sale_info_public_erc",
           //   sale_info_public_erc.tokenPriceInERC20
           // );
-          const price = formatBigToNum(
-            sale_info_public_erc.tokenPriceInERC20.toString(),
-            18,
-            4
-          );
-          setTokenPrice(price);
+          // const price = formatBigToNum(
+          //   sale_info_public_erc.tokenPriceInERC20.toString(),
+          //   18,
+          //   4
+          // );
+          // setTokenPrice(price);
+          toast.error("Please buy with BNB");
         }
         // else if (sale.saleType === "private") {
         //   const price = formatBigToNum(
@@ -174,7 +173,7 @@ export default function Modal({
         // }
       }
     }
-  }, [priceInBNB, sale_info_public_erc]);
+  }, [priceInBNB, saleInfoPublic]);
 
   const convertBNBtoUSD = async () => {
     try {
