@@ -3,8 +3,10 @@ import BaseLayout from '../../components/BaseLayout/BaseLayout'
 import Panel from '../../components/Launchpad/CreateSale/Panel'
 import LaunchpadSVG from '../../svgs/Sidebar/launchpad'
 import { useState } from 'react'
+import { useDocumentTitle } from 'hooks/setDocumentTitle'
 
 export default function CreateSale() {
+    useDocumentTitle("Create Sale")
     const initSaleState = {
         name: '',
         isValid: false,

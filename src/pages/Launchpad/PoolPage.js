@@ -7,6 +7,7 @@ import Modal from "components/Launchpad/Modal";
 import axios from "axios";
 import { useModal } from "react-simple-modal-provider";
 import { BACKEND_URL } from "config/constants/LaunchpadAddress";
+import { useDocumentTitle } from "hooks/setDocumentTitle";
 
 export default function PoolPage() {
   const { id } = useParams();
@@ -25,7 +26,7 @@ export default function PoolPage() {
       .get(`${BACKEND_URL}/api/sale/${id}`)
       .then((res) => {
         setPool(res.data);
-
+        document.title = res.data.sale.name;
         // Check if the user is admin
         if (account && res.data.sale.owner.toLowerCase() === account.toLowerCase()) {
           setAdmin(true);
