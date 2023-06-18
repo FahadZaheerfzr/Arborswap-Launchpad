@@ -43,11 +43,13 @@ export default function PreviewSale({
     const result = await getCalcMax(saleObject, token)
     setMax(result)
   }
-
+  console.log(deployFee)
   async function getFee() {
     const res = await getDeploymentFeePublic()
     setDeployFee(res)
+    setDeploymentFee(ethers.utils.formatEther(res))
   }
+
 
   useEffect(() => {
     calcMax();

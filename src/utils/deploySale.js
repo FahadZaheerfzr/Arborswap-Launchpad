@@ -63,7 +63,39 @@ export const deployPublicSale = async (
   // 2nd - with uints [minParticipation, maxParticipation, lp%, dex listing rate,lpLockPeriod, saleEnd, saleStart, hardCap(tokens), softCap(bnb)]
   let deployedAddress;
   let finalSaleObject;
-  //console the await
+  //console
+  console.log(
+    [
+      routerAddress,
+      adminAddress,
+      token.tokenAddress,
+      account
+    ],
+    [
+      parseEther(saleObject.minAllocation.toString()).toString(),
+      parseEther(saleObject.maxAllocation.toString()).toString(),
+      (saleObject.amountLiquidity * 100).toString(),
+      parseUnits(
+        saleObject.listing.toString(),
+        token.tokenDecimals
+      ).toString(),
+      (saleObject.lockup * 86400).toString(),
+      parseUnits(
+        saleObject.presalePrice.toString(),
+        token.tokenDecimals
+      ).toString(),
+      saleObject.endDate,
+      saleObject.startDate,
+      parseEther(saleObject.hardCap.toString()).toString(),
+      parseEther(saleObject.softCap.toString()).toString(),
+    ],
+    saleObject.unsoldToken === "Burn" ? true : false,
+    {
+      value: utils.parseEther(deploymentFee.toString()),
+      gasLimit: 5000000,
+    }
+  );
+  
   try {
     const tx = await contract.deployNormalSale(
       [routerAddress, adminAddress, token.tokenAddress, account],
@@ -153,6 +185,7 @@ export const deployPublicSale = async (
         closeLoadingModal();
       }
     }
+    else return finalSaleObject
   } catch (error) {
     console.log(error);
     alert("Transaction Failed");

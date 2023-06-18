@@ -219,12 +219,12 @@ export default function AdminPanel({
             <div className="flex items-center justify-between">
               {hard_cap && filled_percent && (
                 <span className="text-xs  text-gray dark:text-gray-dark">
-                  {(hard_cap * (filled_percent / 100)).toLocaleString()} RBA
+                  {(hard_cap * (filled_percent / 100)).toLocaleString()} {sale.currency.symbol}
                 </span>
               )}
 
               <span className="text-xs  text-dim-text dark:text-dim-text-dark">
-                {hard_cap} RBA
+                {hard_cap} {sale.currency.symbol}
               </span>
             </div>
 

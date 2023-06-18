@@ -149,7 +149,7 @@ export default function SaleBox({
           {
             hard_cap && filled_percent!=null?(
               <span className="text-xs font-medium text-gray dark:text-gray-dark">
-                {hard_cap*(filled_percent/100)} {currency.symbol} Raised
+                {(hard_cap*(filled_percent/100)).toFixed(4)} {currency.symbol} Raised
               </span>
             ):(
               <></>
