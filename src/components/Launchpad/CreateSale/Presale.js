@@ -104,33 +104,14 @@ export default function Presale({ setActive, saleType, setSaleObject, token }) {
   const { open: openModal } = useModal("ConnectionModal");
   console.log(connected);
 
-  const handleAddWhitelistField = () => {
-    if (whiteListedAddresses.length < 3) {
-      setWhiteListingCount(whiteListingCount + 1);
-      setWhiteListedAddresses([...whiteListedAddresses, ""]);
-    }
-  };
-  console.log(whiteListedAddresses);
-  const handleRemoveWhitelistField = () => {
-    if (whiteListedAddresses.length > 1) {
-      setWhiteListingCount(whiteListingCount - 1);
-      const updatedAddresses = [...whiteListedAddresses];
-      updatedAddresses.splice(whiteListedAddresses.length - 1, 1);
-      setWhiteListedAddresses(updatedAddresses);
-    }
-    // if (whiteListedDates.length > 1) {
-    //   const updatedDates = [...whiteListedDates];
-    //   updatedDates.splice(index, 1);
-    //   setWhiteListedDates(updatedDates);
-    // }
-  };
 
-  const handleAddressChange = (newValue, index) => {
-    const updatedAddresses = [...whiteListedAddresses];
-    updatedAddresses[index] = newValue;
+  const handleAddressChange = (newValue) => {
+    const addressesArray = newValue.split(',');
+    const updatedAddresses = addressesArray.map((address) => address.trim());
     setWhiteListedAddresses(updatedAddresses);
   };
-
+  console.log(whiteListedAddresses)
+  
   // const handleDateChange = (newDate, index) => {
   //   const updatedDates = [...whiteListedDates];
   //   updatedDates[index] = newDate;
@@ -322,7 +303,7 @@ export default function Presale({ setActive, saleType, setSaleObject, token }) {
       library.getSigner(account)
     );
     const amountRequired = ethers.utils.parseUnits(
-      requiredToken,
+      requiredToken.toString(),
       ethers.BigNumber.from(token.tokenDecimals)
     );
     try {
@@ -350,8 +331,8 @@ export default function Presale({ setActive, saleType, setSaleObject, token }) {
   useEffect(() => {
     if (hardCap > 0 && presalePrice > 0 && saleType === "standard") {
       const reqTokens = hardCap * presalePrice;
-
-      setRequiredToken(reqTokens);
+      const reqTokens2 = hardCap*presalePrice*amountLiquidity
+      setRequiredToken(reqTokens+reqTokens2);
     }
     if (saleType === "private") {
       setRequiredToken(0);
@@ -533,12 +514,11 @@ export default function Presale({ setActive, saleType, setSaleObject, token }) {
         {/* here if whitelisting is enabled, show an input field where addresses can be entered, seperated by comma */}
         {whiteisting && (
           <>
-            {whiteListedAddresses.map((address, index) => (
-              <div className="mt-5" key={index}>
+              <div className="mt-5" >
                 <Input
-                  heading={`Whitelisted Address ${index + 1}`}
+                  heading={`Whitelisted Address`}
                   changeState={(newValue) =>
-                    handleAddressChange(newValue, index)
+                    handleAddressChange(newValue)
                   }
                   whitelist={true}
                   tooltip="Enter addresses to whitelist them for the presale"
@@ -555,21 +535,6 @@ export default function Presale({ setActive, saleType, setSaleObject, token }) {
                   />
                 </div> */}
               </div>
-            ))}
-            <div className="flex lg:flex-row flex-col justify-between mt-5 gap-5">
-              <button
-                className="bg-primary-green hover:opacity-40  text-white font-gilroy font-bold px-2 md:px-5 lg:px-8 py-3 rounded-md mt-5"
-                onClick={handleAddWhitelistField}
-              >
-                Add Whitelist Field
-              </button>
-              <button
-                className="bg-primary-green hover:opacity-40  text-white font-gilroy font-bold px-2 md:px-5 lg:px-8 py-3 rounded-md mt-5 float-right"
-                onClick={handleRemoveWhitelistField}
-              >
-                Remove Whitelist Field
-              </button>
-            </div>
           </>
         )}
 

@@ -95,12 +95,12 @@ export default function PoolsBase({ activeStatus, pools, loading }) {
                     <div className="flex items-center justify-between mt-5">
                       <span className="text-xs  text-gray dark:text-gray-dark">
                         {pool.sale.softCap.toLocaleString()}{" "}
-                        {pool.sale.token.tokenSymbol}
+                        BNB
                         {/* idk where to get filled perccentage */}
                       </span>
 
                       <span className="text-xs  text-dim-text dark:text-dim-text-dark">
-                        {pool.sale.hardCap} {pool.sale.token.tokenSymbol}
+                        {pool.sale.hardCap} BNB
                       </span>
                     </div>
 

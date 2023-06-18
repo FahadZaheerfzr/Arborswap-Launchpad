@@ -10,12 +10,9 @@ import TelegramSVG from "svgs/Socials/telegram";
 import { isValidUrl } from "utils/numberFormat";
 import PreviewHeader from "components/Common/PreviewHeader";
 import DiscordSVG from "svgs/Socials/discord";
+import { toast } from "react-toastify";
 
-export default function ProjectDetails({
-  setActive,
-  setSaleData,
-  saleData,
-}) {
+export default function ProjectDetails({ setActive, setSaleData, saleData }) {
   const { theme } = useContext(ThemeContext);
   const [validWebsite, setValidWebsite] = useState(true);
   const [validTwitter, setValidTwitter] = useState(true);
@@ -37,6 +34,15 @@ export default function ProjectDetails({
   };
 
   const handleSubmit = () => {
+    //if no image or website is provided, display error
+    if (saleData.image === "" ) {
+      toast.error("Please fill in the image field");
+      return;
+    }
+    if (saleData.website === "") {
+      toast.error("Please fill in the website field");
+      return;
+    }
     if (!isValidUrl(saleData.image)) {
       setValid(false);
       return;
@@ -98,11 +104,16 @@ export default function ProjectDetails({
 
     if (isValidUrl(saleData.image) && isValidUrl(saleData.website))
       setActive("Preview");
+    else if (!isValidUrl(saleData.image)) {
+      toast.error("Please fill in the image field correctly");
+    } else if (!isValidUrl(saleData.website)) {
+      toast.error("Please fill in the website field correctly");
+    }
   };
 
   return (
     <div className="w-full p-5 md:p-9 bg-white dark:bg-dark-1 rounded-[10px] ">
-            <>
+      <>
         <div className="flex items-center mt-9">
           <HeadingTags name={"Project Logo"} required />
           <div className="relative">
@@ -115,7 +126,7 @@ export default function ProjectDetails({
               onMouseLeave={handleMouseLeave}
             />
             {/* tooltip to appear above img info tag */}
-            {show.includes('info') && (
+            {show.includes("info") && (
               <div className="absolute z-10 bg-dim-text bg-opacity-50 dark:bg-white rounded-[10px] shadow-lg p-1 bottom-3 left-5 w-36">
                 <p className="text-light-text dark:text-dark-text font-extralight text-sm">
                   This is the logo of your project (atleast 1000px for quality)
@@ -125,7 +136,11 @@ export default function ProjectDetails({
           </div>
         </div>
         <div className="mt-5 flex items-center justify-between gap-5 cursor-pointer">
-          <div className={`flex items-center justify-between bg-[#FAF8F5] border dark:bg-dark-2 px-5 py-4 rounded-md w-[100%] ${valid ? 'border-dim-text' : 'border-red-500'}`}>
+          <div
+            className={`flex items-center justify-between bg-[#FAF8F5] border dark:bg-dark-2 px-5 py-4 rounded-md w-[100%] ${
+              valid ? "border-dim-text" : "border-red-500"
+            }`}
+          >
             <input
               type="text"
               placeholder="Ex: https://..."
@@ -360,14 +375,13 @@ export default function ProjectDetails({
             }
             placeholder="Ex: https://discord.com/.."
           />
-          <DiscordSVG 
+          <DiscordSVG
             className="w-5 h-5"
             outer={`${theme === "dark" ? "#fff" : "#464754"}`}
             inner={`${theme === "dark" ? "#464754" : "#fff"}`}
           />
         </div>
       </div>
-      
 
       <div className="mt-10">
         <div className="flex justify-end items-center mb-10">

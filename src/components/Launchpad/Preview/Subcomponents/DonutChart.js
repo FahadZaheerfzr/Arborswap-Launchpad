@@ -10,9 +10,10 @@ const labels = [
     "Burned"
 ]
 
-export default function DonutChart({presale, liquidity, burned, locked, unlocked}) {
+export default function DonutChart({presale, liquidity, burned, locked, unlocked,supply}) {
     //liquidity to integer
-    const liquidityFloat = parseFloat(liquidity)
+    const liquidityFloat = parseFloat(liquidity/supply*100)
+    console.log(liquidityFloat)
     const series = [presale, liquidityFloat, 
         // locked, unlocked, burned
     ]

@@ -58,12 +58,12 @@ export const deployPublicSale = async (
   );
 
   const saleId = await contract.getNumberOfSalesDeployed();
-
   const routerAddress = ROUTER_ADDRESS;
   const adminAddress = ADMIN_ADDRESS;
   // 2nd - with uints [minParticipation, maxParticipation, lp%, dex listing rate,lpLockPeriod, saleEnd, saleStart, hardCap(tokens), softCap(bnb)]
   let deployedAddress;
   let finalSaleObject;
+  //console the await
   try {
     const tx = await contract.deployNormalSale(
       [routerAddress, adminAddress, token.tokenAddress, account],

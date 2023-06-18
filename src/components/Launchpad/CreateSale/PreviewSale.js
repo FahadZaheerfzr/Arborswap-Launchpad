@@ -31,33 +31,22 @@ export default function PreviewSale({
   const [deploymentFee, setDeploymentFee] = useState(0.0);
   const { account, library } = useEthers();
   const [max, setMax] = useState(null); 
-  let deployFee;
+  const [deployFee, setDeployFee] = useState(null);
   const [startTime, setStartTime] = useState(null);
   const [endTime, setEndTime] = useState(null);
+  const [amt, setAmt] = useState(0);
   //calc max takes, hardcap, tokenPrice, listingPrice, tokenDecimals
   const { open: openLoadingModal, close: closeLoadingModal } =
     useModal("LoadingModal");
-  let amt = 0;
-
 
   async function calcMax() {
     const result = await getCalcMax(saleObject, token)
-      .then((res) => {
-        setMax(res);
-      })
-      .catch((err) => {
-        console.log(err);
-      });
+    setMax(result)
   }
 
   async function getFee() {
-    deployFee = await getDeploymentFeePublic()
-      .then((res) => {
-        setDeploymentFee(ethers.utils.formatEther(res));
-      })
-      .catch((err) => {
-        console.log(err);
-      });
+    const res = await getDeploymentFeePublic()
+    setDeployFee(res)
   }
 
   useEffect(() => {
@@ -67,12 +56,11 @@ export default function PreviewSale({
   useEffect(() => {
     if(!max) return;
     try {
-      amt = parseFloat(saleObject.hardCap) + parseFloat(formatBigToNum(max));
+      setAmt(parseFloat(saleObject.hardCap) + parseFloat(formatBigToNum(max)))
     } catch (err) {
       console.log(err);
     }
   }, [max]);
-
 
 
   useEffect(() => {}, [startTime]);

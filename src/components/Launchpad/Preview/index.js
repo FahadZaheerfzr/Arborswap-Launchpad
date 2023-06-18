@@ -36,12 +36,11 @@ export default function Preview({
   presalePrice,
   liquidity,
   lockup,
-  status,
 }) {
   const { theme } = useContext(ThemeContext);
   const [slide, setSlide] = useState("Presale");
   const supply = parseFloat(token.tokenSupply) / 10 ** token.tokenDecimals;
-  console.log(hard_cap*liquidity*presalePrice)
+  // console.log(supply)
   return (
     <div className="px-9 py-9 my-4">
       <Info
@@ -126,11 +125,11 @@ export default function Preview({
             value={pool.dex.name}
             icon={pool.dex.icon}
           />
-          {liquidity && status==="Ended" &&(
+          {liquidity  &&(
             <PreviewDetails
               name={"Tokens for Liquidity"}
               value={
-                ((hard_cap*liquidity*presalePrice).toFixed(4)).toString() +
+                ((hard_cap*liquidity*presalePrice).toFixed(2)).toString() +
                 " " +
                 token.tokenSymbol
               }
@@ -188,7 +187,8 @@ export default function Preview({
               <div className="w-full ">
                 <DonutChart
                   presale={pool.presalePrice * hard_cap}
-                  liquidity={(hard_cap*liquidity*presalePrice).toFixed(4)}
+                  liquidity={((hard_cap*liquidity*presalePrice))}
+                  supply = {supply}
                   burned={pool.burned}
                   locked={pool.locked}
                   unlocked={pool.unlocked}

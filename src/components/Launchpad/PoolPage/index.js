@@ -69,7 +69,6 @@ export default function PoolPageBase({ pool, showModal, admin }) {
               unsold_tokens={pool.unsoldToken}
               liquidity={pool.amountLiquidity}
               lockup={pool.lockup}
-              status={status&& status}
             />
           </div>
 
