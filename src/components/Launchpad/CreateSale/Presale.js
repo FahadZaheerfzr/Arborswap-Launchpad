@@ -222,7 +222,7 @@ export default function Presale({ setActive, saleType, setSaleObject, token }) {
       return;
     }
     //listing cant be less than presale rate
-    if (listing > presalePrice) {
+    if (listing < presalePrice) {
       toast.error("Listing rate can't be lower than presale rate");
       return;
     }

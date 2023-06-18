@@ -130,7 +130,7 @@ export default function Preview({
             <PreviewDetails
               name={"Tokens for Liquidity"}
               value={
-                (parseInt(listingPrice*liquidity)).toString() +
+                (parseInt(listingPrice*liquidity)).toLocaleString() +
                 " " +
                 token.tokenSymbol
               }
@@ -139,7 +139,7 @@ export default function Preview({
           {hard_cap && presalePrice && (
             <PreviewDetails
               name={"Tokens for Presale"}
-              value={hard_cap * presalePrice + " " + token.tokenSymbol}
+              value={(hard_cap * presalePrice).toLocaleString() + " " + token.tokenSymbol}
             />
           )}
           {liquidity && (

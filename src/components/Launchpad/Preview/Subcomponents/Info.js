@@ -41,7 +41,7 @@ export default function Info({ icon, name, is_private, tags, pool }) {
           {pool.github !== "" &&
           <Link to={pool.github} target="_blank" rel="noopener noreferrer" >
           <GithubSVG
-            className="w-5 h-5"
+            className="w-5 h-5 hidden md:block  "
             outer={`${theme === "dark" ? "#fff" : "#464754"}`}
             inner={`${theme === "dark" ? "#464754" : "#fff"}`}
           />
@@ -67,7 +67,7 @@ export default function Info({ icon, name, is_private, tags, pool }) {
           <DiscordSVG className="fill-dark-text dark:fill-light-text hidden md:block" />
           </Link>
         }
-        <Options width={'w-7'} height={'h-7'} color={'[#FAF8F5]'} dark_color={'dark-2'} />
+        {/* <Options width={'w-7'} height={'h-7'} color={'[#FAF8F5]'} dark_color={'dark-2'} /> */}
       </div>
     </div>
   )
