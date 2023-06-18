@@ -52,6 +52,7 @@ export default function PoolPageBase({ pool, showModal, admin }) {
             presalePrice={pool.presalePrice}
             symbol={pool.image}
             currency={pool.currency}
+            listingPrice={pool.listing}
               pool={pool}
               name={pool.name}
               icon={pool.image}

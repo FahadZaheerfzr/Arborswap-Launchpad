@@ -10,15 +10,18 @@ const labels = [
     "Burned"
 ]
 
-export default function DonutChart({presale, liquidity, burned, locked, unlocked,supply}) {
+export default function DonutChart({presale, liquidity, burned, locked,supply}) {
     //liquidity to integer
-    const liquidityFloat = parseFloat(liquidity/supply*100)
-    console.log(liquidityFloat)
-    const series = [presale, liquidityFloat, 
-        // locked, unlocked, burned
+    const presalePercent = presale/supply*100
+    const liquidityPercent = (liquidity/supply*100)
+    const unlockedPercent = ((supply-liquidity-presale)/supply*100)
+    const lockedPercent = (locked/supply*100)
+    const burnedPercent = (burned/supply*100)
+    const series = [presalePercent, liquidityPercent ,
+        lockedPercent, unlockedPercent, burnedPercent
     ]
     const options = {
-        colors: ["#307856","#585B79","#E56060","#239C63","#C89211"],
+        colors: ["#307856","#585B79","#E56060","#F8CF6B","#C89211"],
         labels: labels,
         plotOptions: {
             pie: {
@@ -51,7 +54,7 @@ export default function DonutChart({presale, liquidity, burned, locked, unlocked
             width: 0
         },
         fill: {
-            colors: ["#307856","#585B79","#E56060","#239C63","#C89211"]
+            colors: ["#307856","#585B79","#E56060","#F8CF6B","#C89211"]
         },
         dataLabels: {
             enabled: false

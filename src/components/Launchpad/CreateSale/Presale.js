@@ -331,7 +331,8 @@ export default function Presale({ setActive, saleType, setSaleObject, token }) {
   useEffect(() => {
     if (hardCap > 0 && presalePrice > 0 && saleType === "standard") {
       const reqTokens = hardCap * presalePrice;
-      const reqTokens2 = hardCap*presalePrice*amountLiquidity
+      const reqTokens2 = listing * amountLiquidity;
+      console.log(reqTokens, reqTokens2);
       setRequiredToken(reqTokens+reqTokens2);
     }
     if (saleType === "private") {

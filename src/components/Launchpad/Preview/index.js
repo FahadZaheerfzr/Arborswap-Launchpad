@@ -34,6 +34,7 @@ export default function Preview({
   vesting_release,
   unsold_tokens,
   presalePrice,
+  listingPrice,
   liquidity,
   lockup,
 }) {
@@ -129,7 +130,7 @@ export default function Preview({
             <PreviewDetails
               name={"Tokens for Liquidity"}
               value={
-                ((hard_cap*liquidity*presalePrice).toFixed(2)).toString() +
+                (parseInt(listingPrice*liquidity)).toString() +
                 " " +
                 token.tokenSymbol
               }
@@ -187,19 +188,19 @@ export default function Preview({
               <div className="w-full ">
                 <DonutChart
                   presale={pool.presalePrice * hard_cap}
-                  liquidity={((hard_cap*liquidity*presalePrice))}
+                  liquidity={((pool.listing*liquidity))}
                   supply = {supply}
-                  burned={pool.burned}
-                  locked={pool.locked}
-                  unlocked={pool.unlocked}
+                  burned={pool.burned || 0}
+                  locked={pool.locked || 0}
                 />
               </div>
               <div className="w-full pl-16">
                 <Labels color={"#307856"} text={"Presale"} />
                 <Labels color={"#585B79"} text={"Liquidity"} />
+                <Labels color={"#F8CF6B"} text={"Unlocked"} />
                 {/* <Labels color={"#C89211"} text={"Locked"} />
                                 <Labels color={"#E56060"} text={"Burned"} />                                
-                                <Labels color={"#239C63"} text={"Unlocked"} /> */}
+                                 */}
               </div>
             </div>
           </div>
