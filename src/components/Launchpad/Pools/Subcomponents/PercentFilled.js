@@ -51,7 +51,7 @@ export default function PercentFilled({ address, setFilled = () => {}, item, sho
         setFilledPercent(newPercent);
         setFilled(newPercent);
         //make request to server if newPercent is 100
-        if (parseFloat(newPercent) === 100) {
+        if (parseInt(newPercent) === 100) {
           store();
         }
       } catch (err) {

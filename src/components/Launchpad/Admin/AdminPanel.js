@@ -27,7 +27,6 @@ export default function AdminPanel({
   finished,
   sale,
 }) {
-  console.log(filled_percent)
   const { library } = useEthers();
   const [showModal, setShowModal] = useState(false);
   const [isFinished, setIsFinished] = useState(null);
@@ -165,6 +164,7 @@ export default function AdminPanel({
     try {
       const tx = await contract.finishSale();
       await tx.wait();
+      window.location.reload();
     } catch (err) {
       //      alert("Something went wrong");
       closeLoadingModal();
@@ -252,7 +252,7 @@ export default function AdminPanel({
           (saleInfo === false ? (
             <div className="mt-7">
               <button
-                disabled={status === "Upcoming" && status === "Live"}
+                disabled={status === "Upcoming" && status === "Live" && !finished}
                 onClick={() => {
                   if (status === "Ended" || finished) {
                     setShowModal(true);
@@ -261,7 +261,10 @@ export default function AdminPanel({
                 className={`w-full ${
                   status === "Upcoming"
                     ? "bg-light dark:bg-dark text-dark-text dark:text-light-text"
-                    : "bg-primary-green text-white opacity-50"
+                    : 
+                    status === "Live" && !finished?
+                    "bg-primary-green text-white opacity-50"
+                    : "bg-primary-green text-white"
                 } rounded-md font-bold py-4`}
               >
                 {/* if sale is not finished then show manage adress too */}
@@ -277,7 +280,7 @@ export default function AdminPanel({
                 className={`w-full ${
                   status === "Upcoming"
                     ? "bg-light dark:bg-dark text-dark-text dark:text-light-text"
-                    : "bg-primary-green text-white opacity-50"
+                    : "bg-primary-green text-white"
                 } rounded-md font-bold py-4`}
               >
                 Withdraw your Earnings
