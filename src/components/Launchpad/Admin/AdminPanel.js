@@ -31,10 +31,21 @@ export default function AdminPanel({
   const [showModal, setShowModal] = useState(false);
   const [isFinished, setIsFinished] = useState(null);
   const [saleInfo, setSaleInfo] = useState(null);
+  const [contributors, setContributors] = useState(null);
   //LoadingModal
   const { open: openLoadingModal, close: closeLoadingModal } =
     useModal("LoadingModal");
 
+  
+  const getContributors = async () => {
+    const contract = new Contract(
+      sale.saleAddress,
+      PublicSaleAbi,
+      library.getSigner()
+    );
+    const contributors = await contract.numberOfParticipants();
+    setContributors(contributors.toNumber());
+  };
 
   async function getFinished() {
     const res = await getIsFinished(sale.saleAddress).then((res) => {
@@ -48,6 +59,7 @@ export default function AdminPanel({
   }
 
   useEffect(() => {
+    getContributors();
     getFinished();
     getSaleInfo();
   }, []);
@@ -244,9 +256,10 @@ export default function AdminPanel({
           })}
 
         {status !== "Upcoming" && (
+          contributors != null &&(
           <div className="mt-7">
-            <PreviewDetails name={"Contributors"} value={"1,041"} />
-          </div>
+            <PreviewDetails name={"Contributors"} value={contributors} />
+          </div>)
         )}
         {saleInfo != null &&
           (saleInfo === false ? (
