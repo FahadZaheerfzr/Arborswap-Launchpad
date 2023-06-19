@@ -33,7 +33,7 @@ export default function PercentFilled({ address, setFilled = () => {}, item, sho
           visible: false,
         }
       );
-      window.location.reload();
+      // window.location.reload();
     } catch (err) {
       console.log(err);
     }

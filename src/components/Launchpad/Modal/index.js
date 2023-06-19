@@ -273,7 +273,6 @@ export default function Modal({
       }
       closeLoadingModal();
       toast.success("Transaction successful");
-      window.location.reload();
       showModal(false);
     } catch (err) {
       toast.error("Transaction failed");
