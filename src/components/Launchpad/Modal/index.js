@@ -24,6 +24,7 @@ import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import getAmountParticipated from "utils/getAmountParticipated";
 import Web3 from "web3";
+import { useModal } from "react-simple-modal-provider";
 
 export default function Modal({
   showModal,
@@ -34,14 +35,14 @@ export default function Modal({
   sale,
   // account,
 }) {
-  const [saleInfoPublic, setSaleInfoPublic] = useState(null);
   const { library } = useEthers();
   const [amount, setAmount] = useState(sale.minAllocation);
   const [bnbUSD, setBnbUSD] = useState(317);
   const [usdAmount, setUsdAmount] = useState(sale.minAllocation * bnbUSD);
-  const [priceInBNB, setPriceInBNB] = useState(null);
+  const [tokenPrice, setTokenPrice] = useState(parseFloat(sale.presalePrice));
+  const { open: openLoadingModal, close: closeLoadingModal } =
+  useModal("LoadingModal");
   // const sale_info_public_erc = usePublicErcSaleInfo(sale.saleAddress);
-
 
   let account = "";
   const [balanceBNB, setBalanceBNB] = useState(null);
@@ -72,14 +73,13 @@ export default function Modal({
     connectWallet();
   }, []);
 
-  const [tokenPrice, setTokenPrice] = useState(0);
   const [tokenAmount, setTokenAmount] = useState(0);
 
-  useEffect(() => {
-    const result = getSaleInfo(sale.saleAddress).then((res) => {
-      setSaleInfoPublic(res);
-    });
-  }, []);
+  // useEffect(() => {
+  //   const result = getSaleInfo(sale.saleAddress).then((res) => {
+  //     setSaleInfoPublic(res);
+  //   });
+  // }, []);
 
   useEffect(() => {
 
@@ -100,80 +100,81 @@ export default function Modal({
     }
   }, [balanceBNB]);
 
-  async function getPrice() {
-    if (!saleInfoPublic) return;
-    const res = await saleInfoPublic.totalBNBRaised;
-    setPriceInBNB(res);
-  }
-  useEffect(() => {
-    getPrice();
-  }, [saleInfoPublic]);
+  // async function getPrice() {
+  //   if (!saleInfoPublic) return;
+  //   const res = await saleInfoPublic.totalBNBRaised;
+  //   setPriceInBNB(res);
+  // }
+  // useEffect(() => {
+  //   getPrice();
+  // }, [saleInfoPublic]);
 
-  useEffect(() => {
-    if (priceInBNB === null) return;
-    if (
-      saleInfoPublic
-      // sale_info_public_erc &&
-      // sale_info_private &&
-      // sale_info_private_erc &&
-      // sale_info_fairlaunch &&
-      // sale_info_fairlaunch_erc
-    ) {
-      if (sale.currency.symbol === "BNB") {
-        if (sale.saleType === "standard") {
-          const price = formatBigToNum(priceInBNB?.toString(), 18, 4);
-          setTokenPrice(price);
-        }
-        // else if (sale.saleType === "private") {
-        //   console.log("sale_info_private", sale_info_private)
-        //   const price = formatBigToNum(
-        //     sale_info_private.tokenPriceInBNB.toString(),
-        //     18,
-        //     4
-        //   );
-        //   setTokenPrice(price);
-        // }
-        // else if (sale.saleType === "fairlaunch") {
-        //   const price = formatBigToNum(
-        //     sale_info_fairlaunch.tokenPriceInBNB.toString(),
-        //     18,
-        //     4
-        //   );
-        //   setTokenPrice(price);
-        // }
-      } else {
-        if (sale.saleType === "standard") {
-          // console.log(
-          //   "sale_info_public_erc",
-          //   sale_info_public_erc.tokenPriceInERC20
-          // );
-          // const price = formatBigToNum(
-          //   sale_info_public_erc.tokenPriceInERC20.toString(),
-          //   18,
-          //   4
-          // );
-          // setTokenPrice(price);
-          toast.error("Please buy with BNB");
-        }
-        // else if (sale.saleType === "private") {
-        //   const price = formatBigToNum(
-        //     sale_info_private_erc.tokenPriceInERC20.toString(),
-        //     18,
-        //     4
-        //   );
-        //   setTokenPrice(price);
-        // }
-        // else if (sale.saleType === "fairlaunch") {
-        //   const price = formatBigToNum(
-        //     sale_info_fairlaunch_erc.tokenPriceInERC20.toString(),
-        //     18,
-        //     4
-        //   );
-        //   setTokenPrice(price);
-        // }
-      }
-    }
-  }, [priceInBNB, saleInfoPublic]);
+  // useEffect(() => {
+  //   if (priceInBNB === null) return;
+  //   if (
+  //     saleInfoPublic
+  //     // sale_info_public_erc &&
+  //     // sale_info_private &&
+  //     // sale_info_private_erc &&
+  //     // sale_info_fairlaunch &&
+  //     // sale_info_fairlaunch_erc
+  //   ) {
+  //     if (sale.currency.symbol === "BNB") {
+  //       if (sale.saleType === "standard") {
+  //         console.log(priceInBNB)
+  //         const price = formatBigToNum(priceInBNB?.toString(), 18, 4);
+  //         setTokenPrice(price);
+  //       }
+  //       // else if (sale.saleType === "private") {
+  //       //   console.log("sale_info_private", sale_info_private)
+  //       //   const price = formatBigToNum(
+  //       //     sale_info_private.tokenPriceInBNB.toString(),
+  //       //     18,
+  //       //     4
+  //       //   );
+  //       //   setTokenPrice(price);
+  //       // }
+  //       // else if (sale.saleType === "fairlaunch") {
+  //       //   const price = formatBigToNum(
+  //       //     sale_info_fairlaunch.tokenPriceInBNB.toString(),
+  //       //     18,
+  //       //     4
+  //       //   );
+  //       //   setTokenPrice(price);
+  //       // }
+  //     } else {
+  //       if (sale.saleType === "standard") {
+  //         // console.log(
+  //         //   "sale_info_public_erc",
+  //         //   sale_info_public_erc.tokenPriceInERC20
+  //         // );
+  //         // const price = formatBigToNum(
+  //         //   sale_info_public_erc.tokenPriceInERC20.toString(),
+  //         //   18,
+  //         //   4
+  //         // );
+  //         // setTokenPrice(price);
+  //         toast.error("Please buy with BNB");
+  //       }
+  //       // else if (sale.saleType === "private") {
+  //       //   const price = formatBigToNum(
+  //       //     sale_info_private_erc.tokenPriceInERC20.toString(),
+  //       //     18,
+  //       //     4
+  //       //   );
+  //       //   setTokenPrice(price);
+  //       // }
+  //       // else if (sale.saleType === "fairlaunch") {
+  //       //   const price = formatBigToNum(
+  //       //     sale_info_fairlaunch_erc.tokenPriceInERC20.toString(),
+  //       //     18,
+  //       //     4
+  //       //   );
+  //       //   setTokenPrice(price);
+  //       // }
+  //     }
+  //   }
+  // }, [priceInBNB, saleInfoPublic]);
 
   const convertBNBtoUSD = async () => {
     try {
@@ -246,7 +247,7 @@ export default function Modal({
     );
     // console.log("contract", contract);
     const amountBuy = parseEther(amount.toString()).toString();
-
+      openLoadingModal();
     try {
       if (sale.currency.symbol !== "BNB") {
         const approvalContract = new Contract(
@@ -270,12 +271,15 @@ export default function Modal({
         const tx = await contract.participate(account, amountBuy);
         await tx.wait();
       }
-
+      closeLoadingModal();
+      toast.success("Transaction successful");
       showModal(false);
     } catch (err) {
       toast.error("Transaction failed");
       // console.log(err);
     }
+    closeLoadingModal();
+
   };
 
   const handleInput = async (e) => {
@@ -298,7 +302,9 @@ export default function Modal({
     let bal = balance;
     const amt = parseFloat(sale.maxAllocation);
     setAmount(amt);
+    console.log(amt)
     setUsdAmount((amt * bnbUSD).toFixed(3));
+    console.log(amt * tokenPrice)
     setTokenAmount((amt * tokenPrice).toFixed(5));
   };
   const handleHalf = () => {
