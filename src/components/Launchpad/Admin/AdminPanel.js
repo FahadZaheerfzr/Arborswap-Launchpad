@@ -27,15 +27,25 @@ export default function AdminPanel({
   finished,
   sale,
 }) {
-  console.log(filled_percent)
   const { library } = useEthers();
   const [showModal, setShowModal] = useState(false);
   const [isFinished, setIsFinished] = useState(null);
   const [saleInfo, setSaleInfo] = useState(null);
+  const [contributors, setContributors] = useState(null);
   //LoadingModal
   const { open: openLoadingModal, close: closeLoadingModal } =
     useModal("LoadingModal");
 
+  
+  const getContributors = async () => {
+    const contract = new Contract(
+      sale.saleAddress,
+      PublicSaleAbi,
+      library.getSigner()
+    );
+    const contributors = await contract.numberOfParticipants();
+    setContributors(contributors.toNumber());
+  };
 
   async function getFinished() {
     const res = await getIsFinished(sale.saleAddress).then((res) => {
@@ -49,6 +59,7 @@ export default function AdminPanel({
   }
 
   useEffect(() => {
+    getContributors();
     getFinished();
     getSaleInfo();
   }, []);
@@ -165,6 +176,7 @@ export default function AdminPanel({
     try {
       const tx = await contract.finishSale();
       await tx.wait();
+      window.location.reload();
     } catch (err) {
       //      alert("Something went wrong");
       closeLoadingModal();
@@ -244,15 +256,16 @@ export default function AdminPanel({
           })}
 
         {status !== "Upcoming" && (
+          contributors != null &&(
           <div className="mt-7">
-            <PreviewDetails name={"Contributors"} value={"1,041"} />
-          </div>
+            <PreviewDetails name={"Contributors"} value={contributors} />
+          </div>)
         )}
         {saleInfo != null &&
           (saleInfo === false ? (
             <div className="mt-7">
               <button
-                disabled={status === "Upcoming" && status === "Live"}
+                disabled={status === "Upcoming" && status === "Live" && !finished}
                 onClick={() => {
                   if (status === "Ended" || finished) {
                     setShowModal(true);
@@ -261,7 +274,10 @@ export default function AdminPanel({
                 className={`w-full ${
                   status === "Upcoming"
                     ? "bg-light dark:bg-dark text-dark-text dark:text-light-text"
-                    : "bg-primary-green text-white opacity-50"
+                    : 
+                    status === "Live" && !finished?
+                    "bg-primary-green text-white opacity-50"
+                    : "bg-primary-green text-white"
                 } rounded-md font-bold py-4`}
               >
                 {/* if sale is not finished then show manage adress too */}
@@ -277,7 +293,7 @@ export default function AdminPanel({
                 className={`w-full ${
                   status === "Upcoming"
                     ? "bg-light dark:bg-dark text-dark-text dark:text-light-text"
-                    : "bg-primary-green text-white opacity-50"
+                    : "bg-primary-green text-white"
                 } rounded-md font-bold py-4`}
               >
                 Withdraw your Earnings
