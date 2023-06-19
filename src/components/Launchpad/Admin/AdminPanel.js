@@ -24,8 +24,10 @@ export default function AdminPanel({
   hard_cap,
   filled_percent,
   soft_cap,
+  finished,
   sale,
 }) {
+  console.log(filled_percent)
   const { library } = useEthers();
   const [showModal, setShowModal] = useState(false);
   const [isFinished, setIsFinished] = useState(null);
@@ -252,7 +254,7 @@ export default function AdminPanel({
               <button
                 disabled={status === "Upcoming" && status === "Live"}
                 onClick={() => {
-                  if (status === "Ended") {
+                  if (status === "Ended" || finished) {
                     setShowModal(true);
                   }
                 }}

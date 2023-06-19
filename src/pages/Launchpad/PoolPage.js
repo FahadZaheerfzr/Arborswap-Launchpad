@@ -69,6 +69,7 @@ export default function PoolPage() {
         >
           <PoolPageBase
             pool={pool.sale}
+            visible={pool.visible}
             showModal={showModal}
             admin={adminMode}
           />

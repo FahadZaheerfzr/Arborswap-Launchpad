@@ -47,8 +47,8 @@ const currencies = [
   },
   {
     id: 3,
-    name: "Gnosis",
-    symbol: "GUSD",
+    name: "USD Coin",
+    symbol: "USDC",
     icon: "/images/cards/gusd.svg",
     address: GUSD_ADDRESS,
   },
@@ -331,9 +331,9 @@ export default function Presale({ setActive, saleType, setSaleObject, token }) {
   useEffect(() => {
     if (hardCap > 0 && presalePrice > 0 && saleType === "standard") {
       const reqTokens = hardCap * presalePrice;
-      const reqTokens2 = listing * amountLiquidity;
+      const reqTokens2 = listing * (amountLiquidity / 100);
       console.log(reqTokens, reqTokens2);
-      setRequiredToken(reqTokens+reqTokens2);
+      setRequiredToken((reqTokens+reqTokens2).toFixed(2));
     }
     if (saleType === "private") {
       setRequiredToken(0);

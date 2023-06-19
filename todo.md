@@ -1,8 +1,4 @@
-1. Loader doesn't go if the transaction is canceled
-2. Go Back on Token Info not working
-3. If already participated, don't let the user participate.
+1. Status on the Home page issue, live, upcoming etc
+2. After participate, refresh the page
+3. Change GUSD to USDC
 4. 
-
-
-Note:
-I have updated the arguments of participate function for ERC sale. Public ERC needs 2 parameters account and amount, please verify it for others.

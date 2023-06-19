@@ -9,7 +9,7 @@ import { useEffect } from 'react';
 import Web3 from 'web3';
 import SaleAbi from '../../../config/abi/PublicSale.json';
 
-export default function PoolPageBase({ pool, showModal, admin }) {
+export default function PoolPageBase({ pool, visible, showModal, admin }) {
   const [status, setStatus] = useState('Live')
   const [liquidityTokens, setLiquidityTokens] = useState(0);
 
@@ -76,7 +76,7 @@ export default function PoolPageBase({ pool, showModal, admin }) {
           <div className="mt-14 md:mt-0 md:w-[35%] ">
 
             {admin ?
-              <AdminPanel  status={status && status} hard_cap={pool.hardCap} filled_percent={pool.filled_percent} soft_cap={pool.softCap} sale={pool} />
+              <AdminPanel  status={status && status} finished={!visible} hard_cap={pool.hardCap} filled_percent={pool.filled_percent} soft_cap={pool.softCap} sale={pool} />
               : <SaleBox hard_cap={pool.hardCap} hard_cap_icon={pool.image} start_date={pool.startDate}
                 min_allocation={pool.minAllocation} max_allocation={pool.maxAllocation} status={status&& status}
                 currency={pool.currency} ends_on={pool.endDate} showModal={showModal} token = {pool.token} presale_address={pool.saleAddress} sale={pool} />
