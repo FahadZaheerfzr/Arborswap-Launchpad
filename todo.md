@@ -1,4 +1,6 @@
-1. Status on the Home page issue, live, upcoming etc
-2. After participate, refresh the page
-3. Change GUSD to USDC
-4. 
+Toast issue
+Scroll then light bg 
+In light, scroll then black line
+Warnings
+Clg remove
+visible false when harcap reach
