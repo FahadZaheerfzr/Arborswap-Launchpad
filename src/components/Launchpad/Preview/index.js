@@ -130,7 +130,7 @@ export default function Preview({
             <PreviewDetails
               name={"Tokens for Liquidity"}
               value={
-                (parseInt(listingPrice*liquidity)).toLocaleString() +
+                ((listingPrice*(liquidity/100))*hard_cap).toLocaleString() +
                 " " +
                 token.tokenSymbol
               }
