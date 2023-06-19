@@ -6,28 +6,13 @@ import { useEffect, useState } from "react";
 import PercentFilled from "./Subcomponents/PercentFilled";
 
 
-export default function PoolsBase({ activeStatus, pools, loading }) {
+export default function PoolsBase({ pools, loading }) {
   //an array of filled percentages
-
-
-  const checkStatus = (item) => {
-    const currentDate = new Date();
-    const startDate = new Date(item.sale.startDate * 1000);
-    const endDate = new Date(item.sale.endDate * 1000);
-    if (currentDate < startDate) {
-      return "Upcoming";
-    } else if (currentDate > startDate && currentDate < endDate && item.visible) {
-      return "Live";
-    } else {
-      return "Ended";
-    }
-  };
   return (
     <div className="grid grid-cols-1 md:grid-cols-3 gap-5 mt-8">
       {!loading &&
         pools?.map(
           (pool) =>
-            checkStatus(pool) === activeStatus && (
               <Link to={`/launchpad/pools/${pool._id}`} key={pool.sale.saleId}>
                 <div className="flex flex-col">
                   <div className="bg-white dark:bg-dark-1 rounded-t-md p-6">
@@ -134,8 +119,8 @@ export default function PoolsBase({ activeStatus, pools, loading }) {
                     </div>
                   </div>
                   {/* here we will check the status of the pool and show the status accordingly */}
-                  {checkStatus(pool) !== "Ended" &&
-                    checkStatus(pool) !== "Upcoming" && (
+                  {pool.sale.status !== "Ended" &&
+                    pool.sale.status !== "Upcoming" && (
                       <div className="bg-[#C89211] bg-opacity-[0.08] py-2 px-6 rounded-b-[20px] flex items-center justify-between">
                         <span className="text-xs font-medium text-gray dark:text-gray-dark">
                           Ends in
@@ -145,7 +130,6 @@ export default function PoolsBase({ activeStatus, pools, loading }) {
                     )}
                 </div>
               </Link>
-            )
         )}
     </div>
   );
