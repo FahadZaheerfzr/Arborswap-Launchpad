@@ -13,7 +13,6 @@ export default function PoolPageBase({ pool, visible, showModal, admin }) {
   const [status, setStatus] = useState('Live')
   const [liquidityTokens, setLiquidityTokens] = useState(0);
 
-
   useEffect(() => {
 
     //if endDate is less than current date, set status to ended
