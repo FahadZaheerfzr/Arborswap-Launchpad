@@ -7,7 +7,7 @@ import Modal from "components/Launchpad/Modal";
 import axios from "axios";
 import { useModal } from "react-simple-modal-provider";
 import { BACKEND_URL } from "config/constants/LaunchpadAddress";
-import { useDocumentTitle } from "hooks/setDocumentTitle";
+import Web3 from "web3";
 
 export default function PoolPage() {
   const { id } = useParams();
@@ -15,33 +15,48 @@ export default function PoolPage() {
   const [modal, showModal] = useState(false);
   const [admin, setAdmin] = useState(false);
   const [adminMode, setAdminMode] = useState(false);
-  const { account } = useEthers();
+  const [account, setAccount] = useState(null);
+  const [saleOwner, setSaleOwner] = useState(null);
   const { open: openLoadingModal, close: closeLoadingModal } =
-  useModal("LoadingModal");
-  
-  useEffect(()  => {
+    useModal("LoadingModal");
+
+
+  useEffect(() => {
+  async function getAccount() {
+    const web3 = new Web3(window.ethereum);
+    try {
+      await window.ethereum.enable();
+      const res = await web3.eth.getAccounts();
+      setAccount(res[0]);
+      if (res[0] === saleOwner) {
+        setAdmin(true);
+        setAdminMode(true);
+      }
+    } catch (e) {
+      console.log(e);
+    }
+  }
+  getAccount();
+  }, [saleOwner]);
+
+  useEffect(() => {
     //get pool data from api
-    openLoadingModal()
+    openLoadingModal();
     axios
       .get(`${BACKEND_URL}/api/sale/${id}`)
       .then((res) => {
         setPool(res.data);
         document.title = res.data.sale.name;
         // Check if the user is admin
-        if (account && res.data.sale.owner.toLowerCase() === account.toLowerCase()) {
-          setAdmin(true);
-          setAdminMode(true);
-        }
-
-        closeLoadingModal()
+        setSaleOwner(res.data.sale.owner);        
+        closeLoadingModal();
       })
       .catch((err) => {
-        // console.log(err);
+        console.log(err);
         //alert ("Something went wrong")
-        closeLoadingModal()
+        closeLoadingModal();
       });
   }, []);
-
   return (
     pool && (
       <div className="w-full">
@@ -53,10 +68,9 @@ export default function PoolPage() {
               from_icon={pool.sale.currency.icon}
               to_icon={pool.sale.token.image}
               to_symbol={pool.sale.token.tokenSymbol}
-              token = {pool.sale.token}
-              sale = {pool.sale}
+              token={pool.sale.token}
+              sale={pool.sale}
               account={account}
-              
             />
           </div>
         )}

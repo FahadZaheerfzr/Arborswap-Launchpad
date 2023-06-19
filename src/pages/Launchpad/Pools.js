@@ -35,7 +35,7 @@ export default function Pools() {
   //we will get data for pools from api
   useEffect(() => {
     //api request to localhost:8080/api/sale
-
+    
     async function getPools() {
       openLoadingModal();
       setLoading(true);

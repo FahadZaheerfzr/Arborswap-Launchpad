@@ -13,7 +13,7 @@ export default function PoolsBase({ pools, loading }) {
       {!loading &&
         pools?.map(
           (pool) =>
-              <Link to={`/launchpad/pools/${pool._id}`} key={pool.sale.saleId}>
+              <Link to={`/launchpad/pools/${pool._id}`} key={pool._id}>
                 <div className="flex flex-col">
                   <div className="bg-white dark:bg-dark-1 rounded-t-md p-6">
                     <div className="flex items-center">
