@@ -272,6 +272,7 @@ export default function Modal({
         await tx.wait();
       }
       closeLoadingModal();
+      window.location.reload()
       toast.success("Transaction successful");
       showModal(false);
     } catch (err) {
