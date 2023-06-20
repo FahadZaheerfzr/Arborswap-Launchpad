@@ -99,6 +99,7 @@ export default function Preview({
             name={"Presale Address"}
             value={address}
             enable_copy
+            address={true}
           />
           <PreviewDetails
             name={"Presale Starts on"}
@@ -184,6 +185,7 @@ export default function Preview({
             name={"Token Address"}
             value={token.tokenAddress}
             enable_copy={true}
+            address={true}
           />
 
           <div className="mt-10">
@@ -200,14 +202,14 @@ export default function Preview({
                   locked={pool.locked || 0}
                 />
               </div>
-              <div className="w-full pl-16">
+              {/* <div className="w-full pl-16">
                 <Labels color={"#307856"} text={"Presale"} />
                 <Labels color={"#585B79"} text={"Liquidity"} />
-                <Labels color={"#F8CF6B"} text={"Unlocked"} />
+                <Labels color={"#F8CF6B"} text={"Unlocked"} /> */}
                 {/* <Labels color={"#C89211"} text={"Locked"} />
                                 <Labels color={"#E56060"} text={"Burned"} />                                
                                  */}
-              </div>
+              {/* </div> */}
             </div>
           </div>
         </div>

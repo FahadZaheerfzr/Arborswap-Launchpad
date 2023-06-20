@@ -25,6 +25,7 @@ export default function SaleBox({
   showModal,
   status,
   token,
+  soft_cap,
   presale_address,
   currency,
   start_date,
@@ -121,7 +122,7 @@ export default function SaleBox({
 
           <div className="ml-3">
             <span className="text-dark-text dark:text-light-text text-2xl font-bold">
-              {hard_cap && hard_cap.toLocaleString() + " " + currency.symbol}
+            {soft_cap} - {hard_cap} {sale.currency.symbol}
             </span>
           </div>
         </div>

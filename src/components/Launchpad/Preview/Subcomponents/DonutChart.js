@@ -1,96 +1,117 @@
+import React, { useContext, useState } from 'react';
+import Chart from 'react-apexcharts';
 import { ThemeContext } from 'context/ThemeContext/ThemeProvider';
-import React, { useContext } from 'react'
-import Chart from "react-apexcharts";
 
+const labels = ['Presale', 'Liquidity', 'Locked', 'Unlocked', 'Burned'];
 
-const labels = [
-    "Presale",
-    "Liquidity",
-    "Locked",
-    "Unlocked",
-    "Burned"
-]
+export default function DonutChart({ presale, liquidity, burned, locked, supply }) {
+  const { theme } = useContext(ThemeContext);
+  const [originalSeries] = useState([
+    presale / supply * 100,
+    parseFloat((liquidity/supply*100).toFixed(2)),
+    parseFloat((locked/supply*100).toFixed(2)),
+    parseFloat(((supply-liquidity-presale)/supply*100).toFixed(2)),
+    parseFloat((burned/supply*100).toFixed(2)),
+  ]);
 
-export default function DonutChart({presale, liquidity, burned, locked,supply}) {
-    const {theme} = useContext(ThemeContext)
+  const [series, setSeries] = useState(originalSeries);
 
-    //liquidity to integer
-    const presalePercent = presale/supply*100
-    const liquidityPercent = parseFloat((liquidity/supply*100).toFixed(2))
-    const unlockedPercent = parseFloat(((supply-liquidity-presale)/supply*100).toFixed(2))
-    const lockedPercent = parseFloat((locked/supply*100).toFixed(2))
-    const burnedPercent = parseFloat((burned/supply*100).toFixed(2))
-    const series = [presalePercent, liquidityPercent ,
-        lockedPercent, unlockedPercent, burnedPercent
-    ]
-    const options = {
-        colors: ["#307856","#585B79","#E56060","#F8CF6B","#C89211"],
-        labels: labels,
-        plotOptions: {
-            pie: {
-                expandOnClick: false,
-                donut: {
-                    labels: {
-                        show: true,
-                        name: {
-                            fontSize: '14px',
-                            fontFamily: 'Gilroy',
-                            fontWeight: 500,
-                            color: theme==="dark"? "#fff" :"#464754",
-                        },
-                        value: {
-                            show: true,
-                            fontSize: '16px',
-                            fontFamily: 'Gilroy',
-                            fontWeight: 700,
-                            color: theme==="dark"? "#fff" :"#464754",
-                            offsetY: 2,
-                            formatter: function (val) {
-                                return val + "%"
-                            }
-                        },
-                    }
-                }
-            }
-        },
-        stroke: {
-            width: 0
-        },
-        fill: {
-            colors: ["#307856","#585B79","#E56060","#F8CF6B","#C89211"]
-        },
-        dataLabels: {
-            enabled: false
-        },
-        chart: {
-            type: 'donut',
-        },
-
-        responsive: [{
-            breakpoint: 480,
-            options: {
-                chart: {
-                    width: 200
-                },
-                legend: {
-
-                    position: 'bottom'
-                }
-            }
-        }],
-        legend: {
-            show: false,
-        },
-        tooltip:{
-            enabled: false,
-        }
+  const handleClick = (index) => {
+    const updatedSeries = [...series];
+    if (updatedSeries[index] === 0) {
+      updatedSeries[index] = originalSeries[index];
+    } else {
+      updatedSeries[index] = 0;
     }
-    return (
-        <Chart
-            options={options}
-            series={series}
-            type="donut"
-            width="300"
-        />
-    )
+    setSeries(updatedSeries);
+  };
+
+  const options = {
+    colors: ['#307856', '#585B79', '#E56060', '#F8CF6B', '#C89211'],
+    labels: labels,
+    plotOptions: {
+      pie: {
+        expandOnClick: false,
+        donut: {
+          labels: {
+            show: true,
+            name: {
+              fontSize: '14px',
+              fontFamily: 'Gilroy',
+              fontWeight: 500,
+              color: theme === 'dark' ? '#fff' : '#464754',
+            },
+            value: {
+              show: true,
+              fontSize: '16px',
+              fontFamily: 'Gilroy',
+              fontWeight: 700,
+              color: theme === 'dark' ? '#fff' : '#464754',
+              offsetY: 2,
+              formatter: function (val) {
+                return val + '%';
+              },
+            },
+          },
+        },
+      },
+    },
+    stroke: {
+      width: 0,
+    },
+    fill: {
+      colors: ['#307856', '#585B79', '#E56060', '#F8CF6B', '#C89211'],
+    },
+    dataLabels: {
+      enabled: false,
+    },
+    chart: {
+      type: 'donut',
+    },
+    responsive: [
+      {
+        breakpoint: 480,
+        options: {
+          chart: {
+            width: 200,
+          },
+          legend: {
+            position: 'bottom',
+          },
+        },
+      },
+    ],
+    legend: {
+      show: false,
+    },
+    tooltip: {
+      enabled: false,
+    },
+  };
+
+  return (
+    <div className="flex">
+      <Chart options={options} series={series} type="donut" width="300" />
+      <div className="ml-4">
+        {labels.map((label, index) => (
+          <div key={index} className="flex items-center mb-2">
+            <div
+              className="w-4 h-4 rounded-md mr-2 cursor-pointer"
+              style={{
+                backgroundColor: options.colors[index],
+                opacity: series[index] === 0 ? 0.5 : 1,
+              }}
+              onClick={() => handleClick(index)}
+            ></div>
+            <span
+            className={`font-gilroy font-semibold ${theme === 'dark' ? 'text-light-text' : 'text-dark-text'} ${series[index] === 0 ? 'line-through' : ''}`}
+            >
+              {label}
+            </span>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+  
 }
