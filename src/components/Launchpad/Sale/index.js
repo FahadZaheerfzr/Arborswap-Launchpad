@@ -29,6 +29,7 @@ export default function SaleBox({
   currency,
   start_date,
   sale,
+  visible,
 }) {
   const [filled_percent, setFilledPercent] = useState(0);
   const [showModal2, setShowModal2] = useState(false);
@@ -201,7 +202,7 @@ export default function SaleBox({
             </button>
           </div>
         )}
-        {status !== "Upcoming" && status !== "Ended" && (
+        {status !== "Upcoming" && status !== "Ended" &&  visible!==false&&(
           <>
             <div className="flex justify-center mt-7">
               <span className="text-sm font-medium text-gray dark:text-gray-dark ">
@@ -230,7 +231,7 @@ export default function SaleBox({
 
         {/* if sale ended then just write Sale has ended */}
         {/* if sale is live then show timer */}
-        {status !== "Ended" && status !== "Upcoming" && (
+        {status !== "Ended" && status !== "Upcoming" && visible!==false &&(
           <Timer date={new Date(ends_on * 1000)} />
         )}
       </div>

@@ -13,8 +13,7 @@ import { formatBigToNum } from "utils/numberFormat";
 import { Link } from "react-router-dom";
 import GithubSVG from "svgs/Socials/github";
 import { ThemeContext } from "context/ThemeContext/ThemeProvider";
-
-
+import YouTubeEmbed from "./Subcomponents/YoutubeImbed";
 
 export default function Preview({
   pool,
@@ -86,6 +85,9 @@ export default function Preview({
       <div className="mt-10">
         <span className="font-medium text-sm text-gray dark:text-gray-dark">
           {description}
+          {pool.youtube && pool.youtube !== "" && (
+            <YouTubeEmbed videoUrl={pool.youtube} />
+          )}
         </span>
       </div>
 
@@ -126,11 +128,11 @@ export default function Preview({
             value={pool.dex.name}
             icon={pool.dex.icon}
           />
-          {liquidity  &&(
+          {liquidity && (
             <PreviewDetails
               name={"Tokens for Liquidity"}
               value={
-                ((listingPrice*(liquidity/100))*hard_cap).toLocaleString() +
+                (listingPrice * (liquidity / 100) * hard_cap).toLocaleString() +
                 " " +
                 token.tokenSymbol
               }
@@ -139,7 +141,11 @@ export default function Preview({
           {hard_cap && presalePrice && (
             <PreviewDetails
               name={"Tokens for Presale"}
-              value={(hard_cap * presalePrice).toLocaleString() + " " + token.tokenSymbol}
+              value={
+                (hard_cap * presalePrice).toLocaleString() +
+                " " +
+                token.tokenSymbol
+              }
             />
           )}
           {liquidity && (
@@ -188,8 +194,8 @@ export default function Preview({
               <div className="w-full ">
                 <DonutChart
                   presale={pool.presalePrice * hard_cap}
-                  liquidity={((pool.listing*liquidity))}
-                  supply = {supply}
+                  liquidity={pool.listing * liquidity}
+                  supply={supply}
                   burned={pool.burned || 0}
                   locked={pool.locked || 0}
                 />

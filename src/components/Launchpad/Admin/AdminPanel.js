@@ -26,6 +26,7 @@ export default function AdminPanel({
   soft_cap,
   finished,
   sale,
+  objId,
 }) {
   const { library } = useEthers();
   const [showModal, setShowModal] = useState(false);
@@ -185,9 +186,11 @@ export default function AdminPanel({
 
     //update the isFinised in database
     try {
-      const res = await axios.put(`${BACKEND_URL}/api/sale/${sale.saleId}`, {
+      const res = await axios.put(`${BACKEND_URL}/api/sale/${objId}`, {
         isFinished: true,
       });
+      toast.success("Sale Finalized Successfully");
+      console.log(res)
     } catch (err) {
       console.log(err);
       closeLoadingModal();
@@ -301,6 +304,7 @@ export default function AdminPanel({
             </div>
           ) : null)}
       </div>
+      
       {showModal && (
         // in this pass withdrawEarnings function if saleInfo is not null and true
         // else pass finalizeSale function

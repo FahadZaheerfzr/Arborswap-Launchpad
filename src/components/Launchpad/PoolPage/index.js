@@ -9,7 +9,7 @@ import { useEffect } from 'react';
 import Web3 from 'web3';
 import SaleAbi from '../../../config/abi/PublicSale.json';
 
-export default function PoolPageBase({ pool, visible, showModal, admin }) {
+export default function PoolPageBase({ pool, visible, showModal, admin,objId ,isFinished}) {
   const [status, setStatus] = useState('Live')
   const [liquidityTokens, setLiquidityTokens] = useState(0);
 
@@ -41,7 +41,7 @@ export default function PoolPageBase({ pool, visible, showModal, admin }) {
     } 
   }, [pool])
 
-  // console.log(pool)
+  console.log(pool, 'pool')
   return (
     pool && (
       <div className="w-full flex justify-center">
@@ -75,20 +75,20 @@ export default function PoolPageBase({ pool, visible, showModal, admin }) {
           <div className="mt-14 md:mt-0 md:w-[35%] ">
 
             {admin ?
-              <AdminPanel  status={status && status} finished={!visible} hard_cap={pool.hardCap} filled_percent={pool.filled_percent} soft_cap={pool.softCap} sale={pool} />
+              <AdminPanel  status={status && status} finished={!visible} hard_cap={pool.hardCap} filled_percent={pool.filled_percent} soft_cap={pool.softCap} sale={pool} objId={objId} />
               : <SaleBox hard_cap={pool.hardCap} hard_cap_icon={pool.image} start_date={pool.startDate}
                 min_allocation={pool.minAllocation} max_allocation={pool.maxAllocation} status={status&& status}
-                currency={pool.currency} ends_on={pool.endDate} showModal={showModal} token = {pool.token} presale_address={pool.saleAddress} sale={pool} />
+                currency={pool.currency} ends_on={pool.endDate} showModal={showModal} token = {pool.token} presale_address={pool.saleAddress} sale={pool} visible={visible}/>
             }
             {
-              admin && pool.status === 'Ended' &&
+              admin && (pool.status === 'Ended'|| visible===false) &&
               <div className='mt-[30px]'>
                 <FundRaised icon={pool.image} pool = {pool}/>
               </div>
             }
             {pool.saleType !== 'private' && !admin &&
               <div className='mt-[30px]'>
-                <UserPanel icon={pool.image} sale={pool} status={status && status} />
+                <UserPanel icon={pool.image} sale={pool} status={status && status} isFinished={isFinished}/>
               </div>
             }
           </div>

@@ -16,16 +16,14 @@ import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
 
-export default function SaleBox({ icon, sale, status }) {
+export default function SaleBox({ icon, sale, status, isFinished }) {
   const { account, library } = useEthers();
   const [allocated, setAllocated] = useState(0);
   const [bought, setBought] = useState(0);
   const [showModal, setShowModal] = useState(false);
   const participated = useParticipated(sale.saleAddress, account);
-
   const { open: openLoadingModal, close: closeLoadingModal } =
   useModal("LoadingModal");
-
   const getUserParticipation = async () => {
     const contract = new Contract(
       sale.saleAddress,
@@ -36,7 +34,6 @@ export default function SaleBox({ icon, sale, status }) {
     setBought(formatBigToNum(userParticipation[0].toString(), 18, 4));
     setAllocated(formatBigToNum(userParticipation[1].toString(), 18, 4));
   };
-
   const withdrawTokens = async () => {
     openLoadingModal()
     setShowModal(false);
@@ -155,7 +152,7 @@ export default function SaleBox({ icon, sale, status }) {
             </span>
           </div>
         </div>
-        {status === "Ended" && (
+        {status === "Ended" || isFinished && (
           <div className="mt-7">
             <button
               onClick={() => setShowModal(true)}

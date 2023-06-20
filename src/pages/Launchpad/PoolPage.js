@@ -82,10 +82,12 @@ export default function PoolPage() {
           setAdminMode={setAdminMode}
         >
           <PoolPageBase
+            objId={pool._id}
             pool={pool.sale}
             visible={pool.visible}
             showModal={showModal}
             admin={adminMode}
+            isFinished={pool.isFinished}
           />
         </BaseLayout>
       </div>

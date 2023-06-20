@@ -263,6 +263,7 @@ export const deployPublicSaleERC = async (
       linkedin: saleData.linkedin,
       discord: saleData.discord,
       telegram: saleData.telegram,
+      youtube: saleData.youtube,
       image: saleData.image,
       name: saleData.name,
       description: saleData.description,

@@ -24,6 +24,7 @@ export default function PercentFilled({ address, setFilled = () => {}, item, sho
   }
 
   async function store() {
+    console.log("store")
     if (!item) return;
     if(item.visible === false) return;
     try {

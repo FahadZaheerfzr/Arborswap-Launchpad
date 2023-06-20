@@ -120,10 +120,10 @@ export default function PoolsBase({ pools, loading }) {
                   </div>
                   {/* here we will check the status of the pool and show the status accordingly */}
                   {pool.sale.status !== "Ended" &&
-                    pool.sale.status !== "Upcoming" && (
+                      (
                       <div className="bg-[#C89211] bg-opacity-[0.08] py-2 px-6 rounded-b-[20px] flex items-center justify-between">
                         <span className="text-xs font-medium text-gray dark:text-gray-dark">
-                          Ends in
+                          {pool.sale.status==="Live" ? "Ends in" : "Starts in"}
                         </span>
                         <Timer date={new Date(pool.sale.endDate * 1000)} />
                       </div>

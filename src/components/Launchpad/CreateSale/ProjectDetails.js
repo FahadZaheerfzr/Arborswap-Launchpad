@@ -10,6 +10,7 @@ import TelegramSVG from "svgs/Socials/telegram";
 import { isValidUrl } from "utils/numberFormat";
 import PreviewHeader from "components/Common/PreviewHeader";
 import DiscordSVG from "svgs/Socials/discord";
+import YoutubeSVG from "svgs/Socials/youtube";
 import { toast } from "react-toastify";
 
 export default function ProjectDetails({ setActive, setSaleData, saleData }) {
@@ -20,6 +21,7 @@ export default function ProjectDetails({ setActive, setSaleData, saleData }) {
   const [validGithub, setValidGithub] = useState(true);
   const [validTelegram, setValidTelegram] = useState(true);
   const [validDiscord, setValidDiscord] = useState(true);
+  const [validYoutube, setValidYoutube] = useState(true);
   const [valid, setValid] = useState(true);
   const [show, setShow] = useState([]);
 
@@ -75,6 +77,14 @@ export default function ProjectDetails({ setActive, setSaleData, saleData }) {
       }
     }
 
+    if(saleData.youtube !== "") {
+      if(!isValidUrl(saleData.youtube)) {
+        setValidYoutube(false);
+        return;
+      } else {
+        setValidYoutube(true);
+      }
+    }
     if (saleData.github !== "") {
       if (!isValidUrl(saleData.github)) {
         setValidGithub(false);
@@ -376,6 +386,32 @@ export default function ProjectDetails({ setActive, setSaleData, saleData }) {
             placeholder="Ex: https://discord.com/.."
           />
           <DiscordSVG
+            className="w-5 h-5"
+            outer={`${theme === "dark" ? "#fff" : "#464754"}`}
+            inner={`${theme === "dark" ? "#464754" : "#fff"}`}
+          />
+        </div>
+      </div>
+      <div className="mt-7">
+        <HeadingTags name={"youtube"} />
+        <div
+          className={`flex items-center rounded-lg border-[1.5px] pr-5 border-opacity-50 justify-between mt-5 ${
+            validYoutube ? "border-dim-text" : "border-red-500"
+          }`}
+        >
+          <input
+            className="bg-transparent w-full px-5 py-4 font-gilroy placeholder:font-medium placeholder:text-dim-text font-semibold text-dark-text dark:text-light-text focus:outline-none"
+            type={"text"}
+            value={saleData.youtube}
+            onChange={(e) =>
+              setSaleData((prevState) => ({
+                ...prevState,
+                youtube: e.target.value,
+              }))
+            }
+            placeholder="Ex: https://youtu.be/.."
+          />
+          <YoutubeSVG
             className="w-5 h-5"
             outer={`${theme === "dark" ? "#fff" : "#464754"}`}
             inner={`${theme === "dark" ? "#464754" : "#fff"}`}

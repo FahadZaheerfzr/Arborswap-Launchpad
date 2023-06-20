@@ -26,6 +26,7 @@ export default function CreateSale() {
         github: '',
         telegram: '',
         discord : '',
+        youtube: '',
         userBalance: '',
         userAllowance: '0',
     }
