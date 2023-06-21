@@ -12,6 +12,7 @@ import SaleAbi from '../../../config/abi/PublicSale.json';
 export default function PoolPageBase({ pool, visible, showModal, admin,objId ,isFinished}) {
   const [status, setStatus] = useState('Live')
   const [liquidityTokens, setLiquidityTokens] = useState(0);
+  const [whitelistedUser, setWhitelistedUser] = useState(false);
 
   useEffect(() => {
 
@@ -38,10 +39,18 @@ export default function PoolPageBase({ pool, visible, showModal, admin,objId ,is
   useEffect(() => {
     if(pool){
       getLiquidTokens(pool.saleAddress)
+      console.log(pool, 'whitelisting')
+      if(pool.whiteisting){
+        //check if user is whitelisted
+        console.log(pool.whiteListedAddresses, window.ethereum.selectedAddress, pool.whiteListedAddresses.includes(window.ethereum.selectedAddress))
+        if(pool.whiteListedAddresses.includes(window.ethereum.selectedAddress.toLowerCase())){
+          setWhitelistedUser(true)
+        }
+      }
     } 
   }, [pool])
+  console.log(pool.whiteisting?whitelistedUser:true, 'whitelistedUser')
 
-  console.log(pool, 'pool')
   return (
     pool && (
       <div className="w-full flex justify-center">
@@ -78,7 +87,7 @@ export default function PoolPageBase({ pool, visible, showModal, admin,objId ,is
               <AdminPanel  status={status && status} finished={!visible} hard_cap={pool.hardCap} filled_percent={pool.filled_percent} soft_cap={pool.softCap} sale={pool} objId={objId} />
               : <SaleBox hard_cap={pool.hardCap} hard_cap_icon={pool.image} start_date={pool.startDate} soft_cap={pool.softCap}
                 min_allocation={pool.minAllocation} max_allocation={pool.maxAllocation} status={status&& status}
-                currency={pool.currency} ends_on={pool.endDate} showModal={showModal} token = {pool.token} presale_address={pool.saleAddress} sale={pool} visible={visible}/>
+                currency={pool.currency} ends_on={pool.endDate} showModal={showModal} token = {pool.token} presale_address={pool.saleAddress} sale={pool} visible={visible} whitelistedUser={whitelistedUser} whitelisting={pool.whiteisting}/>
             }
             {
               admin && (pool.status === 'Ended'|| visible===false) &&
@@ -86,7 +95,7 @@ export default function PoolPageBase({ pool, visible, showModal, admin,objId ,is
                 <FundRaised icon={pool.image} pool = {pool}/>
               </div>
             }
-            {pool.saleType !== 'private' && !admin &&
+            {pool.saleType !== 'private' && !admin && pool.whiteisting?whitelistedUser:true &&
               <div className='mt-[30px]'>
                 <UserPanel icon={pool.image} sale={pool} status={status && status} isFinished={isFinished}/>
               </div>

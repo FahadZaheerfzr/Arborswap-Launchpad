@@ -36,7 +36,7 @@ export default function Modal({
   // account,
 }) {
   const { library } = useEthers();
-  const [amount, setAmount] = useState(sale.minAllocation);
+  const [amount, setAmount] = useState(0);
   const [bnbUSD, setBnbUSD] = useState(317);
   const [usdAmount, setUsdAmount] = useState(sale.minAllocation * bnbUSD);
   const [tokenPrice, setTokenPrice] = useState(parseFloat(sale.presalePrice));

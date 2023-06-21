@@ -97,7 +97,6 @@ export default function Presale({ setActive, saleType, setSaleObject, token }) {
   const [enoughBalance, setEnoughBalance] = useState(false);
   const [whiteListedAddresses, setWhiteListedAddresses] = useState([""]);
   // const [whiteListedDates, setWhiteListedDates] = useState([]);
-  const [whiteListingCount, setWhiteListingCount] = useState(3);
 
   const { open: openLoadingModal, close: closeLoadingModal } =
     useModal("LoadingModal");
@@ -107,9 +106,10 @@ export default function Presale({ setActive, saleType, setSaleObject, token }) {
 
   const handleAddressChange = (newValue) => {
     const addressesArray = newValue.split(',');
-    const updatedAddresses = addressesArray.map((address) => address.trim());
+    const updatedAddresses = addressesArray.map((address) => address.trim().toLowerCase());
     setWhiteListedAddresses(updatedAddresses);
   };
+  
   console.log(whiteListedAddresses)
   
   // const handleDateChange = (newDate, index) => {
@@ -188,24 +188,7 @@ export default function Presale({ setActive, saleType, setSaleObject, token }) {
         return;
       }
     }
-    //second round shouldnt be empty if it exists
-    if (whiteisting && whiteListedAddresses.length > 1) {
-      if (whiteListedAddresses[1] === "" || whiteListedAddresses[0] === "") {
-        toast.error("Whitelist address can't be empty");
-        return;
-      }
-    }
-    //third round shouldnt be empty if it exists
-    if (whiteisting && whiteListedAddresses.length > 2) {
-      if (
-        whiteListedAddresses[2] === "" ||
-        whiteListedAddresses[1] === "" ||
-        whiteListedAddresses[0] === ""
-      ) {
-        toast.error("Whitelist address can't be empty");
-        return;
-      }
-    }
+
     //if white list then set white list dates and addresses else error
     // if (whiteisting) {
     //   if (whiteListedAddresses.length > whiteListedDates.length) {

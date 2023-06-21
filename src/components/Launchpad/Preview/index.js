@@ -103,11 +103,11 @@ export default function Preview({
           />
           <PreviewDetails
             name={"Presale Starts on"}
-            value={new Date(starts_on * 1000).toUTCString()}
+            value={new Date(starts_on * 1000).toUTCString().replace(" GMT", " UTC")}
           />
           <PreviewDetails
             name={"Presale Ends on"}
-            value={new Date(ends_on * 1000).toUTCString()}
+            value={new Date(ends_on * 1000).toUTCString().replace(" GMT", " UTC")}
           />
           <PreviewDetails
             name={"Soft Cap"}

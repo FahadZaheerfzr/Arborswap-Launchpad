@@ -25,6 +25,8 @@ export default function SaleBox({
   showModal,
   status,
   token,
+  whitelisting,
+  whitelistedUser,
   soft_cap,
   presale_address,
   currency,
@@ -38,14 +40,12 @@ export default function SaleBox({
   const [saleInfo, setSaleInfo] = useState(null);
   const saleSuccess = getSuccessPublic(presale_address);
   const participated = useParticipated(presale_address, account);
-
+  console.log(whitelisting && !whitelistedUser, "whitelisting");
   useEffect(() => {
     const result = getSaleInfo(presale_address).then((res) => {
       setSaleInfo(res);
     });
   }, []);
-
-
 
   const withdrawFunds = async () => {
     if (participated[0] === false) {
@@ -61,7 +61,6 @@ export default function SaleBox({
           library.getSigner()
         );
       } else if (sale.saleType === "private") {
-
         contract = new Contract(
           sale.saleAddress,
           PrivateSaleAbi,
@@ -119,10 +118,9 @@ export default function SaleBox({
         </div>
 
         <div className="mt-3 flex">
-
           <div className="ml-3">
             <span className="text-dark-text dark:text-light-text text-2xl font-bold">
-            {soft_cap} - {hard_cap} {sale.currency.symbol}
+              {soft_cap} - {hard_cap} {sale.currency.symbol}
             </span>
           </div>
         </div>
@@ -148,31 +146,43 @@ export default function SaleBox({
         </div>
 
         <div className="flex items-center justify-between mt-5">
-          {
-            hard_cap && filled_percent!=null?(
-              <span className="text-xs font-medium text-gray dark:text-gray-dark">
-                {(hard_cap*(filled_percent/100)).toFixed(4)} {currency.symbol} Raised
-              </span>
-            ):(
-              <></>
-            )
-          }
+          {hard_cap && filled_percent != null ? (
+            <span className="text-xs font-medium text-gray dark:text-gray-dark">
+              {(hard_cap * (filled_percent / 100)).toFixed(4)} {currency.symbol}{" "}
+              Raised
+            </span>
+          ) : (
+            <></>
+          )}
           <span className="text-xs  text-dim-text dark:text-dim-text-dark">
             {hard_cap} {currency.symbol}
           </span>
         </div>
 
-        <PercentFilled address={presale_address}  setFilled={setFilledPercent} showModal={showModal}/>
+        <PercentFilled
+          address={presale_address}
+          setFilled={setFilledPercent}
+          showModal={showModal}
+        />
         {/* if sale is upcoming then show countdown */}
 
         {status === "Upcoming" ? (
           <div>
             <div className="flex justify-center mt-7">
-              <span className="text-sm font-medium text-gray dark:text-gray-dark ">
+              <span className="text-sm font-medium text-gray dark:text-gray-dark">
                 Sale Starts in
               </span>
             </div>
             <Timer date={new Date(start_date * 1000)} />
+          </div>
+        ) : whitelisting && !whitelistedUser ? (
+          <div className="flex mt-10">
+            <button
+              className="w-full bg-dim-text bg-opacity-50 dark:bg-dim-text-dark rounded-md text-white font-bold py-4"
+              disabled
+            >
+              WhiteList Only
+            </button>
           </div>
         ) : (
           <div className="flex mt-10">
@@ -203,7 +213,8 @@ export default function SaleBox({
             </button>
           </div>
         )}
-        {status !== "Upcoming" && status !== "Ended" &&  visible!==false&&(
+
+        {status !== "Upcoming" && status !== "Ended" && visible !== false && (
           <>
             <div className="flex justify-center mt-7">
               <span className="text-sm font-medium text-gray dark:text-gray-dark ">
@@ -232,7 +243,7 @@ export default function SaleBox({
 
         {/* if sale ended then just write Sale has ended */}
         {/* if sale is live then show timer */}
-        {status !== "Ended" && status !== "Upcoming" && visible!==false &&(
+        {status !== "Ended" && status !== "Upcoming" && visible !== false && (
           <Timer date={new Date(ends_on * 1000)} />
         )}
       </div>
