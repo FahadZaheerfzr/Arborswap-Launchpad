@@ -1,7 +1,7 @@
 {
   "files": {
-    "main.css": "/static/css/main.4d9e5379.css",
-    "main.js": "/static/js/main.9f14f754.js",
+    "main.css": "/static/css/main.8c267295.css",
+    "main.js": "/static/js/main.2eb22727.js",
     "static/js/725.2bfa16e2.chunk.js": "/static/js/725.2bfa16e2.chunk.js",
     "static/media/Gilroy-Semibold.woff2": "/static/media/Gilroy-Semibold.7726b19d33f1b7f4135a.woff2",
     "static/media/Gilroy-Medium.woff2": "/static/media/Gilroy-Medium.32817d862e7baaedac65.woff2",
@@ -9,12 +9,12 @@
     "static/media/tree-logo.svg": "/static/media/tree-logo.713448d8ecba28f83819.svg",
     "static/media/tree-logo-desktop.svg": "/static/media/tree-logo-desktop.e4f85c8214942c419378.svg",
     "index.html": "/index.html",
-    "main.4d9e5379.css.map": "/static/css/main.4d9e5379.css.map",
-    "main.9f14f754.js.map": "/static/js/main.9f14f754.js.map",
+    "main.8c267295.css.map": "/static/css/main.8c267295.css.map",
+    "main.2eb22727.js.map": "/static/js/main.2eb22727.js.map",
     "725.2bfa16e2.chunk.js.map": "/static/js/725.2bfa16e2.chunk.js.map"
   },
   "entrypoints": [
-    "static/css/main.4d9e5379.css",
-    "static/js/main.9f14f754.js"
+    "static/css/main.8c267295.css",
+    "static/js/main.2eb22727.js"
   ]
 }
