@@ -76,6 +76,8 @@ export default function PoolPageBase({ pool, visible, showModal, admin,objId ,is
               unsold_tokens={pool.unsoldToken}
               liquidity={pool.amountLiquidity}
               lockup={pool.lockup}
+              objId={objId}
+              admin = {admin}
             />
           </div>
 

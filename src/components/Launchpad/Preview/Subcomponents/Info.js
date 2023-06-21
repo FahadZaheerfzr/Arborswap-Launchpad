@@ -8,7 +8,7 @@ import TelegramSVG from 'svgs/Socials/telegram'
 import TwitterSVG from 'svgs/Socials/twitter'
 import DiscordSVG from 'svgs/Socials/discord'
 
-export default function Info({ icon, name, is_private, tags, pool }) {
+export default function Info({ icon, name, is_private, tags, pool, setEdit,edit,admin }) {
   const { theme } = useContext(ThemeContext);
 
   return (
@@ -68,7 +68,9 @@ export default function Info({ icon, name, is_private, tags, pool }) {
           <DiscordSVG className="fill-dark-text dark:fill-light-text hidden md:block" />
           </Link>
         }
-        {/* <Options width={'w-7'} height={'h-7'} color={'[#FAF8F5]'} dark_color={'dark-2'} /> */}
+        {admin &&
+        <Options width={'w-7'} height={'h-7'} color={'[#FAF8F5]'} dark_color={'dark-2'} edit ={edit} setEdit={setEdit} />
+        }
       </div>
     </div>
   )

@@ -14,6 +14,7 @@ import { Link } from "react-router-dom";
 import GithubSVG from "svgs/Socials/github";
 import { ThemeContext } from "context/ThemeContext/ThemeProvider";
 import YouTubeEmbed from "./Subcomponents/YoutubeImbed";
+import ProjectDetails from "../CreateSale/ProjectDetails";
 
 export default function Preview({
   pool,
@@ -36,184 +37,221 @@ export default function Preview({
   listingPrice,
   liquidity,
   lockup,
+  objId,
+  admin
 }) {
   const { theme } = useContext(ThemeContext);
   const [slide, setSlide] = useState("Presale");
+  const [edit, setEdit] = useState(false);
+  const [saleData, setSaleData] = useState({ ...pool})
   const supply = parseFloat(token.tokenSupply) / 10 ** token.tokenDecimals;
   // console.log(supply)
   return (
-    <div className="px-9 py-9 my-4">
-      <Info
-        name={name}
-        icon={icon}
-        is_private={is_private}
-        tags={tags}
-        pool={pool}
-      />
-
-      <div className="mt-6 flex md:hidden gap-5 ml-[70px]">
-        {pool.github !== "" && (
-          <Link to={pool.github} target="_blank" rel="noopener noreferrer">
-            <GithubSVG
-              className="w-5 h-5"
-              outer={`${theme === "dark" ? "#fff" : "#464754"}`}
-              inner={`${theme === "dark" ? "#464754" : "#fff"}`}
-            />
-          </Link>
-        )}
-        {pool.discord !== "" && (
-          <Link to={pool.discord} target="_blank" rel="noopener noreferrer">
-            <DiscordSVG className="fill-dark-text dark:fill-light-text " />
-          </Link>
-        )}
-        {pool.telegram !== "" && (
-          <Link to={pool.telegram} target="_blank" rel="noopener noreferrer">
-            <TelegramSVG className="fill-dark-text dark:fill-light-text " />
-          </Link>
-        )}
-        {pool.twitter !== "" && (
-          <Link to={pool.twitter} target="_blank" rel="noopener noreferrer">
-            <TwitterSVG className="fill-dark-text dark:fill-light-text" />
-          </Link>
-        )}{" "}
-        {pool.website !== "" && (
-          <Link to={pool.website} target="_blank" rel="noopener noreferrer">
-            <DribbleSVG className="fill-dark-text dark:fill-light-text " />
-          </Link>
-        )}
-      </div>
-      <div className="mt-10">
-        <span className="font-medium text-sm text-gray dark:text-gray-dark">
-          {description}
-          {pool.youtube && pool.youtube !== "" && (
-            <YouTubeEmbed embedCode={pool.youtube} />
-          )}
-        </span>
-      </div>
-
-      <TabSwitch slide={slide} setSlide={setSlide} />
-
-      {slide === "Presale" && (
-        <div className="mt-5">
-          <PreviewDetails
-            name={"Presale Address"}
-            value={address}
-            enable_copy
-            address={true}
-          />
-          <PreviewDetails
-            name={"Presale Starts on"}
-            value={new Date(starts_on * 1000).toUTCString().replace(" GMT", " UTC")}
-          />
-          <PreviewDetails
-            name={"Presale Ends on"}
-            value={new Date(ends_on * 1000).toUTCString().replace(" GMT", " UTC")}
-          />
-          <PreviewDetails
-            name={"Soft Cap"}
-            value={
-              soft_cap && soft_cap.toLocaleString() + " " + currency.symbol
-            }
-          />
-          <PreviewDetails
-            name={"Hard Cap"}
-            value={
-              hard_cap && hard_cap.toLocaleString() + " " + currency.symbol
-            }
-          />
-          {unsold_tokens && (
-            <PreviewDetails name={"Unsold Tokens"} value={unsold_tokens} />
-          )}
-          <PreviewDetails
-            name={"To be listed on"}
-            value={pool.dex.name}
-            icon={pool.dex.icon}
-          />
-          {liquidity && (
-            <PreviewDetails
-              name={"Tokens for Liquidity"}
-              value={
-                (listingPrice * (liquidity / 100) * hard_cap).toLocaleString() +
-                " " +
-                token.tokenSymbol
-              }
-            />
-          )}
-          {hard_cap && presalePrice && (
-            <PreviewDetails
-              name={"Tokens for Presale"}
-              value={
-                (hard_cap * presalePrice).toLocaleString() +
-                " " +
-                token.tokenSymbol
-              }
-            />
-          )}
-          {liquidity && (
-            <PreviewDetails
-              name={"Tokens for Liquidity (%)"}
-              value={liquidity + "%"}
-            />
-          )}
-          {lockup && (
-            <PreviewDetails
-              name={"Liquidity Lockup Time (Days)"}
-              value={lockup}
-            />
-          )}
-          {first_release && (
-            <PreviewDetails name={"First Release"} value={first_release} />
-          )}
-          {vesting_release && (
-            <PreviewDetails name={"Vesting Release"} value={vesting_release} />
-          )}
-        </div>
-      )}
-      {slide === "Token" && (
-        <div className="mt-5">
-          <PreviewDetails name={"Token Name"} value={token.tokenName} />
-          <PreviewDetails name={"Token Symbol"} value={token.tokenSymbol} />
-          <PreviewDetails name={"Token Decimals"} value={token.tokenDecimals} />
-          <PreviewDetails
-            name={"Total Supply"}
-            value={
-              token.tokenSupply &&
-              formatBigToNum(token.tokenSupply, token.tokenDecimals)
-            }
-          />
-          <PreviewDetails
-            name={"Token Address"}
-            value={token.tokenAddress}
-            enable_copy={true}
-            address={true}
+    <>
+      {edit ? (
+        <ProjectDetails
+          setActive={setEdit}
+          saleData={saleData}
+          setSaleData={setSaleData}
+          edit={edit}
+          objId = {objId}
+        />
+      ) : (
+        <div className="px-9 py-9 my-4">
+          <Info
+            name={name}
+            icon={icon}
+            is_private={is_private}
+            tags={tags}
+            pool={pool}
+            setEdit = {setEdit}
+            edit = {edit}
+            admin = {admin}
           />
 
-          <div className="mt-10">
-            <span className="font-semibold text-dark-text dark:text-light-text">
-              Token Metrics
-            </span>
-            <div className="flex items-center mt-7">
-              <div className="w-full ">
-                <DonutChart
-                  presale={pool.presalePrice * hard_cap}
-                  liquidity={pool.listing * liquidity}
-                  supply={supply}
-                  burned={pool.burned || 0}
-                  locked={pool.locked || 0}
+          <div className="mt-6 flex md:hidden gap-5 ml-[70px]">
+            {pool.github !== "" && (
+              <Link to={pool.github} target="_blank" rel="noopener noreferrer">
+                <GithubSVG
+                  className="w-5 h-5"
+                  outer={`${theme === "dark" ? "#fff" : "#464754"}`}
+                  inner={`${theme === "dark" ? "#464754" : "#fff"}`}
                 />
-              </div>
-              {/* <div className="w-full pl-16">
+              </Link>
+            )}
+            {pool.discord !== "" && (
+              <Link to={pool.discord} target="_blank" rel="noopener noreferrer">
+                <DiscordSVG className="fill-dark-text dark:fill-light-text " />
+              </Link>
+            )}
+            {pool.telegram !== "" && (
+              <Link
+                to={pool.telegram}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                <TelegramSVG className="fill-dark-text dark:fill-light-text " />
+              </Link>
+            )}
+            {pool.twitter !== "" && (
+              <Link to={pool.twitter} target="_blank" rel="noopener noreferrer">
+                <TwitterSVG className="fill-dark-text dark:fill-light-text" />
+              </Link>
+            )}{" "}
+            {pool.website !== "" && (
+              <Link to={pool.website} target="_blank" rel="noopener noreferrer">
+                <DribbleSVG className="fill-dark-text dark:fill-light-text " />
+              </Link>
+            )}
+          </div>
+          <div className="mt-10">
+            <span className="font-medium text-sm text-gray dark:text-gray-dark">
+              {description}
+              {pool.youtube && pool.youtube !== "" && (
+                <YouTubeEmbed embedCode={pool.youtube} />
+              )}
+            </span>
+          </div>
+
+          <TabSwitch slide={slide} setSlide={setSlide} />
+
+          {slide === "Presale" && (
+            <div className="mt-5">
+              <PreviewDetails
+                name={"Presale Address"}
+                value={address}
+                enable_copy
+                address={true}
+              />
+              <PreviewDetails
+                name={"Presale Starts on"}
+                value={new Date(starts_on * 1000)
+                  .toUTCString()
+                  .replace(" GMT", " UTC")}
+              />
+              <PreviewDetails
+                name={"Presale Ends on"}
+                value={new Date(ends_on * 1000)
+                  .toUTCString()
+                  .replace(" GMT", " UTC")}
+              />
+              <PreviewDetails
+                name={"Soft Cap"}
+                value={
+                  soft_cap && soft_cap.toLocaleString() + " " + currency.symbol
+                }
+              />
+              <PreviewDetails
+                name={"Hard Cap"}
+                value={
+                  hard_cap && hard_cap.toLocaleString() + " " + currency.symbol
+                }
+              />
+              {unsold_tokens && (
+                <PreviewDetails name={"Unsold Tokens"} value={unsold_tokens} />
+              )}
+              <PreviewDetails
+                name={"To be listed on"}
+                value={pool.dex.name}
+                icon={pool.dex.icon}
+              />
+              {liquidity && (
+                <PreviewDetails
+                  name={"Tokens for Liquidity"}
+                  value={
+                    (
+                      listingPrice *
+                      (liquidity / 100) *
+                      hard_cap
+                    ).toLocaleString() +
+                    " " +
+                    token.tokenSymbol
+                  }
+                />
+              )}
+              {hard_cap && presalePrice && (
+                <PreviewDetails
+                  name={"Tokens for Presale"}
+                  value={
+                    (hard_cap * presalePrice).toLocaleString() +
+                    " " +
+                    token.tokenSymbol
+                  }
+                />
+              )}
+              {liquidity && (
+                <PreviewDetails
+                  name={"Tokens for Liquidity (%)"}
+                  value={liquidity + "%"}
+                />
+              )}
+              {lockup && (
+                <PreviewDetails
+                  name={"Liquidity Lockup Time (Days)"}
+                  value={lockup}
+                />
+              )}
+              {first_release && (
+                <PreviewDetails name={"First Release"} value={first_release} />
+              )}
+              {vesting_release && (
+                <PreviewDetails
+                  name={"Vesting Release"}
+                  value={vesting_release}
+                />
+              )}
+            </div>
+          )}
+          {slide === "Token" && (
+            <div className="mt-5">
+              <PreviewDetails name={"Token Name"} value={token.tokenName} />
+              <PreviewDetails name={"Token Symbol"} value={token.tokenSymbol} />
+              <PreviewDetails
+                name={"Token Decimals"}
+                value={token.tokenDecimals}
+              />
+              <PreviewDetails
+                name={"Total Supply"}
+                value={
+                  token.tokenSupply &&
+                  formatBigToNum(token.tokenSupply, token.tokenDecimals)
+                }
+              />
+              <PreviewDetails
+                name={"Token Address"}
+                value={token.tokenAddress}
+                enable_copy={true}
+                address={true}
+              />
+
+              <div className="mt-10">
+                <span className="font-semibold text-dark-text dark:text-light-text">
+                  Token Metrics
+                </span>
+                <div className="flex items-center mt-7">
+                  <div className="w-full ">
+                    <DonutChart
+                      presale={pool.presalePrice * hard_cap}
+                      liquidity={pool.listing * liquidity}
+                      supply={supply}
+                      burned={pool.burned || 0}
+                      locked={pool.locked || 0}
+                    />
+                  </div>
+                  {/* <div className="w-full pl-16">
                 <Labels color={"#307856"} text={"Presale"} />
                 <Labels color={"#585B79"} text={"Liquidity"} />
                 <Labels color={"#F8CF6B"} text={"Unlocked"} /> */}
-                {/* <Labels color={"#C89211"} text={"Locked"} />
+                  {/* <Labels color={"#C89211"} text={"Locked"} />
                                 <Labels color={"#E56060"} text={"Burned"} />                                
                                  */}
-              {/* </div> */}
+                  {/* </div> */}
+                </div>
+              </div>
             </div>
-          </div>
+          )}
         </div>
       )}
-    </div>
+    </>
   );
 }

@@ -12,8 +12,11 @@ import PreviewHeader from "components/Common/PreviewHeader";
 import DiscordSVG from "svgs/Socials/discord";
 import YoutubeSVG from "svgs/Socials/youtube";
 import { toast } from "react-toastify";
+import { useModal } from "react-simple-modal-provider";
+import { BACKEND_URL } from "config/constants/LaunchpadAddress";
+import axios from "axios";
 
-export default function ProjectDetails({ setActive, setSaleData, saleData }) {
+export default function ProjectDetails({ setActive, setSaleData, saleData,edit,objId }) {
   const { theme } = useContext(ThemeContext);
   const [validWebsite, setValidWebsite] = useState(true);
   const [validTwitter, setValidTwitter] = useState(true);
@@ -24,6 +27,8 @@ export default function ProjectDetails({ setActive, setSaleData, saleData }) {
   const [validYoutube, setValidYoutube] = useState(true);
   const [valid, setValid] = useState(true);
   const [show, setShow] = useState([]);
+  const { open: openLoadingModal, close: closeLoadingModal } =
+  useModal("LoadingModal");
 
   const handleMouseEnter = (e) => {
     const id = e.target.id;
@@ -35,7 +40,7 @@ export default function ProjectDetails({ setActive, setSaleData, saleData }) {
     setShow((prevState) => prevState.filter((item) => item !== id));
   };
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     //if no image or website is provided, display error
     if (saleData.image === "" ) {
       toast.error("Please fill in the image field");
@@ -104,16 +109,76 @@ export default function ProjectDetails({ setActive, setSaleData, saleData }) {
         setValidDiscord(true);
       }
     }
-
-    if (isValidUrl(saleData.image) && isValidUrl(saleData.website))
+    
+    if (isValidUrl(saleData.image) && isValidUrl(saleData.website)){
+      if(edit===undefined){
       setActive("Preview");
+      }
+      else if (edit){
+        //make axios call to update the project details
+        const finalSaleObject = {
+          saleId: saleData.saleId,
+          saleAddress: saleData.saleAddress,
+          saleType: saleData.type,
+          github: saleData.github,
+          website: saleData.website,
+          twitter: saleData.twitter,
+          linkedin: saleData.linkedin,
+          discord: saleData.discord,
+          telegram: saleData.telegram,
+          youtube: saleData.youtube,
+          image: saleData.image,
+          name: saleData.name,
+          description: saleData.description,
+          tags: saleData.tags,
+          token: saleData.token,
+          minAllocation: saleData.minAllocation,
+          maxAllocation: saleData.maxAllocation,
+          amountLiquidity: saleData.amountLiquidity,
+          listing: saleData.listing,
+          lockup: saleData.lockup,
+          presalePrice: saleData.presalePrice,
+          endDate: saleData.endDate,
+          startDate: saleData.startDate,
+          hardCap: saleData.hardCap,
+          softCap: saleData.softCap,
+          unsoldToken: saleData.unsoldToken,
+          currency: saleData.currency,
+          dex: saleData.dex,
+          whiteisting: saleData.whiteisting,
+          whiteListedAddresses: saleData.whiteListedAddresses,
+          owner : saleData.owner,
+          isFinished: saleData.isFinished,
+        };
+        try{
+          openLoadingModal();
+        const res = await axios.put(`${BACKEND_URL}/api/sale/${objId}`, {
+          sale: finalSaleObject,
+        });
+        toast.success("Project details updated successfully")
+        closeLoadingModal();
+        window.location.reload();
+      }
+      catch(err){
+        toast.error("Error updating project details")
+        closeLoadingModal();
+      }
+      }
+
+    }
     else if (!isValidUrl(saleData.image)) {
       toast.error("Please fill in the image field correctly");
     } else if (!isValidUrl(saleData.website)) {
       toast.error("Please fill in the website field correctly");
     }
   };
-
+  function handleBack() {
+    setActive("Presale")
+  }
+  function handleEditBack(){
+    setActive(!edit)
+  }
+  console.log(saleData, "saleData")
   return (
     <div className="w-full p-5 md:p-9 bg-white dark:bg-dark-1 rounded-[10px] ">
       <>
@@ -416,7 +481,7 @@ export default function ProjectDetails({ setActive, setSaleData, saleData }) {
         <div className="flex justify-end items-center mb-10">
           <button
             className="bg-white dark:bg-transparent mr-5 flex items-center gap-2 py-[10px] px-5"
-            onClick={() => setActive("Presale")}
+            onClick={edit? handleEditBack : handleBack}
           >
             <BackArrowSVG className="fill-dark-text dark:fill-light-text" />
             <span className="font-gilroy font-medium text-sm text-dark-text dark:text-light-text">
@@ -429,7 +494,8 @@ export default function ProjectDetails({ setActive, setSaleData, saleData }) {
             // disabled={address.length < 5}
             onClick={handleSubmit}
           >
-            Next
+            {/* if edit then submit, otherwise next */}
+            {edit ? "Submit" : "Next"}
           </button>
         </div>
       </div>
