@@ -136,7 +136,8 @@ export default function AdminPanel({
       closeLoadingModal();
     }
   };
-
+  console.log(objId, "objId");
+  console.log(`${BACKEND_URL}/api/sale/${objId}`)
   const finalizeSale = async () => {
     setShowModal(false);
     openLoadingModal();
@@ -196,7 +197,7 @@ export default function AdminPanel({
     //update the isFinised in database
     try {
       const res = await axios.put(`${BACKEND_URL}/api/sale/${objId}`, {
-        isFinished: true,
+        isFinished: "true",
       });
       toast.success("Sale Finalized Successfully");
       console.log(res);
@@ -271,12 +272,12 @@ export default function AdminPanel({
           isFinished: sale.isFinished,
         };
         const res = await axios.put(`${BACKEND_URL}/api/sale/${objId}`, {
-          saleObject: finalSaleObject,
+          sale: finalSaleObject,
         });
         console.log(res)
         toast.success("Address Added Successfully");
         closeLoadingModal();
-        window.location.reload();
+        // window.location.reload();
 
 
       } catch (err) {
@@ -290,6 +291,7 @@ export default function AdminPanel({
       toast.error("Something went wrong");
     }
   }
+
   return (
     <>
       <div className="hidden md:block px-9 pb-9 bg-white dark:bg-dark-1 rounded-[20px]">

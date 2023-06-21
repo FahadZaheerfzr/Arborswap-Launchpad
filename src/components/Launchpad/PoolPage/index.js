@@ -42,14 +42,12 @@ export default function PoolPageBase({ pool, visible, showModal, admin,objId ,is
       console.log(pool, 'whitelisting')
       if(pool.whiteisting){
         //check if user is whitelisted
-        console.log(pool.whiteListedAddresses, window.ethereum.selectedAddress, pool.whiteListedAddresses.includes(window.ethereum.selectedAddress))
         if(pool.whiteListedAddresses.includes(window.ethereum.selectedAddress.toLowerCase())){
           setWhitelistedUser(true)
         }
       }
     } 
   }, [pool])
-  console.log(pool.whiteisting?whitelistedUser:true, 'whitelistedUser')
 
   return (
     pool && (
@@ -95,7 +93,7 @@ export default function PoolPageBase({ pool, visible, showModal, admin,objId ,is
                 <FundRaised icon={pool.image} pool = {pool}/>
               </div>
             }
-            {pool.saleType !== 'private' && !admin && pool.whiteisting?whitelistedUser:true &&
+            {pool.saleType !== 'private' && !admin && 
               <div className='mt-[30px]'>
                 <UserPanel icon={pool.image} sale={pool} status={status && status} isFinished={isFinished}/>
               </div>
