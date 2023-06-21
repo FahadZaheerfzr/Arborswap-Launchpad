@@ -86,7 +86,7 @@ export default function Preview({
         <span className="font-medium text-sm text-gray dark:text-gray-dark">
           {description}
           {pool.youtube && pool.youtube !== "" && (
-            <YouTubeEmbed videoUrl={pool.youtube} />
+            <YouTubeEmbed embedCode={pool.youtube} />
           )}
         </span>
       </div>

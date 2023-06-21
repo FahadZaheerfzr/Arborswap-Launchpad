@@ -77,14 +77,7 @@ export default function ProjectDetails({ setActive, setSaleData, saleData }) {
       }
     }
 
-    if(saleData.youtube !== "") {
-      if(!isValidUrl(saleData.youtube)) {
-        setValidYoutube(false);
-        return;
-      } else {
-        setValidYoutube(true);
-      }
-    }
+
     if (saleData.github !== "") {
       if (!isValidUrl(saleData.github)) {
         setValidGithub(false);

@@ -110,7 +110,6 @@ export default function Presale({ setActive, saleType, setSaleObject, token }) {
     setWhiteListedAddresses(updatedAddresses);
   };
   
-  console.log(whiteListedAddresses)
   
   // const handleDateChange = (newDate, index) => {
   //   const updatedDates = [...whiteListedDates];
@@ -506,7 +505,7 @@ export default function Presale({ setActive, saleType, setSaleObject, token }) {
                   }
                   whitelist={true}
                   tooltip="Enter addresses to whitelist them for the presale"
-                  placeholder="0xaEa574007c8ad33c7f4f7CF4a0d0B6F704ACD59e"
+                  placeholder="0xaEa574007c8ad33c7f4f7CF4a0d0B6F704ACD59e,..."
                   nothing={true}
                 />
                 {/* <div className="mt-2">

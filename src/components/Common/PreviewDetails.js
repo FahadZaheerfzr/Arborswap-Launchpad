@@ -12,6 +12,8 @@ export default function PreviewDetails({
   tokenSymbol,
   enable_copy,
   address,
+  setFunction,
+  isInputOpen,
 }) {
   const { theme } = useContext(ThemeContext);
 
@@ -24,10 +26,18 @@ export default function PreviewDetails({
     document.body.removeChild(textarea);
     toast.success("Copied to clipboard");
   }
-
   return (
     <>
-      <div className="py-5 flex gap-x-5 justify-between border-b border-dashed border-dim-text border-opacity-30">
+      <div className="py-5 flex gap-x-5 justify-between border-b border-dashed border-dim-text border-opacity-30 relative">
+        {/* if setFunction then display a small plus button on side of border */}
+        {setFunction && (
+          <button
+            onClick={() => setFunction()}
+            className="absolute w-8 h-8 bg-black text-white dark:bg-white dark:text-black cursor-pointer right-0 -bottom-4 rounded-full"
+          >
+            {isInputOpen ? "-" : "+"}
+          </button>
+        )}
         <span className="font-gilroy text-sm font-medium text-gray dark:text-gray-dark">
           {name}
         </span>

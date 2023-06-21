@@ -1,7 +1,7 @@
 import PreviewDetails from "components/Common/PreviewDetails";
 import React from "react";
 import { useEffect, useState } from "react";
-import { Contract} from "ethers";
+import { Contract } from "ethers";
 import { useEthers } from "@usedapp/core";
 import PublicSaleAbi from "../../../config/abi/PublicSale.json";
 import PublicSaleErcAbi from "../../../config/abi/PublicSaleErcAbi.json";
@@ -33,11 +33,13 @@ export default function AdminPanel({
   const [isFinished, setIsFinished] = useState(null);
   const [saleInfo, setSaleInfo] = useState(null);
   const [contributors, setContributors] = useState(null);
+  const [isInputOpen, setIsInputOpen] = useState(false);
+  const [whiteListedAddresses, setWhiteListedAddresses] = useState([""]);
+
   //LoadingModal
   const { open: openLoadingModal, close: closeLoadingModal } =
     useModal("LoadingModal");
 
-  
   const getContributors = async () => {
     const contract = new Contract(
       sale.saleAddress,
@@ -48,6 +50,14 @@ export default function AdminPanel({
     setContributors(contributors.toNumber());
   };
 
+  const handleAddressChange = (newValue) => {
+    const addressesArray = newValue.split(",");
+    const updatedAddresses = addressesArray.map((address) =>
+      address.trim().toLowerCase()
+    );
+    setWhiteListedAddresses(updatedAddresses);
+  };
+  console.log(whiteListedAddresses, "whiteListedAddresses");
   async function getFinished() {
     const res = await getIsFinished(sale.saleAddress).then((res) => {
       setIsFinished(res);
@@ -64,7 +74,6 @@ export default function AdminPanel({
     getFinished();
     getSaleInfo();
   }, []);
-
 
   const withdrawEarnings = async () => {
     setShowModal(false);
@@ -190,14 +199,97 @@ export default function AdminPanel({
         isFinished: true,
       });
       toast.success("Sale Finalized Successfully");
-      console.log(res)
+      console.log(res);
     } catch (err) {
       console.log(err);
       closeLoadingModal();
     }
     closeLoadingModal();
   };
+  function handleInput() {
+    setIsInputOpen(!isInputOpen);
+  }
 
+  async function handleAddAddress() {
+    if (whiteListedAddresses[0] === "") {
+      toast.error("Please enter atleast one address");
+      return;
+    }
+     openLoadingModal();
+
+    try {
+      const contract = new Contract(
+        sale.saleAddress,
+        PublicSaleAbi,
+        library.getSigner()
+      );
+
+      const tx = await contract.setMultiplyAddressesWL(
+        whiteListedAddresses.map((address) => address),
+        true
+      );
+      await tx.wait();
+      try {
+        //an array with new addresses added after sale.whiteListedAddresses
+        const updatedAddresses = [
+          ...sale.whiteListedAddresses,
+          ...whiteListedAddresses,
+        ];
+        console.log(updatedAddresses, "updatedAddresses");
+        const finalSaleObject = {
+          saleId: sale.saleId,
+          saleAddress: sale.saleAddress,
+          saleType: sale.type,
+          github: sale.github,
+          website: sale.website,
+          twitter: sale.twitter,
+          linkedin: sale.linkedin,
+          discord: sale.discord,
+          telegram: sale.telegram,
+          youtube: sale.youtube,
+          image: sale.image,
+          name: sale.name,
+          description: sale.description,
+          tags: sale.tags,
+          token: sale.token,
+          minAllocation: sale.minAllocation,
+          maxAllocation: sale.maxAllocation,
+          amountLiquidity: sale.amountLiquidity,
+          listing: sale.listing,
+          lockup: sale.lockup,
+          presalePrice: sale.presalePrice,
+          endDate: sale.endDate,
+          startDate: sale.startDate,
+          hardCap: sale.hardCap,
+          softCap: sale.softCap,
+          unsoldToken: sale.unsoldToken,
+          currency: sale.currency,
+          dex: sale.dex,
+          whiteisting: sale.whiteisting,
+          whiteListedAddresses: updatedAddresses,
+          owner : sale.owner,
+          isFinished: sale.isFinished,
+        };
+        const res = await axios.put(`${BACKEND_URL}/api/sale/${objId}`, {
+          saleObject: finalSaleObject,
+        });
+        console.log(res)
+        toast.success("Address Added Successfully");
+        closeLoadingModal();
+        window.location.reload();
+
+
+      } catch (err) {
+        console.log(err);
+        closeLoadingModal();
+        toast.error("Something went wrong");
+      }
+    } catch (err) {
+      console.log(err);
+      closeLoadingModal();
+      toast.error("Something went wrong");
+    }
+  }
   return (
     <>
       <div className="hidden md:block px-9 pb-9 bg-white dark:bg-dark-1 rounded-[20px]">
@@ -236,7 +328,8 @@ export default function AdminPanel({
             <div className="flex items-center justify-between">
               {hard_cap && filled_percent && (
                 <span className="text-xs  text-gray dark:text-gray-dark">
-                  {(hard_cap * (filled_percent / 100)).toLocaleString()} {sale.currency.symbol}
+                  {(hard_cap * (filled_percent / 100)).toLocaleString()}{" "}
+                  {sale.currency.symbol}
                 </span>
               )}
 
@@ -248,27 +341,52 @@ export default function AdminPanel({
             <PercentFilled address={sale.saleAddress} />
           </div>
         )}
-        {
-          (sale.whitelisting != null || sale.whitelisting !== false) &&
+        {sale.whiteisting !== false &&
           sale.whiteListedAddresses.map((address, index) => {
             return (
               <div className="mt-7" key={index}>
-                <PreviewDetails name={"Whitelisted Address"} value={address} enable_copy={true}/>
+                <PreviewDetails
+                  name={"Whitelisted Address"}
+                  value={address}
+                  enable_copy={true}
+                  address={true}
+                  setFunction={handleInput}
+                  isInputOpen={isInputOpen}
+                />
               </div>
             );
           })}
 
-        {status !== "Upcoming" && (
-          contributors != null &&(
+        {isInputOpen && (
+          <div className="mt-7 flex">
+            <input
+              type="text"
+              value={whiteListedAddresses}
+              onChange={(e) => handleAddressChange(e.target.value)}
+              className="px-3 py-2 rounded-md border dark:border-white border-black text-sm w-full mr-2 dark:text-white text-black"
+              placeholder="0xaEa5..."
+            />
+            <button
+              className=" bg-primary-green text-white px-3 py-2 rounded-md focus:outline-none "
+              onClick={handleAddAddress}
+            >
+              Add
+            </button>
+          </div>
+        )}
+
+        {status !== "Upcoming" && contributors != null && (
           <div className="mt-7">
             <PreviewDetails name={"Contributors"} value={contributors} />
-          </div>)
+          </div>
         )}
         {saleInfo != null &&
           (saleInfo === false ? (
             <div className="mt-7">
               <button
-                disabled={status === "Upcoming" && status === "Live" && !finished}
+                disabled={
+                  status === "Upcoming" && status === "Live" && !finished
+                }
                 onClick={() => {
                   if (status === "Ended" || finished) {
                     setShowModal(true);
@@ -277,9 +395,8 @@ export default function AdminPanel({
                 className={`w-full ${
                   status === "Upcoming"
                     ? "bg-light dark:bg-dark text-dark-text dark:text-light-text"
-                    : 
-                    status === "Live" && !finished?
-                    "bg-primary-green text-white opacity-50"
+                    : status === "Live" && !finished
+                    ? "bg-primary-green text-white opacity-50"
                     : "bg-primary-green text-white"
                 } rounded-md font-bold py-4`}
               >
@@ -304,7 +421,7 @@ export default function AdminPanel({
             </div>
           ) : null)}
       </div>
-      
+
       {showModal && (
         // in this pass withdrawEarnings function if saleInfo is not null and true
         // else pass finalizeSale function
