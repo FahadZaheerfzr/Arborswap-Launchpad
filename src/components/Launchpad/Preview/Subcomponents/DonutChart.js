@@ -2,20 +2,19 @@ import React, { useContext, useState } from 'react';
 import Chart from 'react-apexcharts';
 import { ThemeContext } from 'context/ThemeContext/ThemeProvider';
 
-const labels = ['Presale', 'Liquidity', 'Locked', 'Unlocked', 'Burned'];
+const labels = ['Presale', 'Liquidity', 'Unlocked'];
 
 export default function DonutChart({ presale, liquidity, burned, locked, supply }) {
   const { theme } = useContext(ThemeContext);
   const [originalSeries] = useState([
     presale / supply * 100,
     parseFloat((liquidity/supply*100).toFixed(2)),
-    parseFloat((locked/supply*100).toFixed(2)),
+   // parseFloat((locked/supply*100).toFixed(2)),
     parseFloat(((supply-liquidity-presale)/supply*100).toFixed(2)),
-    parseFloat((burned/supply*100).toFixed(2)),
+   // parseFloat((burned/supply*100).toFixed(2)),
   ]);
 
   const [series, setSeries] = useState(originalSeries);
-
   const handleClick = (index) => {
     const updatedSeries = [...series];
     if (updatedSeries[index] === 0) {
@@ -27,7 +26,7 @@ export default function DonutChart({ presale, liquidity, burned, locked, supply 
   };
 
   const options = {
-    colors: ['#307856', '#585B79', '#E56060', '#F8CF6B', '#C89211'],
+    colors: ['#307856', '#585B79', '#F8CF6B'],
     labels: labels,
     plotOptions: {
       pie: {
@@ -60,7 +59,7 @@ export default function DonutChart({ presale, liquidity, burned, locked, supply 
       width: 0,
     },
     fill: {
-      colors: ['#307856', '#585B79', '#E56060', '#F8CF6B', '#C89211'],
+      colors: ['#307856', '#585B79', '#F8CF6B'],
     },
     dataLabels: {
       enabled: false,
