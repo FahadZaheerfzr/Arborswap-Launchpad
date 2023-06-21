@@ -248,12 +248,12 @@ export default function AdminPanel({
             <PercentFilled address={sale.saleAddress} />
           </div>
         )}
-        {status === "Upcoming" &&
+        {
           (sale.whitelisting != null || sale.whitelisting !== false) &&
           sale.whiteListedAddresses.map((address, index) => {
             return (
               <div className="mt-7" key={index}>
-                <PreviewDetails name={"Whitelisted Address"} value={address} />
+                <PreviewDetails name={"Whitelisted Address"} value={address} enable_copy={true}/>
               </div>
             );
           })}
