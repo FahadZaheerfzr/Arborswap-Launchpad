@@ -62,6 +62,23 @@ export default function AdminPanel({
       setIsFinished(res);
     });
   }
+
+  const cancelSale = async () => {
+    const contract = new Contract(
+      sale.saleAddress,
+      PublicSaleAbi,
+      library.getSigner()
+    );
+
+    try {
+      await contract.cancelSale();
+      toast.success("Sale cancelled successfully");
+      window.location.reload();
+    }
+    catch (err) {
+      toast.error("Error cancelling sale");
+    }
+  }
   async function getSaleInfo() {
     const res = await getSuccessPublic(sale.saleAddress).then((res) => {
       setSaleInfo(res);

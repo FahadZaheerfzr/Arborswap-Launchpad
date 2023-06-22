@@ -6,7 +6,8 @@ const labels = ["Presale", "Liquidity", "Unlocked"];
 
 export default function DonutChart({ presale, liquidity, burned, locked, supply, sale }) {
   const { theme } = useContext(ThemeContext);
-
+  console.log("liquidity",liquidity);
+  console.log("presale",presale);
   const tokenomics = sale.tokenomics || [];
 
   const originalColors = ['#307856', '#585B79', '#F8CF6B'];
@@ -14,8 +15,8 @@ export default function DonutChart({ presale, liquidity, burned, locked, supply,
   const colors = [...originalColors, ...tokenomicsColors];
 
   const originalSeries = [
-    presale / supply * 100,
-    parseFloat((liquidity / supply * 100).toFixed(2)),
+    parseFloat((presale / supply * 100).toFixed(8)),
+    parseFloat((liquidity / supply * 100).toFixed(8)),
     parseFloat(((supply - liquidity - presale) / supply * 100).toFixed(2)),
   ];
 

@@ -257,7 +257,7 @@ export default function Preview({
                   <div className="w-full ">
                     <DonutChart
                       presale={pool.presalePrice * hard_cap}
-                      liquidity={pool.listing * liquidity}
+                      liquidity={pool.listing * (liquidity/100) * hard_cap}
                       supply={supply}
                       burned={pool.burned || 0}
                       locked={pool.locked || 0}

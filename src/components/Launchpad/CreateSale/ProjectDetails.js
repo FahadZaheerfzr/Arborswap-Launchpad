@@ -451,7 +451,7 @@ export default function ProjectDetails({ setActive, setSaleData, saleData,edit,o
         </div>
       </div>
       <div className="mt-7">
-        <HeadingTags name={"youtube"} />
+        <HeadingTags name={"Youtube"} />
         <div
           className={`flex items-center rounded-lg border-[1.5px] pr-5 border-opacity-50 justify-between mt-5 ${
             validYoutube ? "border-dim-text" : "border-red-500"
