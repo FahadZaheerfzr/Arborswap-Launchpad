@@ -261,6 +261,7 @@ export default function Preview({
                       supply={supply}
                       burned={pool.burned || 0}
                       locked={pool.locked || 0}
+                      sale = {pool || 0}
                     />
                   </div>
                   {/* <div className="w-full pl-16">
