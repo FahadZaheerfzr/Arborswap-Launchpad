@@ -84,10 +84,10 @@ export default function PoolPageBase({ pool, visible, showModal, admin,objId ,is
           <div className="mt-14 md:mt-0 md:w-[35%] ">
 
             {admin ?
-              <AdminPanel  status={status && status} finished={!visible} hard_cap={pool.hardCap} filled_percent={pool.filled_percent} soft_cap={pool.softCap} sale={pool} objId={objId} />
+              <AdminPanel  status={status && status} finished={isFinished} hard_cap={pool.hardCap} filled_percent={pool.filled_percent} soft_cap={pool.softCap} sale={pool} objId={objId} />
               : <SaleBox hard_cap={pool.hardCap} hard_cap_icon={pool.image} start_date={pool.startDate} soft_cap={pool.softCap}
                 min_allocation={pool.minAllocation} max_allocation={pool.maxAllocation} status={status&& status}
-                currency={pool.currency} ends_on={pool.endDate} showModal={showModal} token = {pool.token} presale_address={pool.saleAddress} sale={pool} visible={visible} whitelistedUser={whitelistedUser} whitelisting={pool.whiteisting}/>
+                currency={pool.currency} ends_on={pool.endDate} showModal={showModal} token = {pool.token} presale_address={pool.saleAddress} sale={pool} visible={visible} whitelistedUser={whitelistedUser} whitelisting={pool.whiteisting} isFinished = {isFinished}/>
             }
             {
               admin && (pool.status === 'Ended'|| visible===false) &&

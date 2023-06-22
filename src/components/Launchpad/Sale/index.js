@@ -33,6 +33,7 @@ export default function SaleBox({
   start_date,
   sale,
   visible,
+  isFinished
 }) {
   const [filled_percent, setFilledPercent] = useState(0);
   const [showModal2, setShowModal2] = useState(false);
@@ -188,7 +189,7 @@ export default function SaleBox({
           <div className="flex mt-10">
             <button
               disabled={
-                status === "Ended" ||
+                status === "Ended" || isFinished ||
                 (saleInfo &&
                   saleInfo.totalBNBRaised.toString() -
                     saleInfo.hardCap.toString()) === 0
@@ -196,7 +197,7 @@ export default function SaleBox({
                   : false
               }
               className={`w-full ${
-                status !== "Ended"
+                status !== "Ended" && !isFinished
                   ? "bg-primary-green"
                   : "bg-dim-text bg-opacity-50 dark:bg-dim-text-dark"
               } rounded-md text-white font-bold py-4 disabled:bg-dim-text disabled:opacity-50 disabled:dark:bg-dim-text-dark`}
@@ -208,13 +209,14 @@ export default function SaleBox({
                   saleInfo.totalBNBRaised.toString() -
                     saleInfo.hardCap.toString() ===
                     0
-                ? "Hard Cap Reached"
+                ? "Hard Cap Reached":
+                isFinished && status === "Live" ? "Sale Cancelled"
                 : "Join Sale"}
             </button>
           </div>
         )}
 
-        {status !== "Upcoming" && status !== "Ended" && visible !== false && (
+        {status !== "Upcoming" && status !== "Ended" && visible !== false && !isFinished &&(
           <>
             <div className="flex justify-center mt-7">
               <span className="text-sm font-medium text-gray dark:text-gray-dark ">
@@ -243,7 +245,7 @@ export default function SaleBox({
 
         {/* if sale ended then just write Sale has ended */}
         {/* if sale is live then show timer */}
-        {status !== "Ended" && status !== "Upcoming" && visible !== false && (
+        {status !== "Ended" && status !== "Upcoming" && visible !== false && !isFinished &&(
           <Timer date={new Date(ends_on * 1000)} />
         )}
       </div>
