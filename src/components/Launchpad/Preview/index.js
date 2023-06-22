@@ -15,6 +15,7 @@ import GithubSVG from "svgs/Socials/github";
 import { ThemeContext } from "context/ThemeContext/ThemeProvider";
 import YouTubeEmbed from "./Subcomponents/YoutubeImbed";
 import ProjectDetails from "../CreateSale/ProjectDetails";
+import ConfirmModal from "../Admin/subComponents/ConfirmModal";
 
 export default function Preview({
   pool,
@@ -44,6 +45,7 @@ export default function Preview({
   const [slide, setSlide] = useState("Presale");
   const [edit, setEdit] = useState(false);
   const [saleData, setSaleData] = useState({ ...pool})
+  const [showModal, setShowModal] = useState(false);
   const supply = parseFloat(token.tokenSupply) / 10 ** token.tokenDecimals;
   // console.log(supply)
   return (
@@ -64,10 +66,13 @@ export default function Preview({
             is_private={is_private}
             tags={tags}
             pool={pool}
-            setEdit = {setEdit}
-            edit = {edit}
+            setEdit = {setShowModal}
+            edit = {showModal}
             admin = {admin}
           />
+          {showModal && (
+            <ConfirmModal runFunction={setEdit} description={"Edit sale details?"} title={"Edit Sale"} setShowModal={setShowModal} />
+          )}
 
           <div className="mt-6 flex md:hidden gap-5 ml-[70px]">
             {pool.github !== "" && (
