@@ -63,6 +63,23 @@ export default function AdminPanel({
       setIsFinished(res);
     });
   }
+
+  const cancelSale = async () => {
+    const contract = new Contract(
+      sale.saleAddress,
+      PublicSaleAbi,
+      library.getSigner()
+    );
+
+    try {
+      await contract.cancelSale();
+      toast.success("Sale cancelled successfully");
+      window.location.reload();
+    }
+    catch (err) {
+      toast.error("Error cancelling sale");
+    }
+  }
   async function getSaleInfo() {
     const res = await getSuccessPublic(sale.saleAddress).then((res) => {
       setSaleInfo(res);
@@ -406,6 +423,19 @@ export default function AdminPanel({
               </button>
             </div>
           ) : null)}
+          {saleInfo != null &&
+          (saleInfo === false ? (
+            <div className="mt-7">
+              <button
+                onClick={cancelSale}
+                className={"w-full bg-red-600 text-white rounded-md font-bold py-4"}
+              >
+                {/* if sale is not finished then show manage adress too */}
+                Cancel Sale
+              </button>
+            </div>
+          ) : null)}
+
         {saleInfo != null &&
           (saleInfo === true ? (
             <div className="mt-7">
