@@ -136,8 +136,7 @@ export default function AdminPanel({
       closeLoadingModal();
     }
   };
-  console.log(objId, "objId");
-  console.log(`${BACKEND_URL}/api/sale/${objId}`)
+
   const finalizeSale = async () => {
     setShowModal(false);
     openLoadingModal();
