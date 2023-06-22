@@ -1,4 +1,4 @@
-import React, { useContext, useState,useEffect } from "react";
+import React, { useContext, useState } from "react";
 import Chart from "react-apexcharts";
 import { ThemeContext } from "context/ThemeContext/ThemeProvider";
 
@@ -7,31 +7,23 @@ const labels = ["Presale", "Liquidity", "Unlocked"];
 export default function DonutChart({ presale, liquidity, burned, locked, supply, sale }) {
   const { theme } = useContext(ThemeContext);
 
-  const tokenomics = sale.tokenomics || []; // Extract tokenomics values from sale object or use an empty array if not provided
+  const tokenomics = sale.tokenomics || [];
 
   const originalColors = ['#307856', '#585B79', '#F8CF6B'];
+  const tokenomicsColors = tokenomics.map(item => item.color);
+  const colors = [...originalColors, ...tokenomicsColors];
 
-  const [randomColors, setRandomColors] = useState([]);
-
-  useEffect(() => {
-    // Generate random colors only once when the component mounts
-    const colors = tokenomics.map(() => `#${Math.floor(Math.random() * 16777215).toString(16)}`);
-    setRandomColors(colors);
-  }, [tokenomics]);
-
-  // Calculate the original series values without tokenomics
   const originalSeries = [
     presale / supply * 100,
     parseFloat((liquidity / supply * 100).toFixed(2)),
     parseFloat(((supply - liquidity - presale) / supply * 100).toFixed(2)),
   ];
 
-  // Create the merged series by appending the original series with the tokenomics values
-  const mergedSeries = [...originalSeries, ...tokenomics.map(item => parseFloat(item.split(' ')[1]))];
-  const mergedLabels = [...labels, ...tokenomics.map(item => item.split(' ')[0])];
-  const colors = [...originalColors, ...randomColors];
+  const mergedSeries = [...originalSeries, ...tokenomics.map(item => parseFloat(item.percentage))];
+  const mergedLabels = [...labels, ...tokenomics.map(item => item.name)];
 
   const [series, setSeries] = useState(mergedSeries);
+
   const handleClick = (index) => {
     const updatedSeries = [...series];
     if (updatedSeries[index] === 0) {
@@ -41,7 +33,6 @@ export default function DonutChart({ presale, liquidity, burned, locked, supply,
     }
     setSeries(updatedSeries);
   };
-
 
   const options = {
     colors: colors,
@@ -105,6 +96,7 @@ export default function DonutChart({ presale, liquidity, burned, locked, supply,
       enabled: false,
     },
   };
+
   return (
     <div className="flex">
       <Chart options={options} series={series} type="donut" width="300" />
@@ -114,7 +106,7 @@ export default function DonutChart({ presale, liquidity, burned, locked, supply,
             <div
               className="w-4 h-4 rounded-md mr-2 cursor-pointer"
               style={{
-                backgroundColor: options.colors[index],
+                backgroundColor: colors[index],
                 opacity: series[index] === 0 ? 0.5 : 1,
               }}
               onClick={() => handleClick(index)}
@@ -126,7 +118,6 @@ export default function DonutChart({ presale, liquidity, burned, locked, supply,
             >
               {label}
             </span>
-
           </div>
         ))}
       </div>
