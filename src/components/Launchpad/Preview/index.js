@@ -39,12 +39,12 @@ export default function Preview({
   liquidity,
   lockup,
   objId,
-  admin
+  admin,
 }) {
   const { theme } = useContext(ThemeContext);
   const [slide, setSlide] = useState("Presale");
   const [edit, setEdit] = useState(false);
-  const [saleData, setSaleData] = useState({ ...pool})
+  const [saleData, setSaleData] = useState({ ...pool });
   const [showModal, setShowModal] = useState(false);
   const supply = parseFloat(token.tokenSupply) / 10 ** token.tokenDecimals;
   // console.log(supply)
@@ -56,22 +56,42 @@ export default function Preview({
           saleData={saleData}
           setSaleData={setSaleData}
           edit={edit}
-          objId = {objId}
+          objId={objId}
         />
       ) : (
-        <div className="px-9 py-9 my-4">
+        <div className="px-9 py-9 my-4 relative">
+          <div className="overflow-hidden">
+            {tags.split(",").map(
+              (tag) =>
+                tag !== "" &&
+                tag === "Migration" && (
+                  <span
+                    key={tag}
+                    className="text-[10px] font-bold bg-primary-green py-[2px] px-2 text-white rounded-[10px] mr-2 absolute top-0 -left-2 transform -rotate-45"
+                  >
+                    {tag}
+                  </span>
+                )
+            )}
+          </div>
+
           <Info
             name={name}
             icon={icon}
             is_private={is_private}
             tags={tags}
             pool={pool}
-            setEdit = {setShowModal}
-            edit = {showModal}
-            admin = {admin}
+            setEdit={setShowModal}
+            edit={showModal}
+            admin={admin}
           />
           {showModal && (
-            <ConfirmModal runFunction={setEdit} description={"Edit sale details?"} title={"Edit Sale"} setShowModal={setShowModal} />
+            <ConfirmModal
+              runFunction={setEdit}
+              description={"Edit sale details?"}
+              title={"Edit Sale"}
+              setShowModal={setShowModal}
+            />
           )}
 
           <div className="mt-6 flex md:hidden gap-5 ml-[70px]">

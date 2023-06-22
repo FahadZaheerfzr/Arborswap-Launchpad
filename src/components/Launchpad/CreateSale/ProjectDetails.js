@@ -263,8 +263,8 @@ export default function ProjectDetails({ setActive, setSaleData, saleData,edit,o
         </div>
       </div>
 
-      <div className="mt-10">
-        <div className="flex items-center">
+      {/* <div className="mt-10"> */}
+        {/* <div className="flex items-center">
           <HeadingTags name={"Tags"} />
           <div className="relative">
             <img
@@ -274,18 +274,18 @@ export default function ProjectDetails({ setActive, setSaleData, saleData,edit,o
               className="ml-2"
               onMouseEnter={handleMouseEnter}
               onMouseLeave={handleMouseLeave}
-            />
+            /> */}
             {/* tooltip to appear above img info tag */}
-            {show.includes("info3") && (
+            {/* {show.includes("info3") && (
               <div className="absolute z-10 bg-dim-text bg-opacity-50 dark:bg-white rounded-[10px] shadow-lg p-1 bottom-3 left-5 w-36">
                 <p className="text-light-text dark:text-dark-text font-extralight text-sm">
                   Labels to categorize your project (e.g Web3)
                 </p>
               </div>
-            )}
-          </div>
-        </div>
-        <div className="mt-5">
+            )} */}
+          {/* </div>
+        </div> */}
+        {/* <div className="mt-5">
           <input
             className="bg-transparent w-full px-5 py-4 font-gilroy placeholder:font-medium placeholder:text-dim-text font-semibold text-dark-text dark:text-light-text focus:outline-none border-[1.5px] rounded-lg border-dim-text border-opacity-50"
             type={"text"}
@@ -298,8 +298,8 @@ export default function ProjectDetails({ setActive, setSaleData, saleData,edit,o
             }
             placeholder="Tags"
           />
-        </div>
-      </div>
+        </div> */}
+      {/* </div> */}
       <PreviewHeader heading={"Social Details"} />
       <div className="mt-7">
         <HeadingTags name={"Website"} required />
