@@ -33,7 +33,8 @@ export default function SaleBox({
   start_date,
   sale,
   visible,
-  isFinished
+  isFinished,
+  isCancelled
 }) {
   const [filled_percent, setFilledPercent] = useState(0);
   const [showModal2, setShowModal2] = useState(false);
@@ -104,7 +105,7 @@ export default function SaleBox({
       toast.error("Error withdrawing funds");
     }
   };
-
+  
   return (
     <>
       <div className="p-9 bg-white dark:bg-dark-1 rounded-[20px]">
@@ -164,6 +165,8 @@ export default function SaleBox({
           address={presale_address}
           setFilled={setFilledPercent}
           showModal={showModal}
+          isFinished={isFinished}
+          isCancelled={isCancelled}
         />
         {/* if sale is upcoming then show countdown */}
 
@@ -189,7 +192,7 @@ export default function SaleBox({
           <div className="flex mt-10">
             <button
               disabled={
-                status === "Ended" || isFinished ||
+                status === "Ended" || isFinished || isCancelled ||
                 (saleInfo &&
                   saleInfo.totalBNBRaised.toString() -
                     saleInfo.hardCap.toString()) === 0
@@ -210,7 +213,7 @@ export default function SaleBox({
                     saleInfo.hardCap.toString() ===
                     0
                 ? "Hard Cap Reached":
-                isFinished && status === "Live" ? "Sale Cancelled"
+                isCancelled ? "Sale Cancelled"
                 : "Join Sale"}
             </button>
           </div>
@@ -220,7 +223,7 @@ export default function SaleBox({
           <>
             <div className="flex justify-center mt-7">
               <span className="text-sm font-medium text-gray dark:text-gray-dark ">
-                Sale Ends in
+                {isCancelled? "You can with draw in":"Sale Ends in"}
               </span>
             </div>
           </>

@@ -27,6 +27,7 @@ export default function AdminPanel({
   finished,
   sale,
   objId,
+  cancelled,
 }) {
   const { library } = useEthers();
   const [showModal, setShowModal] = useState(false);
@@ -62,29 +63,12 @@ export default function AdminPanel({
       setIsFinished(res);
     });
   }
-
-  const cancelSale = async () => {
-    const contract = new Contract(
-      sale.saleAddress,
-      PublicSaleAbi,
-      library.getSigner()
-    );
-
-    try {
-      await contract.cancelSale();
-      toast.success("Sale cancelled successfully");
-      window.location.reload();
-    }
-    catch (err) {
-      toast.error("Error cancelling sale");
-    }
-  }
   async function getSaleInfo() {
     const res = await getSuccessPublic(sale.saleAddress).then((res) => {
       setSaleInfo(res);
     });
-  } 
-  console.log(saleInfo, "saleInfo")
+  }
+  console.log(saleInfo, "saleInfo");
   useEffect(() => {
     getContributors();
     getFinished();
@@ -94,7 +78,7 @@ export default function AdminPanel({
   const withdrawEarnings = async () => {
     setShowModal(false);
     openLoadingModal();
-    if (isFinished[0] === false) {
+    if (isFinished[0] === false || !finished) {
       toast.error("The sale is not finished yet");
       setShowModal(false);
       return;
@@ -148,13 +132,13 @@ export default function AdminPanel({
         await tx.wait();
         toast.success("Tokens withdrawn successfully");
       } else {
-      const tx = await contract.withdrawEarnings();
-      await tx.wait();
-      toast.success("Earnings withdrawn successfully");
+        const tx = await contract.withdrawEarnings();
+        await tx.wait();
+        toast.success("Earnings withdrawn successfully");
       }
       closeLoadingModal();
     } catch (err) {
-      console.log(err)
+      console.log(err);
       toast.error("You Have Already Withdrawn Your Earnings");
       closeLoadingModal();
     }
@@ -211,11 +195,10 @@ export default function AdminPanel({
         const tx = await contract.cancelSale();
         await tx.wait();
         toast.success("Sale Cancelled Successfully");
-      }
-      else {
-      const tx = await contract.finishSale();
-      await tx.wait();
-      toast.success("Sale Finalized Successfully");
+      } else {
+        const tx = await contract.finishSale();
+        await tx.wait();
+        toast.success("Sale Finalized Successfully");
       }
     } catch (err) {
       //      alert("Something went wrong");
@@ -225,12 +208,19 @@ export default function AdminPanel({
 
     //update the isFinised in database
     try {
-      const res = await axios.put(`${BACKEND_URL}/api/sale/${objId}`, {
-        isFinished: "true",
-      });
+      if (status === "Live") {
+        const res = await axios.put(`${BACKEND_URL}/api/sale/${objId}`, {
+          isCancelled: "true",
+        });
+        console.log(res);
+      } else {
+        const res = await axios.put(`${BACKEND_URL}/api/sale/${objId}`, {
+          isFinished: "true",
+        });
+        console.log(res);
+      }
       toast.success("Sale Finalized Successfully");
       window.location.reload();
-      console.log(res);
     } catch (err) {
       console.log(err);
       closeLoadingModal();
@@ -245,7 +235,7 @@ export default function AdminPanel({
       toast.error("Please enter atleast one address");
       return;
     }
-     openLoadingModal();
+    openLoadingModal();
 
     try {
       const contract = new Contract(
@@ -297,18 +287,16 @@ export default function AdminPanel({
           dex: sale.dex,
           whiteisting: sale.whiteisting,
           whiteListedAddresses: updatedAddresses,
-          owner : sale.owner,
+          owner: sale.owner,
           isFinished: sale.isFinished,
         };
         const res = await axios.put(`${BACKEND_URL}/api/sale/${objId}`, {
           sale: finalSaleObject,
         });
-        console.log(res)
+        console.log(res);
         toast.success("Address Added Successfully");
         closeLoadingModal();
         // window.location.reload();
-
-
       } catch (err) {
         console.log(err);
         closeLoadingModal();
@@ -320,7 +308,7 @@ export default function AdminPanel({
       toast.error("Something went wrong");
     }
   }
-
+  console.log(saleInfo , finished ,status, cancelled , "saleInfo === false && !finished && status !== Live && !cancelled")
   return (
     <>
       <div className="hidden md:block px-9 pb-9 bg-white dark:bg-dark-1 rounded-[20px]">
@@ -369,7 +357,11 @@ export default function AdminPanel({
               </span>
             </div>
 
-            <PercentFilled address={sale.saleAddress} isFinished={finished} />
+            <PercentFilled
+              address={sale.saleAddress}
+              isFinished={finished}
+              isCancelled={cancelled}
+            />
           </div>
         )}
         {sale.whiteisting !== false &&
@@ -411,52 +403,56 @@ export default function AdminPanel({
             <PreviewDetails name={"Contributors"} value={contributors} />
           </div>
         )}
-          {saleInfo === false &&!finished && status!=="Live"?  (
-            <div className="mt-7">
-              <button
-                onClick={() => {
-                    setShowModal(true);
-                }}
-                className={`w-full ${
-                  status === "Upcoming"
-                    ? "bg-light dark:bg-dark text-dark-text dark:text-light-text"
-                    : "bg-primary-green text-white"
-                } rounded-md font-bold py-4`}
-              >
-                {/* if sale is not finished then show manage adress too */}
-                {status === "Upcoming" ? "Manage Address" : "Finalize Sale"}
-              </button>
-            </div>
-          ) : saleInfo === false &&!finished && status==="Live"? (
-            <div className="mt-7">
-              <button
-                onClick={() => {
-                    setShowModal(true);
-                }}
-                className={`w-full ${
-                  status === "Upcoming"
-                    ? "bg-light dark:bg-dark text-dark-text dark:text-light-text"
-                    : "bg-primary-green text-white"
-                } rounded-md font-bold py-4`}
-              >
-                Cancel Sale
-              </button>
-            </div>
-          ): null }
-          {saleInfo === true && finished? (
-            <div className="mt-7">
-              <button
-                onClick={() => setShowModal(true)}
-                className={`w-full ${
-                  status === "Upcoming"
-                    ? "bg-light dark:bg-dark text-dark-text dark:text-light-text"
-                    : "bg-primary-green text-white"
-                } rounded-md font-bold py-4`}
-              >
-                {saleInfo===true?"Withdraw your Earnings":"Withdraw Tokens"}
-              </button>
-            </div>
-          ) : null}
+        {saleInfo === false && !finished && status !== "Live" && !cancelled ? (
+          <div className="mt-7">
+            <button
+              onClick={() => {
+                setShowModal(true);
+              }}
+              className={`w-full ${
+                status === "Upcoming"
+                  ? "bg-light dark:bg-dark text-dark-text dark:text-light-text"
+                  : "bg-primary-green text-white"
+              } rounded-md font-bold py-4`}
+            >
+              {/* if sale is not finished then show manage adress too */}
+              {status === "Upcoming" ? "Manage Address" : "Finalize Sale"}
+            </button>
+          </div>
+        ) : saleInfo === false && !cancelled && status === "Live" ? (
+          <div className="mt-7">
+            <button
+              onClick={() => {
+                setShowModal(true);
+              }}
+              className={`w-full ${
+                status === "Upcoming"
+                  ? "bg-light dark:bg-dark text-dark-text dark:text-light-text"
+                  : "bg-primary-green text-white"
+              } rounded-md font-bold py-4`}
+            >
+              Cancel Sale
+            </button>
+          </div>
+        ) : cancelled?(
+          <span className="text-sm font-medium text-gray dark:text-gray-dark">
+            sale was cancelled{" "}
+          </span>
+        ):null }
+        {saleInfo === true && finished ? (
+          <div className="mt-7">
+            <button
+              onClick={() => setShowModal(true)}
+              className={`w-full ${
+                status === "Upcoming"
+                  ? "bg-light dark:bg-dark text-dark-text dark:text-light-text"
+                  : "bg-primary-green text-white"
+              } rounded-md font-bold py-4`}
+            >
+              {saleInfo === true ? "Withdraw your Earnings" : "Withdraw Tokens"}
+            </button>
+          </div>
+        ) : null}
       </div>
 
       {showModal && (
@@ -465,24 +461,27 @@ export default function AdminPanel({
 
         <ConfirmModal
           runFunction={
-            status === "Live" && !finished ? finalizeSale :
-            saleInfo != null && finished
+            !cancelled && !finished
+              ? finalizeSale
+              : saleInfo != null && finished
               ? saleInfo === true && finished
                 ? withdrawEarnings
                 : withdrawEarnings
               : finalizeSale
           }
           title={
-            status === "Live" && !finished ? "Cancel Sale" :
-            saleInfo != null && finished
+            status === "Live" && !finished
+              ? "Cancel Sale"
+              : saleInfo != null && finished
               ? saleInfo === true && finished
                 ? "Withdraw Earnings"
                 : "Withdraw Tokens"
               : "Finalize Sale"
           }
           description={
-            status === "Live" && !finished ? "Are you sure you want to cancel the sale?" :
-            saleInfo != null && finished
+            status === "Live" && !finished
+              ? "Are you sure you want to cancel the sale?"
+              : saleInfo != null && finished
               ? saleInfo === true && finished
                 ? "Are you sure you want to withdraw your earnings?"
                 : "Are you sure you want to withdraw tokens?"

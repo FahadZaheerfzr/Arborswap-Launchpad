@@ -16,7 +16,7 @@ import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
 
-export default function SaleBox({ icon, sale, status, isFinished }) {
+export default function SaleBox({ icon, sale, status, isFinished, isCancelled }) {
   const { account, library } = useEthers();
   const [allocated, setAllocated] = useState(0);
   const [bought, setBought] = useState(0);
@@ -73,7 +73,7 @@ export default function SaleBox({ icon, sale, status, isFinished }) {
     }
 
     try {
-      if(status==="Live"){
+      if(isCancelled){
         console.log("withdrawUserFundsIfSaleCancelled")
         const tx = await contract.withdrawUserFundsIfSaleCancelled();
         await tx.wait();

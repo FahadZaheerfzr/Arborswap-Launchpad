@@ -88,6 +88,7 @@ export default function PoolPage() {
             showModal={showModal}
             admin={adminMode}
             isFinished={pool.isFinished}
+            isCancelled={pool.isCancelled}
           />
         </BaseLayout>
       </div>

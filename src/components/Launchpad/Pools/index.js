@@ -90,7 +90,7 @@ export default function PoolsBase({ pools, loading }) {
                       </span>
                     </div>
 
-                    <PercentFilled address={pool.sale.saleAddress} item = {pool} />
+                    <PercentFilled address={pool.sale.saleAddress} item = {pool} isCancelled={pool.isCancelled} isFinished={pool.isFinished} />
 
                     <div className="flex items-center justify-between mt-6">
                       <div className="flex flex-col justify-between">

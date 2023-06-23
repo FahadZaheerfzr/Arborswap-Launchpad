@@ -1,9 +1,7 @@
 import React, { useContext, useState } from "react";
 import Info from "./Subcomponents/Info";
-
 import TabSwitch from "./Subcomponents/TabSwitch";
 import DonutChart from "./Subcomponents/DonutChart";
-import Labels from "./Subcomponents/Labels";
 import TwitterSVG from "svgs/Socials/twitter";
 import DribbleSVG from "svgs/Socials/dribble";
 import PreviewDetails from "components/Common/PreviewDetails";
