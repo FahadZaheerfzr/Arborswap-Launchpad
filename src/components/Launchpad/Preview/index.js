@@ -48,7 +48,6 @@ export default function Preview({
   const [saleData, setSaleData] = useState({ ...pool });
   const [showModal, setShowModal] = useState(false);
   const supply = parseFloat(token.tokenSupply) / 10 ** token.tokenDecimals;
-  console.log(tags2.split(",") , "tags2")
   return (
     <>
       {edit ? (
