@@ -83,8 +83,8 @@ export default function AdminPanel({
     const res = await getSuccessPublic(sale.saleAddress).then((res) => {
       setSaleInfo(res);
     });
-  }
-
+  } 
+  console.log(saleInfo, "saleInfo")
   useEffect(() => {
     getContributors();
     getFinished();
@@ -143,11 +143,18 @@ export default function AdminPanel({
     }
 
     try {
+      if (status === "Live") {
+        const tx = await contract.withdraw();
+        await tx.wait();
+        toast.success("Tokens withdrawn successfully");
+      } else {
       const tx = await contract.withdrawEarnings();
       await tx.wait();
       toast.success("Earnings withdrawn successfully");
+      }
       closeLoadingModal();
     } catch (err) {
+      console.log(err)
       toast.error("You Have Already Withdrawn Your Earnings");
       closeLoadingModal();
     }
@@ -233,7 +240,6 @@ export default function AdminPanel({
   function handleInput() {
     setIsInputOpen(!isInputOpen);
   }
-
   async function handleAddAddress() {
     if (whiteListedAddresses[0] === "") {
       toast.error("Please enter atleast one address");
@@ -363,7 +369,7 @@ export default function AdminPanel({
               </span>
             </div>
 
-            <PercentFilled address={sale.saleAddress} />
+            <PercentFilled address={sale.saleAddress} isFinished={finished} />
           </div>
         )}
         {sale.whiteisting !== false &&
@@ -405,30 +411,39 @@ export default function AdminPanel({
             <PreviewDetails name={"Contributors"} value={contributors} />
           </div>
         )}
-        {saleInfo != null|| !finished &&
-          (saleInfo === false ||!finished? (
+          {saleInfo === false &&!finished && status!=="Live"?  (
             <div className="mt-7">
               <button
-                disabled={
-                  status === "Upcoming" && status === "Live" && !finished
-                }
                 onClick={() => {
                     setShowModal(true);
                 }}
                 className={`w-full ${
                   status === "Upcoming"
                     ? "bg-light dark:bg-dark text-dark-text dark:text-light-text"
-                    : status === "Live" && !finished
-                    ? "bg-red-700 text-white "
                     : "bg-primary-green text-white"
                 } rounded-md font-bold py-4`}
               >
                 {/* if sale is not finished then show manage adress too */}
-                {status === "Upcoming" ? "Manage Address" : status === "Live" && !finished ? "Cancel Sale" : "Finalize Sale"}
+                {status === "Upcoming" ? "Manage Address" : "Finalize Sale"}
               </button>
             </div>
-          ) : null)}
-          {saleInfo === true || finished? (
+          ) : saleInfo === false &&!finished && status==="Live"? (
+            <div className="mt-7">
+              <button
+                onClick={() => {
+                    setShowModal(true);
+                }}
+                className={`w-full ${
+                  status === "Upcoming"
+                    ? "bg-light dark:bg-dark text-dark-text dark:text-light-text"
+                    : "bg-primary-green text-white"
+                } rounded-md font-bold py-4`}
+              >
+                Cancel Sale
+              </button>
+            </div>
+          ): null }
+          {saleInfo === true && finished? (
             <div className="mt-7">
               <button
                 onClick={() => setShowModal(true)}
@@ -438,7 +453,7 @@ export default function AdminPanel({
                     : "bg-primary-green text-white"
                 } rounded-md font-bold py-4`}
               >
-                Withdraw your Earnings
+                {saleInfo===true?"Withdraw your Earnings":"Withdraw Tokens"}
               </button>
             </div>
           ) : null}
@@ -451,26 +466,26 @@ export default function AdminPanel({
         <ConfirmModal
           runFunction={
             status === "Live" && !finished ? finalizeSale :
-            saleInfo != null || finished
-              ? saleInfo === true || finished
+            saleInfo != null && finished
+              ? saleInfo === true && finished
                 ? withdrawEarnings
-                : finalizeSale
+                : withdrawEarnings
               : finalizeSale
           }
           title={
             status === "Live" && !finished ? "Cancel Sale" :
-            saleInfo != null || finished
-              ? saleInfo === true || finished
+            saleInfo != null && finished
+              ? saleInfo === true && finished
                 ? "Withdraw Earnings"
-                : "Finalize Sale"
+                : "Withdraw Tokens"
               : "Finalize Sale"
           }
           description={
             status === "Live" && !finished ? "Are you sure you want to cancel the sale?" :
-            saleInfo != null
-              ? saleInfo === true
+            saleInfo != null && finished
+              ? saleInfo === true && finished
                 ? "Are you sure you want to withdraw your earnings?"
-                : "Are you sure you want to finalize the sale?"
+                : "Are you sure you want to withdraw tokens?"
               : "Are you sure you want to finalize the sale?"
           }
           setShowModal={setShowModal}

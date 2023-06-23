@@ -6,7 +6,7 @@ import { formatBigToNum } from "utils/numberFormat";
 import axios from "axios";
 import { BACKEND_URL } from "config/constants/LaunchpadAddress";
 
-export default function PercentFilled({ address, setFilled = () => {}, item, showModal }) {
+export default function PercentFilled({ address, setFilled = () => {}, item, showModal,finished }) {
   const [filled_percent, setFilledPercent] = useState("0");
   const [saleInfo, setSaleInfo] = useState(null);
   const [priceInBNB, setPriceInBNB] = useState(null);
@@ -52,7 +52,8 @@ export default function PercentFilled({ address, setFilled = () => {}, item, sho
         setFilledPercent(newPercent);
         setFilled(newPercent);
         //make request to server if newPercent is 100
-        if (parseInt(newPercent) === 100) {
+        if (parseInt(newPercent) === 100 || finished) {
+          console.log("finished")
           store();
         }
       } catch (err) {

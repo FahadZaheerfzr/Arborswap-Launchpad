@@ -73,8 +73,17 @@ export default function SaleBox({ icon, sale, status, isFinished }) {
     }
 
     try {
+      if(status==="Live"){
+        console.log("withdrawUserFundsIfSaleCancelled")
+        const tx = await contract.withdrawUserFundsIfSaleCancelled();
+        await tx.wait();
+
+      }
+      else{
       const tx = await contract.withdraw();
       await tx.wait();
+
+      }
       toast.success("Tokens Withdrawn");
     } catch (err) {
       toast.error("Transaction Failed");
@@ -121,7 +130,6 @@ export default function SaleBox({ icon, sale, status, isFinished }) {
       getUserParticipation();
     }
   }, [sale]);
-
   return (
     <>
       <div className="px-9 pb-9 bg-white dark:bg-dark-1 rounded-[20px]">
@@ -152,7 +160,7 @@ export default function SaleBox({ icon, sale, status, isFinished }) {
             </span>
           </div>
         </div>
-        {status === "Ended" || isFinished && (
+        {(status === "Ended" || isFinished) && (
           <div className="mt-7">
             <button
               onClick={() => setShowModal(true)}
