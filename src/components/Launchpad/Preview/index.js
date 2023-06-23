@@ -57,7 +57,7 @@ export default function Preview({
           objId={objId}
         />
       ) : (
-        <div className="px-9 py-9 my-4 relative">
+        <div className="px-9 py-9 my-4 relative ">
           <div className="overflow-hidden">
             {tags2 && tags2?.split(",").map(
               (tag) =>
@@ -65,7 +65,7 @@ export default function Preview({
                 tag === "Migration" ? (
                   <span
                     key={tag}
-                    className="text-[10px] font-bold bg-red-600 py-[2px] px-2 text-white rounded-[10px] mr-2 absolute top-0 -right-2 transform rotate-45"
+                    className="absolute text-sm right-[-60px] top-[0px] w-[170px] transform rotate-45 dark:bg-red-600 bg-pink-500 font-bold text-center text-white py-0"
                   >
                     {tag}
                   </span>

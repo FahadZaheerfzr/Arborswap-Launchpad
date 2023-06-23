@@ -14,36 +14,38 @@ export default function PoolsBase({ pools, loading }) {
         pools?.map(
           (pool) =>
               <Link to={`/launchpad/pools/${pool._id}`} key={pool._id}>
-                <div className="flex flex-col relative">
+                <div className="flex flex-col relative overflow-hidden">
                 <div className="overflow-hidden">
+                  
             {pool.sale.tags2 && pool.sale.tags2?.split(",").map(
               (tag) =>
                 tag !== "" &&
                 tag === "Migration" ? (
                   <span
                     key={tag}
-                    className="text-[10px] font-bold bg-red-600 py-[2px] px-2 text-white rounded-[10px] mr-2 absolute top-3 -right-4 transform rotate-45"
+                    
+                    className="absolute text-sm right-[-60px] top-[16px] w-[170px] transform rotate-45 dark:bg-red-600 bg-pink-500 font-bold text-center text-white py-0"
                   >
                     {tag}
                   </span>
                 ) : tag === "KYC" ? (
                   <span 
                     key={tag}
-                    className="text-[10px] font-bold bg-primary-green py-[2px] px-2 text-white rounded-[5px] mr-2 absolute top-14 right-0"
+                    className="text-[10px] font-bold bg-primary-green py-[2px] px-2 text-white rounded-[5px] mr-2 absolute top-[85px] left-[112px]"
                   >
                     {tag}
                   </span>
                 ) : tag === "SAFU" ? (
                   <span
                     key={tag}
-                    className="text-[10px] font-bold bg-purple-400 py-[2px] px-2 text-white rounded-[5px] mr-2 absolute top-14 right-10"
+                    className="text-[10px] font-bold bg-purple-400 py-[2px] px-2 text-white rounded-[5px] mr-2 absolute top-[85px] left-[70px]"
                   >
                     {tag}
                   </span>
                 ) : tag === "AUDIT" ? (
                   <span
                     key={tag}
-                    className="text-[10px] font-bold bg-blue-400 py-[2px] px-2 text-white rounded-[5px] mr-2 absolute top-8 right-5"
+                    className="text-[10px] font-bold bg-blue-400 py-[2px] px-2 text-white rounded-[5px] mr-2 absolute top-[85px] left-6"
                   >
                     {tag}
                   </span>

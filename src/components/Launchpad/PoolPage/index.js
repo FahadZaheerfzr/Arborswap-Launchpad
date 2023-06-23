@@ -53,7 +53,7 @@ export default function PoolPageBase({ pool, visible, showModal, admin,objId ,is
     pool && (
       <div className="w-full flex justify-center">
         <div className="w-full px-4 md:px-0 md:flex md:w-10/12 md:gap-7">
-          <div className="w-full md:w-[65%] bg-white dark:bg-dark-1 rounded-[10px]">
+          <div className="w-full md:w-[65%] bg-white dark:bg-dark-1 rounded-[10px] overflow-hidden">
             <Preview
             presalePrice={pool.presalePrice}
             symbol={pool.image}
