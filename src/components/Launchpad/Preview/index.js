@@ -25,6 +25,7 @@ export default function Preview({
   is_private,
   token,
   tags,
+  tags2,
   description,
   address,
   starts_on,
@@ -47,7 +48,7 @@ export default function Preview({
   const [saleData, setSaleData] = useState({ ...pool });
   const [showModal, setShowModal] = useState(false);
   const supply = parseFloat(token.tokenSupply) / 10 ** token.tokenDecimals;
-  // console.log(supply)
+  console.log(tags2.split(",") , "tags2")
   return (
     <>
       {edit ? (
@@ -61,18 +62,40 @@ export default function Preview({
       ) : (
         <div className="px-9 py-9 my-4 relative">
           <div className="overflow-hidden">
-            {tags.split(",").map(
+            {tags2 && tags2?.split(",").map(
               (tag) =>
                 tag !== "" &&
-                tag === "Migration" && (
+                tag === "Migration" ? (
                   <span
                     key={tag}
                     className="text-[10px] font-bold bg-primary-green py-[2px] px-2 text-white rounded-[10px] mr-2 absolute top-0 -left-2 transform -rotate-45"
                   >
                     {tag}
                   </span>
-                )
+                ) : tag === "KYC" ? (
+                  <span 
+                    key={tag}
+                    className="text-[10px] font-bold bg-primary-green py-[2px] px-2 text-white rounded-[10px] mr-2 absolute top-0 right-2"
+                  >
+                    {tag}
+                  </span>
+                ) : tag === "SAFU" ? (
+                  <span
+                    key={tag}
+                    className="text-[10px] font-bold bg-primary-green py-[2px] px-2 text-white rounded-[10px] mr-2 absolute top-0 right-12"
+                  >
+                    {tag}
+                  </span>
+                ) : tag === "AUDIT" ? (
+                  <span
+                    key={tag}
+                    className="text-[10px] font-bold bg-primary-green py-[2px] px-2 text-white rounded-[10px] mr-2 absolute top-0 right-24"
+                  >
+                    {tag}
+                  </span>
+                ): null
             )}
+
           </div>
 
           <Info

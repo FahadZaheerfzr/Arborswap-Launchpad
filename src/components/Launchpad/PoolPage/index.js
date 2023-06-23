@@ -59,6 +59,7 @@ export default function PoolPageBase({ pool, visible, showModal, admin,objId ,is
             symbol={pool.image}
             currency={pool.currency}
             listingPrice={pool.listing}
+            tags2={pool.tags2}
               pool={pool}
               name={pool.name}
               icon={pool.image}
