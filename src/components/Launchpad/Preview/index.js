@@ -65,28 +65,28 @@ export default function Preview({
                 tag === "Migration" ? (
                   <span
                     key={tag}
-                    className="text-[10px] font-bold bg-primary-green py-[2px] px-2 text-white rounded-[10px] mr-2 absolute top-0 -left-2 transform -rotate-45"
+                    className="text-[10px] font-bold bg-red-600 py-[2px] px-2 text-white rounded-[10px] mr-2 absolute top-0 -right-2 transform rotate-45"
                   >
                     {tag}
                   </span>
                 ) : tag === "KYC" ? (
                   <span 
                     key={tag}
-                    className="text-[10px] font-bold bg-primary-green py-[2px] px-2 text-white rounded-[10px] mr-2 absolute top-0 right-2"
+                    className="text-[10px] font-bold bg-primary-green py-[2px] px-2 text-white rounded-[5px] mr-2 absolute top-5 right-14"
                   >
                     {tag}
                   </span>
                 ) : tag === "SAFU" ? (
                   <span
                     key={tag}
-                    className="text-[10px] font-bold bg-primary-green py-[2px] px-2 text-white rounded-[10px] mr-2 absolute top-0 right-12"
+                    className="text-[10px] font-bold bg-purple-400 py-[2px] px-2 text-white rounded-[5px] mr-2 absolute top-5 right-24"
                   >
                     {tag}
                   </span>
                 ) : tag === "AUDIT" ? (
                   <span
                     key={tag}
-                    className="text-[10px] font-bold bg-primary-green py-[2px] px-2 text-white rounded-[10px] mr-2 absolute top-0 right-24"
+                    className="text-[10px] font-bold bg-blue-400 py-[2px] px-2 text-white rounded-[5px] mr-2 absolute top-5 right-36"
                   >
                     {tag}
                   </span>

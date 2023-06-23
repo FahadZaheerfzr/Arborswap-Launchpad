@@ -14,7 +14,43 @@ export default function PoolsBase({ pools, loading }) {
         pools?.map(
           (pool) =>
               <Link to={`/launchpad/pools/${pool._id}`} key={pool._id}>
-                <div className="flex flex-col">
+                <div className="flex flex-col relative">
+                <div className="overflow-hidden">
+            {pool.sale.tags2 && pool.sale.tags2?.split(",").map(
+              (tag) =>
+                tag !== "" &&
+                tag === "Migration" ? (
+                  <span
+                    key={tag}
+                    className="text-[10px] font-bold bg-red-600 py-[2px] px-2 text-white rounded-[10px] mr-2 absolute top-3 -right-4 transform rotate-45"
+                  >
+                    {tag}
+                  </span>
+                ) : tag === "KYC" ? (
+                  <span 
+                    key={tag}
+                    className="text-[10px] font-bold bg-primary-green py-[2px] px-2 text-white rounded-[5px] mr-2 absolute top-14 right-0"
+                  >
+                    {tag}
+                  </span>
+                ) : tag === "SAFU" ? (
+                  <span
+                    key={tag}
+                    className="text-[10px] font-bold bg-purple-400 py-[2px] px-2 text-white rounded-[5px] mr-2 absolute top-14 right-10"
+                  >
+                    {tag}
+                  </span>
+                ) : tag === "AUDIT" ? (
+                  <span
+                    key={tag}
+                    className="text-[10px] font-bold bg-blue-400 py-[2px] px-2 text-white rounded-[5px] mr-2 absolute top-8 right-5"
+                  >
+                    {tag}
+                  </span>
+                ): null
+            )}
+
+          </div>
                   <div className="bg-white dark:bg-dark-1 rounded-t-md p-6">
                     <div className="flex items-center">
                       <img
