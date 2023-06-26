@@ -43,7 +43,6 @@ export default function PreviewSale({
     const result = await getCalcMax(saleObject, token)
     setMax(result)
   }
-  console.log(deployFee)
   async function getFee() {
     const res = await getDeploymentFeePublic()
     setDeployFee(res)
@@ -71,7 +70,7 @@ export default function PreviewSale({
     setEndTime(new Date(saleObject.endDate * 1000));
     getFee();
   }, [deployFee]);
-
+  console.log(deploymentFee, "deploymentFee")
   const handleSubmit = async () => {
     openLoadingModal();
 
