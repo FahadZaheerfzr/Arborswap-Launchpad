@@ -279,7 +279,7 @@ export default function ProjectDetails({ setActive, setSaleData, saleData,edit,o
                 youtube: e.target.value,
               }))
             }
-            placeholder="Embed link Ex: https://youtu.be/.."
+            placeholder="Embed link Ex: <iframe>..."
           />
           <YoutubeSVG
             className="w-5 h-5"
