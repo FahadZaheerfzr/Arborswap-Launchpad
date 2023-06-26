@@ -163,7 +163,7 @@ export default function PoolsBase({ pools, loading }) {
                         <span className="text-xs font-medium text-gray dark:text-gray-dark">
                           {pool.sale.status==="Live" ? "Ends in" : "Starts in"}
                         </span>
-                        <Timer date={new Date(pool.sale.endDate * 1000)} />
+                        <Timer date={pool.sale.status==="Live"?new Date(pool.sale.endDate * 1000):new Date(pool.sale.startDate * 1000)} />
                       </div>
                     )}
                 </div>

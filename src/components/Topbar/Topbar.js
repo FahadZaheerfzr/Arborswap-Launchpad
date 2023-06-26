@@ -48,7 +48,9 @@ export default function Topbar({
         </div>
         {subpage ? (
           <div className="flex items-center">
-            <span className="font-medium text-dim-text text-xl capitalize">{page_name}</span>
+            <span 
+            onClick={() => window.history.back()}
+            className="font-medium text-dim-text text-xl capitalize hover:cursor-pointer">{page_name}</span>
 
             <div className="w-3 h-3 mx-2 -rotate-45 border-b-2 border-r-2 border-dark-text dark:border-light-text rounded" />
 

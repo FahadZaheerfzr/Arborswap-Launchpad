@@ -272,8 +272,8 @@ export default function Modal({
         await tx.wait();
       }
       closeLoadingModal();
-      window.location.reload()
       toast.success("Transaction successful");
+      window.history.back();
       showModal(false);
     } catch (err) {
       toast.error("Transaction failed");

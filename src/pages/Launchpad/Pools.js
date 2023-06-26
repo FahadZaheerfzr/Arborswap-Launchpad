@@ -45,6 +45,12 @@ export default function Pools() {
         const filteredPools = res.data.filter(
           (pool) => pool.sale.status === Tabs[activeTab - 1].tabName
         );
+        filteredPools.sort((a, b) => {
+          return (
+            new Date(b.sale.startDate).getTime() -
+            new Date(a.sale.startDate).getTime()
+          );
+        });
         setPools(filteredPools);
         setFilteredPools(filteredPools);
       } catch (err) {

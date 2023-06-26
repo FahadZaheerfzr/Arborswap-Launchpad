@@ -164,7 +164,7 @@ export default function SaleBox({ icon, sale, status, isFinished, isCancelled })
           <div className="mt-7">
             <button
               onClick={() => setShowModal(true)}
-              className="w-full opacity-50 bg-primary-green rounded-md text-white font-bold py-4"
+              className="w-full bg-primary-green rounded-md text-white font-bold py-4"
             >
               Withdraw
             </button>
@@ -174,7 +174,7 @@ export default function SaleBox({ icon, sale, status, isFinished, isCancelled })
           <div className="mt-7">
             <button
               onClick={() => setShowModal(true)}
-              className="w-full opacity-50 bg-primary-green rounded-md text-white font-bold py-4"
+              className="w-full bg-primary-green rounded-md text-white font-bold py-4"
             >
               Withdraw
             </button>
