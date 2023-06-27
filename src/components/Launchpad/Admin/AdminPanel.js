@@ -414,6 +414,7 @@ export default function AdminPanel({
                   ? "bg-light dark:bg-dark text-dark-text dark:text-light-text"
                   : "bg-primary-green text-white"
               } rounded-md font-bold py-4`}
+              disabled={status === "Upcoming" ? true : false}
             >
               {/* if sale is not finished then show manage adress too */}
               {status === "Upcoming" ? "Manage Address" : "Finalize Sale"}
