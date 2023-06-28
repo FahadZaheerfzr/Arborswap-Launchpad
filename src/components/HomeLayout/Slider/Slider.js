@@ -58,7 +58,7 @@ export default function Carousel({ mobileView }) {
                 {banners
                   .slice(slideIndex * 3, slideIndex * 3 + 3)
                   .map((banner, bannerIndex) => (
-                    <SlideContent key={bannerIndex} img={banner.url} name={banner.name} />
+                    <SlideContent key={bannerIndex} img={BACKEND_URL+banner.url} name={banner.name} />
                   ))}
               </div>
             </Slide>
