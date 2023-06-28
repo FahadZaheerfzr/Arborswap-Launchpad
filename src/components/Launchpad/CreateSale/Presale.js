@@ -324,7 +324,7 @@ export default function Presale({ setActive, saleType, setSaleObject, token }) {
     if (saleType === "fairlaunch") {
       setRequiredToken(0);
     }
-  }, [hardCap, softCap, listing, presalePrice]);
+  }, [hardCap, softCap, listing, presalePrice, amountLiquidity]);
 
   // //for fairlaunch
   // useEffect(() => {

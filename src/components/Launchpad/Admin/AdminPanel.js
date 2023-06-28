@@ -423,7 +423,7 @@ export default function AdminPanel({
               disabled={status === "Upcoming" ? true : false}
             >
               {/* if sale is not finished then show manage adress too */}
-              {status === "Upcoming" ? "Manage Address" : "Finalize Sale"}
+              {status === "Upcoming" ? sale.whiteisting ? "Manage Address": "Whitelisting Disabled" : "Finalize Sale"}
             </button>
           </div>
         )}
@@ -437,7 +437,7 @@ export default function AdminPanel({
                 }}
                 className={`w-full ${
                   status === "Upcoming"
-                    ? "bg-light dark:bg-dark text-dark-text dark:text-light-text"
+                    ? "bg-light dark:bg-red-600 text-dark-text dark:text-light-text"
                     : "bg-primary-green text-white"
                 } rounded-md font-bold py-4`}
               >
