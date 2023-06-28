@@ -58,7 +58,8 @@ export default function Preview({
         />
       ) : (
         <div className="px-9 py-9 my-4 relative ">
-          <div className="overflow-hidden">
+          <div className="flex flex-col">
+          <div className="overflow-hidden ml-auto md:mb-0 mb-2">
             {tags2 && tags2?.split(",").map(
               (tag) =>
                 tag !== "" &&
@@ -72,21 +73,21 @@ export default function Preview({
                 ) : tag === "KYC" ? (
                   <span 
                     key={tag}
-                    className="text-[10px] font-bold bg-primary-green py-[2px] px-2 text-white rounded-[5px] mr-2 absolute top-5 right-14"
+                    className="text-[10px] font-bold bg-primary-green py-[2px] px-2 text-white rounded-[5px] mr-2 "
                   >
                     {tag}
                   </span>
                 ) : tag === "SAFU" ? (
                   <span
                     key={tag}
-                    className="text-[10px] font-bold bg-purple-400 py-[2px] px-2 text-white rounded-[5px] mr-2 absolute top-5 right-24"
+                    className="text-[10px] font-bold bg-purple-400 py-[2px] px-2 text-white rounded-[5px] mr-2 "
                   >
                     {tag}
                   </span>
                 ) : tag === "AUDIT" ? (
                   <span
                     key={tag}
-                    className="text-[10px] font-bold bg-blue-400 py-[2px] px-2 text-white rounded-[5px] mr-2 absolute top-5 right-36"
+                    className="text-[10px] font-bold bg-blue-400 py-[2px] px-2 text-white rounded-[5px] mr-2 "
                   >
                     {tag}
                   </span>
@@ -105,6 +106,7 @@ export default function Preview({
             edit={showModal}
             admin={admin}
           />
+          </div>
           {showModal && (
             <ConfirmModal
               runFunction={setEdit}

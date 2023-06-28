@@ -330,7 +330,7 @@ export default function Modal({
       <div
         className={`w-screen h-screen flex backdrop-blur-[7px] flex-col justify-center items-center bg-[#F2F3F5] dark:bg-dark dark:bg-opacity-40 bg-opacity-40`}
       >
-        <div className="w-[90%] max-w-[420px] rounded-[10px] px-9 py-7 bg-white dark:bg-dark-1">
+        <div className="w-[90%] max-w-[420px] rounded-[10px] px-9 py-5 bg-white dark:bg-dark-1">
           <div className="flex justify-between items-center  ">
             <span className="text-dark-text dark:text-light-text font-gilroy font-semibold text-lg">
               Join Pool
@@ -431,7 +431,7 @@ export default function Modal({
           </div>
         </div>
 
-        <div className="w-[90%] max-w-[420px]  mt-10">
+        <div className="w-[90%] max-w-[420px]  mt-1">
           <button
             className="w-full bg-primary-green text-white py-5 rounded-md font-gilroy font-bold text-xl"
             onClick={handleSubmit}

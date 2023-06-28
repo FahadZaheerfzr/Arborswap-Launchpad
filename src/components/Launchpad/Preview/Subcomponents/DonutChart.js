@@ -99,9 +99,9 @@ export default function DonutChart({ presale, liquidity, burned, locked, supply,
   };
 
   return (
-    <div className="flex">
+    <div className="md:flex ">
       <Chart options={options} series={series} type="donut" width="300" />
-      <div className="ml-4">
+      <div className="md:ml-4">
         {mergedLabels.map((label, index) => (
           <div key={index} className="flex items-center mb-2">
             <div
