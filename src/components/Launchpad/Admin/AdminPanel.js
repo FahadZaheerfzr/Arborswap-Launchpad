@@ -208,7 +208,7 @@ export default function AdminPanel({
 
     //update the isFinised in database
     try {
-      if (status === "Live") {
+      if (status === "Live" || status === "Upcoming") {
         const res = await axios.put(`${BACKEND_URL}/api/sale/${objId}`, {
           isCancelled: "true",
         });
@@ -308,7 +308,13 @@ export default function AdminPanel({
       toast.error("Something went wrong");
     }
   }
-  console.log(saleInfo , finished ,status, cancelled , "saleInfo === false && !finished && status !== Live && !cancelled")
+  console.log(
+    saleInfo,
+    finished,
+    status,
+    cancelled,
+    "saleInfo === false && !finished && status !== Live && !cancelled"
+  );
   return (
     <>
       <div className="hidden md:block px-9 pb-9 bg-white dark:bg-dark-1 rounded-[20px]">
@@ -403,7 +409,7 @@ export default function AdminPanel({
             <PreviewDetails name={"Contributors"} value={contributors} />
           </div>
         )}
-        {saleInfo === false && !finished && status !== "Live" && !cancelled ? (
+        {saleInfo === false && !finished && status !== "Live" && !cancelled && (
           <div className="mt-7">
             <button
               onClick={() => {
@@ -420,26 +426,30 @@ export default function AdminPanel({
               {status === "Upcoming" ? "Manage Address" : "Finalize Sale"}
             </button>
           </div>
-        ) : saleInfo === false && !cancelled && status === "Live" ? (
-          <div className="mt-7">
-            <button
-              onClick={() => {
-                setShowModal(true);
-              }}
-              className={`w-full ${
-                status === "Upcoming"
-                  ? "bg-light dark:bg-dark text-dark-text dark:text-light-text"
-                  : "bg-primary-green text-white"
-              } rounded-md font-bold py-4`}
-            >
-              Cancel Sale
-            </button>
-          </div>
-        ) : cancelled?(
+        )}
+        {saleInfo === false &&
+          !cancelled &&
+          (status === "Live" || status === "Upcoming") && (
+            <div className="mt-7">
+              <button
+                onClick={() => {
+                  setShowModal(true);
+                }}
+                className={`w-full ${
+                  status === "Upcoming"
+                    ? "bg-light dark:bg-dark text-dark-text dark:text-light-text"
+                    : "bg-primary-green text-white"
+                } rounded-md font-bold py-4`}
+              >
+                Cancel Sale
+              </button>
+            </div>
+          )}
+        {cancelled && (
           <span className="text-sm font-medium text-gray dark:text-gray-dark">
             sale was cancelled{" "}
           </span>
-        ):null }
+        )}
         {saleInfo === true && finished ? (
           <div className="mt-7">
             <button
@@ -471,7 +481,7 @@ export default function AdminPanel({
               : finalizeSale
           }
           title={
-            status === "Live" && !finished
+            (status === "Live" || status === "Upcoming") && !finished
               ? "Cancel Sale"
               : saleInfo != null && finished
               ? saleInfo === true && finished
@@ -480,7 +490,7 @@ export default function AdminPanel({
               : "Finalize Sale"
           }
           description={
-            status === "Live" && !finished
+            (status === "Live" || status === "Upcoming") && !finished
               ? "Are you sure you want to cancel the sale?"
               : saleInfo != null && finished
               ? saleInfo === true && finished
